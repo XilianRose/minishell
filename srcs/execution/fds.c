@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/10 16:57:45 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/15 16:45:14 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ void	ft_close_fds(t_childproc *child)
 
 bool	ft_infile(t_childproc *child, t_rdr *rdr)
 {
-	child->fdin = open(rdr->data, O_RDONLY); // this is on -1? why? why wont it open infile?
+	child->fdin = open(rdr->data, O_RDONLY);
 	if (child->fdin == -1 || dup2(child->fdin, STDIN_FILENO) == -1 || \
 		close(child->fdin) == -1)
 	{
-		child->exitcode = errno;
+		child->errorcode = errno;
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		return (perror(rdr->data), false);
 	}
@@ -69,7 +69,10 @@ void	ft_check_for_files(t_childproc *child, t_scmd_list *lst)
 		{
 			rdr = lst->data;
 			if (rdr->type == RDR_INPUT)
-				ft_infile(child, rdr);
+			{
+				if (!ft_infile(child, rdr))
+					break ;
+			}
 			if (rdr->type == RDR_OUTPUT || \
 				rdr->type == RDR_APPEND)
 				ft_outfile(child, rdr);

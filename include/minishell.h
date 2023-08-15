@@ -92,8 +92,9 @@ typedef struct s_export
 typedef struct s_childproc
 {
 	pid_t		*ids;
+	t_cmd		*cmd;
 	int			status;
-	int			exitcode;
+	int			errorcode;
 	int			i;
 	int			nr_of_cmds;
 	int			pipe_count;
@@ -153,6 +154,8 @@ void			ft_write_export(char **sortedenv);
 void			ft_unset_builtin(t_cmd *info);
 // -----------------------------------------------------------------------------
 void			ft_create_child(t_list *lst);
+
+bool			ft_prepare_child(t_childproc *child, t_list *lst);
 
 void			ft_free_all(void);
 void			ft_throw_error(int errornr, char *errormessage);

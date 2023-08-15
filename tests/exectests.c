@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/26 18:40:55 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/15 13:16:17 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/15 16:56:57 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,33 +111,33 @@ void	ft_test_child(t_env *env)
 	free(data4);
 }
 
-void	ft_leaks(void)
-{
-	system("leaks -q minishell_test");
-}
+// void	ft_leaks(void)
+// {
+// 	system("leaks -q minishell_test");
+// }
 
-int	main(int argc, char **argv, char **envp)
-{
-	t_env	env;
-	int		i;
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	t_env	env;
+// 	int		i;
 
-	argc = 0;
-	argv = 0;
-	i = 0;
-	// atexit(ft_leaks);
-	ft_copy_env(&env, envp);
-	ft_test_child(&env);
-	if (env.new_env)
-	{
-		if (env.new_env[i])
-		{
-			while (env.new_env[i])
-				free(env.new_env[i++]);
-		}
-		free(env.new_env);
-	}
-	// while (1);
-}
+// 	argc = 0;
+// 	argv = 0;
+// 	i = 0;
+// 	// atexit(ft_leaks);
+// 	ft_copy_env(&env, envp);
+// 	ft_test_child(&env);
+// 	if (env.new_env)
+// 	{
+// 		if (env.new_env[i])
+// 		{
+// 			while (env.new_env[i])
+// 				free(env.new_env[i++]);
+// 		}
+// 		free(env.new_env);
+// 	}
+// 	// while (1);
+// }
 
 // All the linked lists and their nodes will be malloced, including env. 
 // Those should probably be freed at the end. Everything else free after use.

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/10 16:58:37 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/15 16:55:44 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,11 @@ static bool	ft_store_output(t_childproc *child)
 static void	ft_wait_for_last_child(t_childproc *child)
 {
 	ft_close_fds(child);
-	if (waitpid(child->ids[child->nr_of_cmds - 1], &child->status, 0) == -1)
-		perror("minishell: ");
+	waitpid(child->ids[child->nr_of_cmds - 1], &child->status, 0);
 	if (WIFEXITED(child->status))
-		child->exitcode = WEXITSTATUS(child->status); // this must be exit value
+		child->errorcode = WEXITSTATUS(child->status); // this must be exit value
 	else
-		child->exitcode = -1; // is this needed?
+		child->errorcode = -1; // is this needed?
 	free(child->ids);
 	child->ids = NULL;
 	ft_free_pipes(child->pipes, child->pipe_count);
@@ -51,81 +50,51 @@ static void	ft_child_process(t_childproc *child)
 			ft_throw_error(errno, "minishell: "); // free all and exit
 	}
 	ft_close_fds(child);
-	ft_execute(child->temp->data);
+	ft_execute(child->cmd);
 }
 
-static bool	ft_prepare_pipes(t_childproc *child, t_list *lst)
+static void	ft_find_cmd(t_childproc *child, t_scmd_list *lst)
 {
-	child->oldout = -1;
-	child->pipes = NULL;
-	child->i = 0;
-	child->pipe_count = ft_count_pipes(lst);
-	child->nr_of_cmds = child->pipe_count + 1;
-	child->ids = malloc(child->nr_of_cmds * sizeof(pid_t));
-	if (!child->ids)
-		return (perror("minishell: "), false);
-	if (child->pipe_count)
+	while (lst)
 	{
-		child->pipes = ft_create_pipes(child->pipes, child->pipe_count);
-		if (!child->pipes)
+		if (lst->type == CMD)
 		{
-			free(child->ids);
-			child->ids = NULL;
-			return (false);
+			child->cmd = lst->data;
+			break ;
 		}
+		lst = lst->next;
 	}
-	return (true);
+	if (!lst)
+	{
+		child->cmd = NULL;
+	}
 }
 
-void	ft_create_child(t_list *lst) // it broke :c
+void	ft_create_child(t_list *lst)
 {
 	t_childproc	child;
 
-	if (!ft_prepare_pipes(&child, lst) || !ft_store_output(&child))
+	if (!ft_prepare_child(&child, lst) || !ft_store_output(&child))
 		return ;
 	while (lst)
 	{
+		ft_find_cmd(&child, lst->content);
 		ft_check_for_files(&child, lst->content); // make sure this checks if all infiles exist & make all outfiles, write to last one only.
-		child.ids[child.i] = fork();
-		if (child.ids[child.i] == -1)
+		if (child.cmd && !child.errorcode)
 		{
-			perror("minishell: ");
-			break ;
+			child.ids[child.i] = fork();
+			if (child.ids[child.i] == -1)
+			{
+				perror("minishell: ");
+				break ;
+			}
+			if (child.ids[child.i] == 0)
+				ft_child_process(&child);
+			child.i++;
 		}
-		if (child.ids[child.i] == 0)
-			ft_child_process(&child);
-		child.i++;
 		lst = lst->next;
 	}
 	if (child.oldout != -1)
 		ft_restore_output(&child);
 	ft_wait_for_last_child(&child);
 }
-
-// void	ft_create_child(t_list *lst)
-// {
-// 	t_childproc	child;
-//
-// 	if (!ft_prepare_pipes(&child, lst))
-// 		return ;
-// 	while (lst && child.i <= child.nr_of_cmds)
-// 	{
-// 		child.temp = lst->content;
-// 		if (child.temp->type == CMD)
-// 		{
-// 			child.ids[child.i] = fork();
-// 			if (child.ids[child.i] == -1)
-// 			{
-// 				perror("minishell: ");
-// 				break ;
-// 			}
-// 			if (child.ids[child.i] == 0)
-// 				ft_child_process(&child);
-// 			child.i++;
-// 		}
-// 		lst = lst->next;
-// 	}
-// 	if (child.oldout != -1)
-// 		ft_restore_output(&child);
-// 	ft_wait_for_last_child(&child);
-// }
