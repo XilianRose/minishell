@@ -6,41 +6,63 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/15 15:31:02 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/16 14:29:27 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../include/minishell.h"
 
-//	to par
-t_scmd_list	*make_scmdlist(void)
+void	my_freearray(char **array)
 {
-}
+	int	i;
 
-//	to parser
-size_t	calc_smds(char **ui_array)
-{
-	size_t	res;
-	size_t	i;
-
-	res = 1;
 	i = 0;
-	while (ui_array)
+	while (array != NULL && array[i] != NULL)
 	{
-		if (ui_array[i][0] == '|')
-			res++;
+		free(array[i]);
+		array[i] = NULL;
 		i++;
 	}
-	return (res);
+	if (array != NULL)
+	{
+		free(array);
+		array = NULL;
+	}
 }
 
-t_list	*make_tlist(char **ui_array, t_list *tokens)
+void	print_array(char **array)
+{
+	while (array)
+	{
+		printf("array str: [%s]\n", *array);
+		array++;
+	}
+}
+
+void	print_list(t_list *list)
+{
+	while (list != NULL && list->next != NULL)
+	{
+		printf("list: [%s]\n", list->content);
+		list = list->next;
+	}
+	if (list != NULL)
+		printf("list: [%s]\n", list->content);
+}
+
+size_t	make_tlist(char **ui_array, t_list **tokens)
 {
 	t_list	*token;
-	size_t	len;
 
-	len = calc_smds(ui_array);
-	ft_lstadd_back(&tokens, token);
+	while (ui_array)
+	{
+		token = ft_lstnew(&ui_array);
+		if (token == NULL)
+			return (ft_lstclear(tokens, &free), 1);
+		ft_lstadd_back(tokens, token);
+		ui_array++;
+	}
+	return (0);
 }
 
 t_list	*tokenisation(char *user_input)
@@ -51,10 +73,17 @@ t_list	*tokenisation(char *user_input)
 	ui_array = ft_split(user_input, ' ');
 	if (!ui_array)
 		exit(1);
+	print_array(ui_array);
+	make_tlist(ui_array, &tokens);
+	print_list(tokens);
 	return (my_freearray(ui_array), tokens);
 }
 
-// int	main(void)
-// {
+int	main(void)
+{
+	char	*user_input;
 
-// }
+	user_input = "cat << \";\" | grep \"aap\" | wc -l > outfile";
+	tokenisation(user_input);
+	return (0);
+}

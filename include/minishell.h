@@ -13,17 +13,17 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h"
+# include "../42lib/include/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/errno.h>
 # include <sys/param.h>
 
-# if defined(WIN32) || defined(_WIN32) 
+# if defined(WIN32) || defined(_WIN32)
 #  define DIR_SEPARATOR '\\'
-# else 
-#  define DIR_SEPARATOR '/' 
-# endif 
+# else
+#  define DIR_SEPARATOR '/'
+# endif
 
 # define ENV_VAR_DELIMITERS "\0 \t\n\r\f\v\""
 
