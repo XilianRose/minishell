@@ -130,6 +130,8 @@ typedef struct s_expand_length_info
 	char	*data;
 }	t_expand_length_info;
 
+void			ft_test_child(t_env *env, char **argv);
+// -----------------------------------------------------------------------------
 void			ft_echo_builtin(t_cmd *info);
 void			ft_cd_builtin(t_cmd *info);
 void			ft_pwd_builtin(void);
@@ -155,7 +157,7 @@ void			ft_unset_builtin(t_cmd *info);
 // -----------------------------------------------------------------------------
 void			ft_create_child(t_list *lst);
 
-bool			ft_prepare_child(t_childproc *child, t_list *lst);
+bool			ft_prep(t_childproc *child, t_list *lst);
 
 void			ft_free_all(void);
 void			ft_throw_error(int errornr, char *errormessage);

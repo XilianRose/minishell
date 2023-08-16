@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/26 18:40:55 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/15 16:56:57 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/16 18:01:40 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type)
 
 // linked list containing all info from 1st cmd and redirections in 1 node, if pipe 2nd cmd in second node, etc..
 // node00 could be  [< infile]->[< infile]->[< infile]->[cmd1]->[> outfile]->NULL
-void	ft_test_child(t_env *env)
+void	ft_test_child(t_env *env, char **argv)
 {
 	char		**cmd1;
 	char		**cmd2;
@@ -52,16 +52,16 @@ void	ft_test_child(t_env *env)
 	data4 = NULL;
 	outfile = NULL;
 	head = NULL;
-	cmd1 = ft_split("cat /dev/urandom", ' ');
-	cmd2 = ft_split("head -n 5", ' ');
-	cmd3 = ft_split("cat", ' ');
-	cmd4 = ft_split("cat", ' ');
-	infile = allocate_mem_redirect(infile, "infile", RDR_INPUT);
+	cmd1 = ft_split(argv[2], ' ');
+	cmd2 = ft_split(argv[3], ' ');
+	cmd3 = ft_split(argv[4], ' ');
+	cmd4 = ft_split(argv[5], ' ');
+	infile = allocate_mem_redirect(infile, argv[1], RDR_INPUT);
 	data1 = allocate_mem_cmd_info(data1, "/bin/cat", cmd1, env);
 	data2 = allocate_mem_cmd_info(data2, "/usr/bin/head", cmd2, env);
 	data3 = allocate_mem_cmd_info(data3, "/bin/cat", cmd3, env);
 	data4 = allocate_mem_cmd_info(data4, "/bin/cat", cmd4, env);
-	outfile = allocate_mem_redirect(outfile, "outfile", RDR_OUTPUT);
+	outfile = allocate_mem_redirect(outfile, argv[6], RDR_OUTPUT);
 
 	cmdhead0 = ft_lstnewscmd(infile, RDR);
 	cmdhead0->next = ft_lstnewscmd(data1, CMD);
@@ -119,23 +119,13 @@ void	ft_test_child(t_env *env)
 // int	main(int argc, char **argv, char **envp)
 // {
 // 	t_env	env;
-// 	int		i;
 
 // 	argc = 0;
 // 	argv = 0;
-// 	i = 0;
 // 	// atexit(ft_leaks);
 // 	ft_copy_env(&env, envp);
 // 	ft_test_child(&env);
-// 	if (env.new_env)
-// 	{
-// 		if (env.new_env[i])
-// 		{
-// 			while (env.new_env[i])
-// 				free(env.new_env[i++]);
-// 		}
-// 		free(env.new_env);
-// 	}
+// 	ft_free_env(env.new_env, NULL);
 // 	// while (1);
 // }
 

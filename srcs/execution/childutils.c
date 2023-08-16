@@ -6,13 +6,13 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/15 16:55:36 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/16 18:06:12 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	ft_prepare_child(t_childproc *child, t_list *lst)
+bool	ft_prep(t_childproc *child, t_list *lst)
 {
 	child->errorcode = 0;
 	child->oldout = -1;

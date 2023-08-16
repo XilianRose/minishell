@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/15 16:55:44 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/16 17:55:31 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	ft_create_child(t_list *lst)
 {
 	t_childproc	child;
 
-	if (!ft_prepare_child(&child, lst) || !ft_store_output(&child))
+	if (!ft_prep(&child, lst) || !ft_store_output(&child))
 		return ;
 	while (lst)
 	{
