@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:25:23 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/15 13:10:35 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/18 13:59:55 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_put_command_lst(t_list *lst)
 	{
 		count++;
 		cmd = (t_cmd *)current->content;
-		ft_printf("cmd %d\n", count);
+		printf("cmd %d\n", count);
 		current = current->next;
 	}
 }

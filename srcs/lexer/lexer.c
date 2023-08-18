@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:43 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/01 14:24:45 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/18 13:59:49 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static bool	merge_quoted_tokens(t_list *tokens)
 		{
 			item_ending_in_quote = find_item_ending_with_quote(current->next);
 			if (item_ending_in_quote == NULL)
-				return (ft_printf("no closing quotes found\n"), false);
+				return (printf("no closing quotes found\n"), false);
 			old_token_data = token->data;
 			data_to_join = ((t_token *)item_ending_in_quote->content)->data;
 			token->data = str_join_sep(token->data, data_to_join, ' ');

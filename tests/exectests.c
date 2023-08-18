@@ -6,27 +6,12 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/26 18:40:55 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/16 18:01:40 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/18 14:27:32 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type)
-{
-	t_scmd_list	*newnode;
-
-	newnode = malloc(sizeof(t_scmd_list));
-	if (!newnode)
-		return (NULL);
-	newnode->data = data;
-	newnode->type = type;
-	newnode->next = NULL;
-	return (newnode);
-}
-
-// linked list containing all info from 1st cmd and redirections in 1 node, if pipe 2nd cmd in second node, etc..
-// node00 could be  [< infile]->[< infile]->[< infile]->[cmd1]->[> outfile]->NULL
 void	ft_test_child(t_env *env, char **argv)
 {
 	char		**cmd1;
@@ -56,9 +41,9 @@ void	ft_test_child(t_env *env, char **argv)
 	cmd2 = ft_split(argv[3], ' ');
 	cmd3 = ft_split(argv[4], ' ');
 	cmd4 = ft_split(argv[5], ' ');
-	infile = allocate_mem_redirect(infile, argv[1], RDR_INPUT);
+	infile = allocate_mem_redirect(infile, argv[1], HERE_DOC);
 	data1 = allocate_mem_cmd_info(data1, "/bin/cat", cmd1, env);
-	data2 = allocate_mem_cmd_info(data2, "/usr/bin/head", cmd2, env);
+	data2 = allocate_mem_cmd_info(data2, "/bin/cat", cmd2, env);
 	data3 = allocate_mem_cmd_info(data3, "/bin/cat", cmd3, env);
 	data4 = allocate_mem_cmd_info(data4, "/bin/cat", cmd4, env);
 	outfile = allocate_mem_redirect(outfile, argv[6], RDR_OUTPUT);

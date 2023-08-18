@@ -170,7 +170,7 @@ bool			ft_infile(t_childproc *child, t_rdr *which);
 bool			ft_outfile(t_childproc *child, t_rdr *which);
 void			ft_check_for_files(t_childproc *child, t_scmd_list *lst);
 
-void			ft_heredoc(void);
+bool			ft_heredoc(char *data);
 
 void			ft_free_pipes(int **pipes, int pipe_count);
 int				ft_count_pipes(t_list *arglst);
@@ -180,8 +180,9 @@ long long int	ft_atollong(const char *str);
 
 void			ft_bubble_sort(char **sortedenv, int len);
 
+t_scmd_list		*ft_lstnewscmd(void *data, t_struct_type type);
 bool			ft_freelst(t_list *lst);
-bool			ft_freescmdlst(t_scmd_list *lst);
+void			ft_freescmdlst(t_scmd_list *lst);
 
 t_rdr			*allocate_mem_redirect(t_rdr *redirect, char *data, \
 	t_redirect_type type);

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/15 16:45:14 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/18 13:17:29 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ void	ft_check_for_files(t_childproc *child, t_scmd_list *lst)
 			if (rdr->type == RDR_OUTPUT || \
 				rdr->type == RDR_APPEND)
 				ft_outfile(child, rdr);
-			// if (rdr->type == HERE_DOC)
-			// 	ft_heredoc();
+			if (rdr->type == HERE_DOC)
+				ft_heredoc(rdr->data);
 		}
 		lst = lst->next;
 	}
