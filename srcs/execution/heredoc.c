@@ -57,4 +57,4 @@ bool	ft_heredoc(char *data)
 	return (true);
 }
 // expand only if the delimiter is not between quotes. cat << EOF or cat << ";" / cat << ';' work differently.
-// ";" or ';' expansion doesn't happen.
+// ";" or ';' expansion doesn't happen..
