@@ -19,29 +19,25 @@
 # include <sys/errno.h>
 # include <sys/param.h>
 
-# if defined(WIN32) || defined(_WIN32) 
-#  define DIR_SEPARATOR '\\'
-# else 
-#  define DIR_SEPARATOR '/' 
-# endif 
+// # if defined(WIN32) || defined(_WIN32) 
+// #  define DIR_SEPARATOR '\\'
+// # else 
+// #  define DIR_SEPARATOR '/' 
+// # endif 
 
 # define ENV_VAR_DELIMITERS "\0 \t\n\r\f\v\""
 
 typedef enum e_struct_type
 {
 	CMD = 0,
-
 	RDR = 1
 }	t_struct_type;
 
 typedef enum e_redirect_type
 {
 	RDR_INPUT,
-
 	RDR_OUTPUT,
-
 	HERE_DOC,
-
 	RDR_APPEND
 }	t_redirect_type;
 
@@ -195,16 +191,18 @@ void			str_array_free(char **str_array);
 bool			str_equals(char *lhs, char *rhs);
 bool			str_contains_length(const char *str, int length, char c);
 bool			str_contains_any(const char *str, const char *chars);
-int				str_length_until(char *str, const char *delimiters, int delimiter_count);
+int				str_length_until(char *str, const char *delimiters, \
+	int delimiter_count);
 bool			ft_cmpname(const char *s1, const char *s2, int n);
-char			*str_head(char *str, const char *delimiters, int delimiter_count);
+char			*str_head(char *str, const char *delimiters, \
+	int delimiter_count);
 char			*str_join_sep(char *lhs, char *rhs, char c);
 char			*str_empty(void);
 
 t_token			*token_new(char *data, t_token_type type);
 t_token			*str_to_token(char *str, t_token *previous_token);
-bool 			is_quoted_token_end(t_token *token);
-bool 			is_quoted_token_start(t_token *token);
+bool			is_quoted_token_end(t_token *token);
+bool			is_quoted_token_start(t_token *token);
 void			token_free(void *token);
 void			ft_put_token_lst(t_list *lst);
 
@@ -215,13 +213,15 @@ void			lst_free(t_list **lst);
 
 t_list			*read_tokens_from_command_line(char *command_line);
 
-int				resolve_quote_index_at_data_index(int data_index, int quote_index);
+int				resolve_quote_index_at_data_index(int data_index, \
+	int quote_index);
 int				resolve_environment_variable_length(char *data, int *length);
 bool			do_env_variable_assignment(char *old_data, \
-char 	*expanded_data, int *old_data_i, int *expanded_data_i);
+char			*expanded_data, int *old_data_i, int *expanded_data_i);
 
 bool			expand_tokens(t_list *tokens);
-bool			init_expand_info(t_expand_info *info, char *old_data, int expand_data_length);
+bool			init_expand_info(t_expand_info *info, char *old_data, \
+	int expand_data_length);
 bool			expand_data_at(t_expand_info info, char c);
 bool			check_env_variable_assignment(t_expand_info *info);
 void			check_quote_index_at_data_index(t_expand_info *info);
@@ -234,6 +234,7 @@ void			update_quote(t_expand_length_info *info);
 void			update_dquote(t_expand_length_info *info);
 
 bool			token_arr_assert_data(t_token **token_arr, char *data[]);
-bool			token_arr_assert_type(t_token **token_arr, t_token_type types[]);
+bool			token_arr_assert_type(t_token **token_arr, \
+	t_token_type types[]);
 
 #endif
