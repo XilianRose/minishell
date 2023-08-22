@@ -6,32 +6,22 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/22 13:38:49 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/22 17:08:08 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_heredoc(char *data)
+static void	ft_expand(void)
 {
-	int		fd[2];
-	int		templen;
-	int		datalen;
-	char	*temp;
-	bool	expand;
+	return ;
+}
 
-	expand = true;
-	if (pipe(fd) == -1)
-	{
-		perror("minishell: ");
-		return ;
-	}
-	datalen = ft_strlen(data);
-	if (ft_strchr(data, '"') || ft_strchr(data, '\''))
-	{
-		// remove quotes from delimiter to use as delimiter
-		expand = false;
-	}
+static void	ft_read_input(char *data, int datalen, int *fd, bool expand)
+{
+	char	*temp;
+	int		templen;
+
 	while (1)
 	{
 		temp = readline("> ");
@@ -45,15 +35,55 @@ void	ft_heredoc(char *data)
 			free(temp);
 			break ;
 		}
-		// if (expand == true)
-		// {
-		// 	// call expand function that returns the string if found in env else stays the same
-		// }
+		if (expand == true)
+			ft_expand();
 		templen = ft_strlen(temp);
 		write(fd[1], temp, templen);
-        write(fd[1], "\n", 1);
+		write(fd[1], "\n", 1);
 		free(temp);
 	}
+}
+
+static void	ft_remove_quotes(char *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (data[i])
+	{
+		if (data[i] == '\'' || data[i] == '"')
+		{
+			j = i;
+			while (data[j])
+			{
+				data[j] = data[j + 1];
+				j++;
+			}
+		}
+		i++;
+	}
+}
+
+void	ft_heredoc(char *data)
+{
+	int		fd[2];
+	int		datalen;
+	bool	expand;
+
+	expand = true;
+	if (pipe(fd) == -1)
+	{
+		perror("minishell: ");
+		return ;
+	}
+	datalen = ft_strlen(data);
+	if (ft_strchr(data, '"') || ft_strchr(data, '\''))
+	{
+		ft_remove_quotes(data);
+		expand = false;
+	}
+	ft_read_input(data, datalen, fd, expand);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
 		perror("minishell :");
 	close(fd[0]);
