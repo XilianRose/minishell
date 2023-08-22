@@ -170,7 +170,7 @@ bool			ft_infile(t_childproc *child, t_rdr *which);
 bool			ft_outfile(t_childproc *child, t_rdr *which);
 void			ft_check_for_files(t_childproc *child, t_scmd_list *lst);
 
-bool			ft_heredoc(char *data);
+void			ft_heredoc(char *data);
 
 void			ft_free_pipes(int **pipes, int pipe_count);
 int				ft_count_pipes(t_list *arglst);
