@@ -6,13 +6,13 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 15:09:45 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/24 16:44:55 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/24 16:47:40 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_array(char **array)
+static void	print_array(char **array)
 {
 	while (array[0] != '\0')
 	{
@@ -21,7 +21,7 @@ void	print_array(char **array)
 	}
 }
 
-void	print_tlist(t_list *list)
+static void	print_tlist(t_list *list)
 {
 	t_token	*current;
 
