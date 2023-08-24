@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/23 14:57:37 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/24 13:15:46 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,32 @@ void	print_tlist(t_list *list)
 		printf("data: [%s]	type: [%d]\n", current->data, current->type);
 }
 
-static t_list	*quote_end(t_list *tokens, size_t len)
+static t_list	*quote_begin(t_list *tokens)
 {
 	t_token	*token;
+	size_t	len;
 
 	while (tokens != NULL)
 	{
 		token = tokens->content;
+		len = ft_strlen(token->data) - 1;
+		if ((token->data[0] == '\'' || token->data[0] == '\"')
+			&& (token->data[len] != '\'' || token->data[len] != '\"'))
+			return (tokens);
+		tokens = tokens->next;
+	}
+	return (NULL);
+}
+
+static t_list	*quote_end(t_list *tokens)
+{
+	t_token	*token;
+	size_t	len;
+
+	while (tokens != NULL)
+	{
+		token = tokens->content;
+		len = ft_strlen(token->data) - 1;
 		if ((token->data[0] != '\'' || token->data[0] != '\"')
 			&& (token->data[len] == '\'' || token->data[len] == '\"'))
 			return (tokens);
@@ -75,35 +94,56 @@ static t_list	*quote_end(t_list *tokens, size_t len)
 	// beginnode.data = new_data
 	// beginnode.next = endnode.next
 	// while != endnode.next > lst_delone
+
 static size_t	merge_tokens(t_list *tokens)
 {
 	t_list	*begin;
 	t_list	*end;
 	t_token	*token;
-	size_t	len;
+	t_token	*next_token;
 
 	while (tokens != NULL)
 	{
-		token = tokens->content;
-		len = ft_strlen(token->data) - 1;
-		if ((token->data[0] == '\'' || token->data[0] == '\"')
-			&& (token->data[len] != '\'' || token->data[len] != '\"'))
+		begin = quote_begin(tokens);
+		end = quote_end(begin);
+		if (begin == NULL || end == NULL)
+			return (1); //no quotes || no ending quotes
+		token = begin->content;
+		tokens = begin;
+		while (tokens != end)
 		{
-			begin = tokens;
-			end = quote_end(tokens, len);
-			if (!end)
-				exit (1);
-			token = begin->content;
-			while (tokens != end)
-			{
-				token->data = ft_strjoin(token->data, )
-			}
-
+			next_token = tokens->next->content;
+			token->data = ft_strjoin(token->data, " ");
+			token->data = ft_strjoin(token->data, next_token->data);
+			tokens = tokens->next;
 		}
+		begin->next = end->next;
 		tokens = tokens->next;
 	}
-
+	return (0);
 }
+
+// 	while (tokens != NULL)
+// 	{
+// 		token = tokens->content;
+// 		len = ft_strlen(token->data) - 1;
+// 		if (begin = quote_begin()
+// 		{
+// 			begin = tokens;
+// 			end = quote_end(tokens, len);
+// 			if (!end)
+// 				exit (1);
+// 			token = begin->content;
+// 			while (tokens != end)
+// 			{
+// 				tokens = tokens->next;
+// 				next_token = tokens->content;
+// 				token->data = ft_strjoin(token->data, next_token->data);
+// 			}
+// 		}
+// 		tokens = tokens->next;
+// 	}
+// }
 
 t_token	*new_token(const char *data, t_token_type type)
 {
@@ -161,6 +201,12 @@ t_list	*tokenisation(const char *user_input)
 	print_array(ui_array);
 	make_tlist((const char **) ui_array, &tokens);
 	//error handling -> exit "failed to parse"?
+	printf("\nbefore merge	(CMD_OR_FILE = 1, REDIRECTION = 2, PIPE = 3)\n");
+	printf("______________________________________________________________________\n");
+	print_tlist(tokens);
+	merge_tokens(tokens);
+	printf("\nafter merge	(CMD_OR_FILE = 1, REDIRECTION = 2, PIPE = 3)\n");
+	printf("______________________________________________________________________\n");
 	print_tlist(tokens);
 	return (free_array(ui_array), tokens);
 }
@@ -169,7 +215,9 @@ int	main(void)
 {
 	char	*user_input;
 
-	user_input = "cat << \";\" | grep \"aap noot mies\" | wc -l > outfile | >l";
+	// user_input = "cat << \";\" | grep \"aap noot mies\" | wc -l > outfile | >l";
+	user_input = "cat << \";\" | grep \"aap | wc -l > outfile | >l";
+	printf("user input: %s\n______________________________________________________________________\n", user_input);
 	tokenisation(user_input);
 	return (0);
 }

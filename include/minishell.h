@@ -48,9 +48,8 @@ typedef enum e_redirect_type
 typedef enum e_token_type
 {
 	CMD_OR_FILE_TOKEN	= 1,
-	OPTION_TOKEN		= 2,
-	REDIRECTION_TOKEN	= 3,
-	PIPE_TOKEN			= 4
+	REDIRECTION_TOKEN	= 2,
+	PIPE_TOKEN			= 3
 }	t_token_type;
 
 typedef struct s_rdr
