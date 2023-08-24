@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/24 16:44:46 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/24 16:46:17 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,21 +70,6 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 		ui_array++;
 	}
 	return (0);
-}
-
-static void	print_tlist(t_list *list)
-{
-	t_token	*current;
-
-	current = list->content;
-	while (list != NULL && list->next != NULL)
-	{
-		printf("data: [%s]	type: [%d]\n", current->data, current->type);
-		list = list->next;
-		current = list->content;
-	}
-	if (list != NULL)
-		printf("data: [%s]	type: [%d]\n", current->data, current->type);
 }
 
 t_list	*tokenisation(const char *user_input)
