@@ -3,118 +3,101 @@
 /*                                                        ::::::::            */
 /*   lexer.c                                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/08/01 14:24:43 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/18 13:59:49 by cschabra      ########   odam.nl         */
+/*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
+/*   Updated: 2023/08/24 16:23:50 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_list	*find_item_ending_with_quote(t_list *tokens)
+static size_t	merge_tokens(t_list *tokens)
 {
-	t_list	*current;
+	t_list	*begin;
+	t_list	*end;
 	t_token	*token;
-	int		length;
+	t_token	*next_token;
 
-	current = tokens;
-	while (current != NULL)
+	while (tokens != NULL)
 	{
-		token = (t_token *)current->content;
-		length = ft_strlen(token->data);
-		if (is_quoted_token_end(token))
-			return (current);
-		current = current->next;
-	}
-	return (NULL);
-}
-
-static bool	merge_quoted_tokens(t_list *tokens)
-{
-	t_list	*current;
-	t_list	*item_ending_in_quote;
-	t_token	*token;
-	char	*old_token_data;
-	char	*data_to_join;
-
-	current = tokens;
-	while (current != NULL)
-	{
-		token = (t_token *)current->content;
-		if (is_quoted_token_start(token))
+		begin = quote_begin(tokens);
+		end = quote_end(begin);
+		if (begin == NULL || end == NULL)
+			return (1); //no quotes || no ending quotes
+		token = begin->content;
+		tokens = begin;
+		while (tokens != end)
 		{
-			item_ending_in_quote = find_item_ending_with_quote(current->next);
-			if (item_ending_in_quote == NULL)
-				return (printf("no closing quotes found\n"), false);
-			old_token_data = token->data;
-			data_to_join = ((t_token *)item_ending_in_quote->content)->data;
-			token->data = str_join_sep(token->data, data_to_join, ' ');
-			current->next = item_ending_in_quote->next;
-			free(old_token_data);
-			ft_lstdelone(item_ending_in_quote, &token_free);
+			next_token = tokens->next->content;
+			token->data = ft_strjoin(token->data, " ");
+			token->data = ft_strjoin(token->data, next_token->data);
+			tokens = tokens->next;
 		}
-		current = current->next;
+		begin->next = end->next;
+		tokens = tokens->next;
 	}
-	return (true);
+	return (0);
 }
 
-static t_list	*create_token_list_item(char *token_string, t_list *previous)
+static t_token	*init_token(const char *str)
 {
-	t_list	*token_list_item;
-	t_token	*token;
-	t_token	*previous_token;
-
-	if (previous == NULL)
-		previous_token = NULL;
+	if (ft_strncmp(str, "|", 2) == 0)
+		return (new_token(str, PIPE_TOKEN));
+	else if ((ft_strncmp(str, ">", 2) == 0) || (ft_strncmp(str, "<", 2) == 0)
+		|| (ft_strncmp(str, ">>", 3) == 0) || (ft_strncmp(str, "<<", 3) == 0))
+		return (new_token(str, REDIRECTION_TOKEN));
 	else
-		previous_token = (t_token *)previous->content;
-	token = str_to_token(token_string, previous_token);
-	if (token == NULL)
-		return (NULL);
-	token_list_item = ft_lstnew(token);
-	if (token_list_item == NULL)
-		return (free(token), NULL);
-	return (token_list_item);
+		return (new_token(str, CMD_OR_FILE_TOKEN));
 }
 
-static t_list	*create_token_list_items(char **split_command_line, int length)
+static size_t	make_tlist(const char **ui_array, t_list **tokens)
 {
-	t_list	*tokens;
-	t_list	*token;
-	t_list	*previous;
-	int		i;
+	t_list	*node;
+	t_token	*token;
+	char	*str;
 
-	i = 0;
-	tokens = NULL;
-	previous = NULL;
-	while (i < length)
+	while (ui_array[0] != '\0')
 	{
-		token = create_token_list_item(split_command_line[i], previous);
+		str = (char *)*ui_array;
+		token = init_token(str);
 		if (token == NULL)
-			return (ft_lstclear(&tokens, &free), NULL);
-		ft_lstadd_back(&tokens, token);
-		previous = token;
-		i++;
+			return (ft_lstclear(tokens, &free), 1);
+		node = ft_lstnew(token);
+		if (node == NULL)
+			return (ft_lstclear(tokens, &free), 1);
+		ft_lstadd_back(tokens, node);
+		ui_array++;
 	}
-	return (tokens);
+	return (0);
 }
 
-t_list	*read_tokens_from_command_line(char *command_line)
+static void	print_tlist(t_list *list)
+{
+	t_token	*current;
+
+	current = list->content;
+	while (list != NULL && list->next != NULL)
+	{
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+		list = list->next;
+		current = list->content;
+	}
+	if (list != NULL)
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+}
+
+t_list	*tokenisation(const char *user_input)
 {
 	t_list	*tokens;
-	char	**split_command_line;
-	int		length;
+	char	**ui_array;
 
-	split_command_line = ft_split(command_line, ' ');
-	if (split_command_line == NULL)
-		return (NULL);
-	length = str_array_length(split_command_line);
-	tokens = create_token_list_items(split_command_line, length);
-	if (tokens == NULL)
-		return (str_array_free(split_command_line), NULL);
-	free(split_command_line);
-	if (!merge_quoted_tokens(tokens))
-		return (ft_lstclear(&tokens, &token_free), NULL);
+	tokens = NULL;
+	ui_array = ft_split(user_input, ' ');
+	if (!ui_array)
+		exit(1); //exit "failed to parse"?
+	make_tlist((const char **) ui_array, &tokens);
+	merge_tokens(tokens);
+	print_tlist(tokens);
 	return (tokens);
 }
