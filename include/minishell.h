@@ -13,17 +13,17 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft.h"
+# include "../42lib/include/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/errno.h>
 # include <sys/param.h>
 
-// # if defined(WIN32) || defined(_WIN32) 
-// #  define DIR_SEPARATOR '\\'
-// # else 
-// #  define DIR_SEPARATOR '/' 
-// # endif 
+# if defined(WIN32) || defined(_WIN32)
+#  define DIR_SEPARATOR '\\'
+# else
+#  define DIR_SEPARATOR '/'
+# endif
 
 # define ENV_VAR_DELIMITERS "\0 \t\n\r\f\v\""
 
@@ -44,9 +44,8 @@ typedef enum e_redirect_type
 typedef enum e_token_type
 {
 	CMD_OR_FILE_TOKEN	= 1,
-	OPTION_TOKEN		= 2,
-	REDIRECTION_TOKEN	= 3,
-	PIPE_TOKEN			= 4
+	REDIRECTION_TOKEN	= 2,
+	PIPE_TOKEN			= 3
 }	t_token_type;
 
 typedef struct s_rdr

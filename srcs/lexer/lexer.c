@@ -3,50 +3,118 @@
 /*                                                        ::::::::            */
 /*   lexer.c                                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:43 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/18 13:59:49 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/24 14:35:35 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../include/minishell.h"
 
-static t_list	*find_item_ending_with_quote(t_list *tokens)
+void	free_array(char **array)
 {
-	t_list	*current;
-	t_token	*token;
-	int		length;
+	int	i;
 
-	current = tokens;
-	while (current != NULL)
+	i = 0;
+	while (array != NULL && array[i] != NULL)
 	{
-		token = (t_token *)current->content;
-		length = ft_strlen(token->data);
-		if (is_quoted_token_end(token))
-			return (current);
-		current = current->next;
+		free(array[i]);
+		array[i] = NULL;
+		i++;
+	}
+	if (array != NULL)
+	{
+		free(array);
+		array = NULL;
+	}
+}
+
+void	print_array(char **array)
+{
+	while (array[0] != '\0')
+	{
+		printf("array str: [%s]\n", *array);
+		array++;
+	}
+}
+
+void	print_tlist(t_list *list)
+{
+	t_token	*current;
+
+	current = list->content;
+	while (list != NULL && list->next != NULL)
+	{
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+		list = list->next;
+		current = list->content;
+	}
+	if (list != NULL)
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+}
+
+static t_list	*quote_begin(t_list *tokens)
+{
+	t_token	*token;
+	size_t	len;
+
+	while (tokens != NULL)
+	{
+		token = tokens->content;
+		len = ft_strlen(token->data) - 1;
+		if ((token->data[0] == '\'' || token->data[0] == '\"')
+			&& (token->data[len] != '\'' || token->data[len] != '\"'))
+			return (tokens);
+		tokens = tokens->next;
 	}
 	return (NULL);
 }
 
-static bool	merge_quoted_tokens(t_list *tokens)
+static t_list	*quote_end(t_list *tokens)
 {
-	t_list	*current;
-	t_list	*item_ending_in_quote;
 	t_token	*token;
-	char	*old_token_data;
-	char	*data_to_join;
+	size_t	len;
 
-	current = tokens;
-	while (current != NULL)
+	while (tokens != NULL)
 	{
-		token = (t_token *)current->content;
-		if (is_quoted_token_start(token))
+		token = tokens->content;
+		len = ft_strlen(token->data) - 1;
+		if ((token->data[0] != '\'' || token->data[0] != '\"')
+			&& (token->data[len] == '\'' || token->data[len] == '\"'))
+			return (tokens);
+		tokens = tokens->next;
+	}
+	return (NULL);
+}
+
+	// find starting quotes & add pointer to node
+	// find ending quotes & add pointer to node
+	// while != endnode > new_data = strjoin(beginnode.data, nextnode.data))
+	// beginnode.data = new_data
+	// beginnode.next = endnode.next
+	// while != endnode.next > lst_delone
+
+static size_t	merge_tokens(t_list *tokens)
+{
+	t_list	*begin;
+	t_list	*end;
+	t_token	*token;
+	t_token	*next_token;
+
+	while (tokens != NULL)
+	{
+		begin = quote_begin(tokens);
+		end = quote_end(begin);
+		if (begin == NULL || end == NULL)
+			return (1); //no quotes || no ending quotes
+		token = begin->content;
+		tokens = begin;
+		while (tokens != end)
 		{
 			item_ending_in_quote = find_item_ending_with_quote(current->next);
 			if (item_ending_in_quote == NULL)
-				return (printf("no closing quotes found\n"), false);
+				return (ft_printf("no closing quotes found\n"), false);
 			old_token_data = token->data;
 			data_to_join = ((t_token *)item_ending_in_quote->content)->data;
 			token->data = str_join_sep(token->data, data_to_join, ' ');
@@ -54,67 +122,107 @@ static bool	merge_quoted_tokens(t_list *tokens)
 			free(old_token_data);
 			ft_lstdelone(item_ending_in_quote, &token_free);
 		}
-		current = current->next;
+		begin->next = end->next;
+		tokens = tokens->next;
 	}
-	return (true);
+	return (0);
 }
 
-static t_list	*create_token_list_item(char *token_string, t_list *previous)
-{
-	t_list	*token_list_item;
-	t_token	*token;
-	t_token	*previous_token;
+// 	while (tokens != NULL)
+// 	{
+// 		token = tokens->content;
+// 		len = ft_strlen(token->data) - 1;
+// 		if (begin = quote_begin()
+// 		{
+// 			begin = tokens;
+// 			end = quote_end(tokens, len);
+// 			if (!end)
+// 				exit (1);
+// 			token = begin->content;
+// 			while (tokens != end)
+// 			{
+// 				tokens = tokens->next;
+// 				next_token = tokens->content;
+// 				token->data = ft_strjoin(token->data, next_token->data);
+// 			}
+// 		}
+// 		tokens = tokens->next;
+// 	}
+// }
 
-	if (previous == NULL)
-		previous_token = NULL;
-	else
-		previous_token = (t_token *)previous->content;
-	token = str_to_token(token_string, previous_token);
+t_token	*new_token(const char *data, t_token_type type)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token *));
 	if (token == NULL)
 		return (NULL);
-	token_list_item = ft_lstnew(token);
-	if (token_list_item == NULL)
-		return (free(token), NULL);
-	return (token_list_item);
+	token->data = (char *)data;
+	token->type = type;
+	return (token);
 }
 
-static t_list	*create_token_list_items(char **split_command_line, int length)
+static t_token	*init_token(const char *str)
 {
-	t_list	*tokens;
-	t_list	*token;
-	t_list	*previous;
-	int		i;
+	if (ft_strncmp(str, "|", 2) == 0)
+		return (new_token(str, PIPE_TOKEN));
+	else if ((ft_strncmp(str, ">", 2) == 0) || (ft_strncmp(str, "<", 2) == 0)
+		|| (ft_strncmp(str, ">>", 3) == 0) || (ft_strncmp(str, "<<", 3) == 0))
+		return (new_token(str, REDIRECTION_TOKEN));
+	else
+		return (new_token(str, CMD_OR_FILE_TOKEN));
+}
 
-	i = 0;
-	tokens = NULL;
-	previous = NULL;
-	while (i < length)
+static size_t	make_tlist(const char **ui_array, t_list **tokens)
+{
+	t_list	*node;
+	t_token	*token;
+	char	*str;
+
+	while (ui_array[0] != '\0')
 	{
-		token = create_token_list_item(split_command_line[i], previous);
+		str = (char *)*ui_array;
+		token = init_token(str);
 		if (token == NULL)
-			return (ft_lstclear(&tokens, &free), NULL);
-		ft_lstadd_back(&tokens, token);
-		previous = token;
-		i++;
+			return (ft_lstclear(tokens, &free), 1);
+		node = ft_lstnew(token);
+		if (node == NULL)
+			return (ft_lstclear(tokens, &free), 1);
+		ft_lstadd_back(tokens, node);
+		ui_array++;
 	}
-	return (tokens);
+	return (0);
 }
 
-t_list	*read_tokens_from_command_line(char *command_line)
+t_list	*tokenisation(const char *user_input)
 {
 	t_list	*tokens;
-	char	**split_command_line;
-	int		length;
+	char	**ui_array;
 
-	split_command_line = ft_split(command_line, ' ');
-	if (split_command_line == NULL)
-		return (NULL);
-	length = str_array_length(split_command_line);
-	tokens = create_token_list_items(split_command_line, length);
-	if (tokens == NULL)
-		return (str_array_free(split_command_line), NULL);
-	free(split_command_line);
-	if (!merge_quoted_tokens(tokens))
-		return (ft_lstclear(&tokens, &token_free), NULL);
-	return (tokens);
+	tokens = NULL;
+	ui_array = ft_split(user_input, ' ');
+	if (!ui_array)
+		exit(1); //exit "failed to parse"?
+	print_array(ui_array);
+	make_tlist((const char **) ui_array, &tokens);
+	//error handling -> exit "failed to parse"?
+	printf("\nbefore merge	(CMD_OR_FILE = 1, REDIRECTION = 2, PIPE = 3)\n");
+	printf("______________________________________________________________________\n");
+	print_tlist(tokens);
+	merge_tokens(tokens);
+	printf("\nafter merge	(CMD_OR_FILE = 1, REDIRECTION = 2, PIPE = 3)\n");
+	printf("______________________________________________________________________\n");
+	print_tlist(tokens);
+	return (free_array(ui_array), tokens);
+}
+
+int	main(void)
+{
+	char	*user_input;
+
+	// user_input = "cat << \";\" | grep \"aap noot mies\" | wc -l > outfile | >l";
+	user_input = "cat << \";\" | grep \"aap | wc -l > outfile | >l";
+	printf("user input: %s\n______________________________________________________________________\n", user_input);
+	tokenisation(user_input);
+	return (0);
 }
