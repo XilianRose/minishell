@@ -6,94 +6,11 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/24 14:50:24 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/24 16:23:50 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-
-void	free_array(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (array != NULL && array[i] != NULL)
-	{
-		free(array[i]);
-		array[i] = NULL;
-		i++;
-	}
-	if (array != NULL)
-	{
-		free(array);
-		array = NULL;
-	}
-}
-
-void	print_array(char **array)
-{
-	while (array[0] != '\0')
-	{
-		printf("array str: [%s]\n", *array);
-		array++;
-	}
-}
-
-void	print_tlist(t_list *list)
-{
-	t_token	*current;
-
-	current = list->content;
-	while (list != NULL && list->next != NULL)
-	{
-		printf("data: [%s]	type: [%d]\n", current->data, current->type);
-		list = list->next;
-		current = list->content;
-	}
-	if (list != NULL)
-		printf("data: [%s]	type: [%d]\n", current->data, current->type);
-}
-
-static t_list	*quote_begin(t_list *tokens)
-{
-	t_token	*token;
-	size_t	len;
-
-	while (tokens != NULL)
-	{
-		token = tokens->content;
-		len = ft_strlen(token->data) - 1;
-		if ((token->data[0] == '\'' || token->data[0] == '\"')
-			&& (token->data[len] != '\'' || token->data[len] != '\"'))
-			return (tokens);
-		tokens = tokens->next;
-	}
-	return (NULL);
-}
-
-static t_list	*quote_end(t_list *tokens)
-{
-	t_token	*token;
-	size_t	len;
-
-	while (tokens != NULL)
-	{
-		token = tokens->content;
-		len = ft_strlen(token->data) - 1;
-		if ((token->data[0] != '\'' || token->data[0] != '\"')
-			&& (token->data[len] == '\'' || token->data[len] == '\"'))
-			return (tokens);
-		tokens = tokens->next;
-	}
-	return (NULL);
-}
-
-	// find starting quotes & add pointer to node
-	// find ending quotes & add pointer to node
-	// while != endnode > new_data = strjoin(beginnode.data, nextnode.data))
-	// beginnode.data = new_data
-	// beginnode.next = endnode.next
-	// while != endnode.next > lst_delone
+#include "minishell.h"
 
 static size_t	merge_tokens(t_list *tokens)
 {
@@ -121,40 +38,6 @@ static size_t	merge_tokens(t_list *tokens)
 		tokens = tokens->next;
 	}
 	return (0);
-}
-
-// 	while (tokens != NULL)
-// 	{
-// 		token = tokens->content;
-// 		len = ft_strlen(token->data) - 1;
-// 		if (begin = quote_begin()
-// 		{
-// 			begin = tokens;
-// 			end = quote_end(tokens, len);
-// 			if (!end)
-// 				exit (1);
-// 			token = begin->content;
-// 			while (tokens != end)
-// 			{
-// 				tokens = tokens->next;
-// 				next_token = tokens->content;
-// 				token->data = ft_strjoin(token->data, next_token->data);
-// 			}
-// 		}
-// 		tokens = tokens->next;
-// 	}
-// }
-
-t_token	*new_token(const char *data, t_token_type type)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token *));
-	if (token == NULL)
-		return (NULL);
-	token->data = (char *)data;
-	token->type = type;
-	return (token);
 }
 
 static t_token	*init_token(const char *str)
@@ -189,6 +72,21 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 	return (0);
 }
 
+static void	print_tlist(t_list *list)
+{
+	t_token	*current;
+
+	current = list->content;
+	while (list != NULL && list->next != NULL)
+	{
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+		list = list->next;
+		current = list->content;
+	}
+	if (list != NULL)
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+}
+
 t_list	*tokenisation(const char *user_input)
 {
 	t_list	*tokens;
@@ -198,26 +96,8 @@ t_list	*tokenisation(const char *user_input)
 	ui_array = ft_split(user_input, ' ');
 	if (!ui_array)
 		exit(1); //exit "failed to parse"?
-	print_array(ui_array);
 	make_tlist((const char **) ui_array, &tokens);
-	//error handling -> exit "failed to parse"?
-	printf("\nbefore merge	(CMD_OR_FILE = 1, REDIRECTION = 2, PIPE = 3)\n");
-	printf("______________________________________________________________________\n");
-	print_tlist(tokens);
 	merge_tokens(tokens);
-	printf("\nafter merge	(CMD_OR_FILE = 1, REDIRECTION = 2, PIPE = 3)\n");
-	printf("______________________________________________________________________\n");
 	print_tlist(tokens);
-	return (free_array(ui_array), tokens);
-}
-
-int	main(void)
-{
-	char	*user_input;
-
-	// user_input = "cat << \";\" | grep \"aap noot mies\" | wc -l > outfile | >l";
-	user_input = "cat << \";\" | grep \"aap | wc -l > outfile | >l";
-	printf("user input: %s\n______________________________________________________________________\n", user_input);
-	tokenisation(user_input);
-	return (0);
+	return (tokens);
 }

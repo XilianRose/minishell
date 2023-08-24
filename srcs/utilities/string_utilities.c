@@ -3,28 +3,14 @@
 /*                                                        ::::::::            */
 /*   string_utilities.c                                 :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:25:42 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/01 14:25:43 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/24 15:09:12 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	str_contains_length(const char *str, int length, char c)
-{
-	int	i;
-
-	i = 0;
-	while (i < length)
-	{
-		if (str[i] == c)
-			return (true);
-		i++;
-	}
-	return (false);
-}
 
 bool	str_contains_any(const char *str, const char *chars)
 {
@@ -44,30 +30,6 @@ bool	str_contains_any(const char *str, const char *chars)
 		i++;
 	}
 	return (false);
-}
-
-// returns the amount of characters in the string until one of the given
-// delimiters is encountered or the terminating character.
-int	str_length_until(char *str, const char *delimiters, int delimiter_count)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		j = 0;
-		while (j < delimiter_count)
-		{
-			if (str[i] == delimiters[j])
-				return (i);
-			j++;
-		}
-		i++;
-	}
-	if (str_contains_length(delimiters, delimiter_count, '\0'))
-		return (i);
-	return (-1);
 }
 
 bool	str_equals(char *lhs, char *rhs)
@@ -103,4 +65,22 @@ bool	ft_cmpname(const char *s1, const char *s2, int n)
 			return (false);
 	}
 	return (true);
+}
+
+void	free_array(char **array)
+{
+	int	i;
+
+	i = 0;
+	while (array != NULL && array[i] != NULL)
+	{
+		free(array[i]);
+		array[i] = NULL;
+		i++;
+	}
+	if (array != NULL)
+	{
+		free(array);
+		array = NULL;
+	}
 }

@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   heredoc.c                                          :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/22 17:08:08 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/24 16:09:21 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

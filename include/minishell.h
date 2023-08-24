@@ -13,19 +13,11 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../42lib/include/libft.h"
+# include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/errno.h>
 # include <sys/param.h>
-
-# if defined(WIN32) || defined(_WIN32)
-#  define DIR_SEPARATOR '\\'
-# else
-#  define DIR_SEPARATOR '/'
-# endif
-
-# define ENV_VAR_DELIMITERS "\0 \t\n\r\f\v\""
 
 typedef enum e_struct_type
 {
@@ -197,6 +189,7 @@ char			*str_head(char *str, const char *delimiters, \
 	int delimiter_count);
 char			*str_join_sep(char *lhs, char *rhs, char c);
 char			*str_empty(void);
+void			free_array(char **array);
 
 t_token			*token_new(char *data, t_token_type type);
 t_token			*str_to_token(char *str, t_token *previous_token);
@@ -235,5 +228,11 @@ void			update_dquote(t_expand_length_info *info);
 bool			token_arr_assert_data(t_token **token_arr, char *data[]);
 bool			token_arr_assert_type(t_token **token_arr, \
 	t_token_type types[]);
+
+// lexer
+t_list			*quote_begin(t_list *tokens);
+t_list			*quote_end(t_list *tokens);
+t_token			*new_token(const char *data, t_token_type type);
+t_list			*tokenisation(const char *user_input);
 
 #endif
