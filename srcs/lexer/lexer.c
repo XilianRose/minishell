@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/24 16:23:50 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/24 16:44:46 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,5 @@ t_list	*tokenisation(const char *user_input)
 		exit(1); //exit "failed to parse"?
 	make_tlist((const char **) ui_array, &tokens);
 	merge_tokens(tokens);
-	print_tlist(tokens);
 	return (tokens);
 }
