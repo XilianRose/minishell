@@ -6,13 +6,13 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 15:09:45 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/24 16:13:57 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/24 16:47:40 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_array(char **array)
+static void	print_array(char **array)
 {
 	while (array[0] != '\0')
 	{
@@ -21,7 +21,7 @@ void	print_array(char **array)
 	}
 }
 
-void	print_tlist(t_list *list)
+static void	print_tlist(t_list *list)
 {
 	t_token	*current;
 
@@ -58,20 +58,20 @@ void	print_tlist(t_list *list)
 // 	return (free_array(ui_array), tokens);
 // }
 
-int	main(void)
-{
-	char	*user_input;
-	t_list	*tokens;
+// int	main(void)
+// {
+// 	char	*user_input;
+// 	t_list	*tokens;
 
-	tokens = NULL;
-	// user_input = "cat << \";\" | grep \"aap noot mies\" | wc -l > outfile | >l";
-	user_input = "cat << \";\" | grep \"aap | wc -l > outfile | >l";
-	printf("user input: %s\n______________________________________________________________________\n", user_input);
-	tokens = tokenisation(user_input);
-	printf("______________________________________________________________________\n");
-	print_tlist(tokens);
-	return (0);
-}
+// 	tokens = NULL;
+// 	// user_input = "cat << \";\" | grep \"aap noot mies\" | wc -l > outfile | >l";
+// 	user_input = "cat << \";\" | grep \"aap | wc -l > outfile | >l";
+// 	printf("user input: %s\n______________________________________________________________________\n", user_input);
+// 	tokens = tokenisation(user_input);
+// 	printf("______________________________________________________________________\n");
+// 	print_tlist(tokens);
+// 	return (0);
+// }
 
 
 
