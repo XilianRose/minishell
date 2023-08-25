@@ -19,6 +19,7 @@
 # include <sys/errno.h>
 # include <sys/param.h>
 # include <signal.h>
+# include <stdbool.h>
 
 typedef enum e_struct_type
 {
@@ -58,6 +59,7 @@ typedef struct s_cmd
 	char	*path;
 	char	**arg;
 	t_env	*env;
+	bool	builtin;
 }	t_cmd;
 
 typedef struct s_scmd_list
@@ -119,6 +121,7 @@ typedef struct s_expand_length_info
 }	t_expand_length_info;
 
 void			ft_test_child(t_env *env, char **argv); // tester, remove at end
+void			ft_test_signals(void); // tester, remove at end
 // builtins
 void			ft_echo_builtin(t_cmd *info);
 void			ft_cd_builtin(t_cmd *info);
@@ -186,10 +189,9 @@ t_scmd_list		*ft_lstnewscmd(void *data, t_struct_type type);
 void			ft_freelst(t_list *lst);
 void			ft_freescmdlst(t_scmd_list *lst);
 
-t_rdr			*allocate_mem_redirect(t_rdr *redirect, char *data, \
+t_rdr			*allocate_mem_redirect(char *data, \
 	t_redirect_type type);
-t_cmd			*allocate_mem_cmd_info(t_cmd *cmd, char *path, \
-	char **arg, t_env *env);
+t_cmd			*allocate_mem_cmd_info(char **arg, t_env *env, bool builtin);
 
 bool			str_contains_any(const char *str, const char *chars);
 bool			str_equals(char *lhs, char *rhs);
