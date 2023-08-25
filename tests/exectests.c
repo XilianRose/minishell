@@ -6,11 +6,35 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/26 18:40:55 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/18 14:27:32 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/25 16:09:34 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	test_exit(int signal)
+{
+	if (signal == SIGINT)
+		exit(0); // dont exit with 0, exit with exitstatus
+	else if (signal == SIGTSTP)
+		exit(1); // handle suspending to bg here
+		
+}
+
+void	ft_test_signals(void)
+{
+	struct sigaction sa;
+	sa.sa_handler = &test_exit;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGTSTP, &sa, NULL);
+	// sigaction(SIGINT, &sa, NULL);
+
+	while (1)
+	{
+		puts("in da loop");
+		sleep(1);
+	}
+}
 
 void	ft_test_child(t_env *env, char **argv)
 {
@@ -41,12 +65,16 @@ void	ft_test_child(t_env *env, char **argv)
 	cmd2 = ft_split(argv[3], ' ');
 	cmd3 = ft_split(argv[4], ' ');
 	cmd4 = ft_split(argv[5], ' ');
-	infile = allocate_mem_redirect(infile, argv[1], HERE_DOC);
-	data1 = allocate_mem_cmd_info(data1, "/bin/cat", cmd1, env);
-	data2 = allocate_mem_cmd_info(data2, "/bin/cat", cmd2, env);
-	data3 = allocate_mem_cmd_info(data3, "/bin/cat", cmd3, env);
-	data4 = allocate_mem_cmd_info(data4, "/bin/cat", cmd4, env);
-	outfile = allocate_mem_redirect(outfile, argv[6], RDR_OUTPUT);
+	infile = allocate_mem_redirect(argv[1], RDR_INPUT);
+	data1 = allocate_mem_cmd_info(cmd1, env, false);
+	data2 = allocate_mem_cmd_info(cmd2, env, false);
+	data3 = allocate_mem_cmd_info(cmd3, env, false);
+	data4 = allocate_mem_cmd_info(cmd4, env, false);
+	outfile = allocate_mem_redirect(argv[6], RDR_OUTPUT);
+	data1->path = "/bin/cat";
+	data2->path = "/usr/bin/head";
+	data3->path = "/bin/cat";
+	data4->path = "/bin/cat";
 
 	cmdhead0 = ft_lstnewscmd(infile, RDR);
 	cmdhead0->next = ft_lstnewscmd(data1, CMD);
