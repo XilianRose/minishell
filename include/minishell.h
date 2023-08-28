@@ -180,14 +180,19 @@ t_list			*tokenisation(const char *user_input);
 // parser here
 // -----------------------------------------------------------------------------
 
+t_list			*parse(const char *user_input);
+size_t			count_cmdtokens(t_list **tokens);
+bool			is_builtin(t_list **tokens);
+
 // utilities
 long long int	ft_atollong(const char *str);
 
 void			ft_bubble_sort(char **sortedenv, int len);
 
 t_scmd_list		*ft_lstnewscmd(void *data, t_struct_type type);
-void			ft_freelst(t_list *lst);
 void			ft_freescmdlst(t_scmd_list *lst);
+void			scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);
+void			ft_freelst(t_list *lst);
 
 t_rdr			*allocate_mem_redirect(char *data, \
 	t_redirect_type type);
