@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/16 17:59:13 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/28 16:58:18 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ void	ft_execute(t_cmd *info)
 {
 	// if builtin, run builtin, else run below.
 	if (access(info->path, F_OK) == -1)
-		ft_throw_error(errno, "access failed");
+		ft_throw_error(errno, "minishell: ");
 	else
 	{
 		if (execve(info->path, info->arg, info->env->new_env) == -1)
-			ft_throw_error(errno, "execve failed");
+			ft_throw_error(errno, "minishell: ");
 	}
 }

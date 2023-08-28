@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:50:56 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/05/17 13:31:01 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/28 16:51:39 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ long long int	ft_atollong(const char *str)
 	}
 	if (((result - 1) > LLONG_MAX && multiplyer == -1) \
 		|| (result > LLONG_MAX && multiplyer == 1))
-		ft_throw_error(255, "numeric argument required");
+		ft_error_exit((char *)str);
 	return_result = result * multiplyer;
 	return (return_result);
 }

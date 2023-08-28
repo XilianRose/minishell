@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:14:27 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/10 16:46:43 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/28 17:32:41 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ void	ft_fill_env(t_cmd *info, t_env *env, t_export *exp, int i)
 		exp->new_env[i] = malloc((exp->var_len + 1) * sizeof(char));
 		if (!exp->new_env[i])
 		{
-			i = errno;
 			ft_free_env(exp->new_env, exp->arg_copy);
-			ft_throw_error(i, "new env while loop malloc failed");
+			ft_throw_error(ENOMEM, "minishell: ");
 		}
 		ft_memcpy(exp->new_env[i], info->env->new_env[i], (exp->var_len + 1));
 		i++;
@@ -100,7 +99,7 @@ void	ft_write_export(char **sortedenv)
 	{
 		name = ft_find_name(sortedenv[i]);
 		if (!name)
-			ft_throw_error(1, "find name in write export failed");
+			ft_throw_error(ENOMEM, "minishell: ");
 		value = ft_find_value(sortedenv[i]);
 		if (value == -1)
 			printf("declare -x %s\n", name);

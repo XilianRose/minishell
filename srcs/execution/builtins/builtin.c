@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/10 16:43:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/28 16:58:38 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_echo_builtin(t_cmd *info)
 void	ft_cd_builtin(t_cmd *info)
 {
 	if (chdir(info->arg[1]) == -1)
-		ft_throw_error(errno, "chdir failed");
+		ft_throw_error(errno, "minishell: ");
 }
 
 void	ft_pwd_builtin(void)
@@ -55,7 +55,7 @@ void	ft_pwd_builtin(void)
 	char	buffer[MAXPATHLEN];
 
 	if (getcwd(buffer, MAXPATHLEN) == NULL)
-		ft_throw_error(errno, "pwd failed");
+		ft_throw_error(errno, "minishell: ");
 	printf("%s\n", buffer);
 }
 
@@ -67,18 +67,21 @@ void	ft_exit_builtin(t_cmd *info)
 
 	i = 0;
 	if (!info->arg[1])
+	{
+		ft_putendl_fd("exit", STDERR_FILENO);
 		exit(0);
+	}
 	if (info->arg[1][0] == '-' || info->arg[1][0] == '+')
 		i++;
 	while (info->arg[1][i])
 	{
 		if (!ft_isdigit(info->arg[1][i]))
-			ft_throw_error(255, "numeric argument required");
+			ft_error_exit(info->arg[1]);
 		i++;
 	}
 	string_to_llong = ft_atollong(info->arg[1]) % 256;
 	if (string_to_llong < 0)
 		string_to_llong += 256;
-	printf("%s\n", "exit");
+	ft_putendl_fd("exit", STDERR_FILENO);
 	exit(string_to_llong);
 }

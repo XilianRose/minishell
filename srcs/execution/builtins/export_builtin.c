@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/10 16:43:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/28 17:25:02 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,13 @@ void	ft_add_new_var(t_cmd *info, t_env *env, char *arg)
 	exp.arg_len = ft_strlen(arg);
 	exp.new_env = malloc((env->env_len + 2) * sizeof(char *));
 	if (!exp.new_env)
-		ft_throw_error(errno, "add new env malloc failed");
+		ft_throw_error(errno, "minishell: ");
 	exp.arg_copy = malloc((exp.arg_len + 1) * sizeof(char));
 	if (!exp.arg_copy)
 	{
-		i = errno;
 		free(exp.new_env);
 		exp.new_env = NULL;
-		ft_throw_error(i, "arg copy malloc failed");
+		ft_throw_error(ENOMEM, "minishell: ");
 	}
 	ft_memcpy(exp.arg_copy, arg, (exp.arg_len + 1));
 	ft_fill_env(info, env, &exp, i);
@@ -46,7 +45,7 @@ static void	ft_overwrite_var(t_cmd *info, char *arg, int c)
 	info->env->new_env[c] = NULL;
 	info->env->new_env[c] = malloc((len + 1) * sizeof(char));
 	if (!info->env->new_env[c])
-		ft_throw_error(1, "overwrite var malloc failed");
+		ft_throw_error(errno, "minishell: ");
 	ft_memcpy(info->env->new_env[c], arg, (len + 1));
 }
 
@@ -86,7 +85,7 @@ static void	ft_export_no_args(t_cmd *info)
 		len++;
 	sortedenv = malloc((len + 1) * sizeof(char *));
 	if (!sortedenv)
-		ft_throw_error(errno, "export malloc failed");
+		ft_throw_error(errno, "minishell: ");
 	ft_memcpy(sortedenv, info->env->new_env, (len + 1) * sizeof(char *));
 	ft_bubble_sort(sortedenv, len);
 	ft_write_export(sortedenv);
@@ -111,8 +110,7 @@ void	ft_export_builtin(t_cmd *info, t_env *env)
 	while (arg[i])
 	{
 		if (!ft_check_export_input(info, env, arg[i], j))
-			printf("minishell: export: %c%s\': not a valid identifier\n", \
-				'`', arg[i]);
+			ft_error_export_unset("export", arg[i]);
 		i++;
 	}
 }

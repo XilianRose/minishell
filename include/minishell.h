@@ -152,7 +152,10 @@ void			ft_create_child(t_list *lst);
 bool			ft_prep(t_childproc *child, t_list *lst);
 
 void			ft_free_all(void);
-void			ft_throw_error(int errornr, char *errormessage);
+void			ft_error_export_unset(char *name, char *option);
+void			ft_error_exit(char *str);
+void 			ft_error_env(int errnr, char *str);
+void			ft_throw_error(int errnr, char *str);
 
 void			ft_execute(t_cmd *info);
 

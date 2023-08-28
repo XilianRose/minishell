@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 14:49:53 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/10 16:48:55 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/28 16:34:59 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static bool	ft_check_unset_input(char *arg)
 		if (!arg[j])
 			return (true);
 	}
-	printf("minishell: unset: %c%s\': not a valid identifier\n", '`', arg);
+	ft_error_export_unset("unset", arg);
 	return (false);
 }
 
