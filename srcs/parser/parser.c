@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 15:06:20 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/29 15:47:59 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 
 	rdr = NULL;
 	token = tokens->content;
-	next_token = tokens->next->content;
-	if (next_token->type != CMD_OR_FILE_TOKEN)
-		return (ft_putstr_fd("minishell: syntax error \
-		near unexpected token\n", 2), NULL);
+	if (tokens->next)
+		next_token = tokens->next->content;
+	if (tokens->next == NULL || next_token->type != CMD_OR_FILE_TOKEN)
+		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
+		2), NULL);
 	if (ft_strncmp(token->data, ">", 2) == 0)
 		rdr = allocate_mem_rdr(next_token->data, RDR_OUTPUT);
 	else if (ft_strncmp(token->data, "<", 2) == 0)
@@ -78,7 +79,8 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 		else if (token->type == RDR_TOKEN)
 		{
 			node = init_rdrstruct(tokens);
-			tokens = tokens->next->next;
+			if (node)
+				tokens = tokens->next->next;
 		}
 		if (!node || token->type == PIPE_TOKEN)
 			return (tokens);
