@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/28 17:50:06 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/29 15:00:43 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ size_t	count_cmdtokens(t_list **tokens)
 	current = *tokens;
 	token = current->content;
 	count = 0;
-	while (token->type == CMD_OR_FILE_TOKEN)
+	while (token->type == CMD_OR_FILE_TOKEN && current != NULL)
 	{
 		token = current->content;
 		if (token->type == CMD_OR_FILE_TOKEN)

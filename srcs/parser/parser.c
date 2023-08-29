@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 13:26:20 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 15:06:20 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 	t_token			*token;
 	size_t			count;
 
-	while (tokens->next)
+	while (tokens != NULL)
 	{
 		token = tokens->content;
 		if (token->type == CMD_OR_FILE_TOKEN)
@@ -94,7 +94,7 @@ static size_t	make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 
 	node = NULL;
 	scmds = NULL;
-	while (tokens->next != NULL )
+	while (tokens)
 	{
 		tokens = make_scmdlist(tokens, &scmds, env);
 		node = ft_lstnew(scmds);
@@ -102,6 +102,8 @@ static size_t	make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 		if (!node)
 			return (ft_lstclear(cmds, &free), 1);
 		ft_lstadd_back(cmds, node);
+		if (tokens == NULL)
+			return (0);
 		tokens = tokens->next;
 	}
 	return (0);

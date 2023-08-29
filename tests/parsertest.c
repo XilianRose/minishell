@@ -6,7 +6,7 @@
 // /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 // /*                                                   +#+                      */
 // /*   Created: 2023/08/24 16:48:04 by mstegema      #+#    #+#                 */
-// /*   Updated: 2023/08/28 17:53:29 by mstegema      ########   odam.nl         */
+// /*   Updated: 2023/08/29 15:08:32 by mstegema      ########   odam.nl         */
 // /*                                                                            */
 // /* ************************************************************************** */
 
@@ -60,8 +60,9 @@
 // 	t_list	*cmds;
 
 // 	user_input = "cat << \";\" | grep \"aap noot mies\" | wc -l > outfile | >l";
-// 	printf("user input: %s\n______________________________________________________________________\n", user_input);
-// 	cmds = parse(user_input);
+// 	// user_input = "cat";
+// 	// printf("user input: %s\n______________________________________________________________________\n", user_input);
+// 	cmds = parse(NULL, user_input);
 // 	print_commandlist(cmds);
 // 	return (0);
 // }
