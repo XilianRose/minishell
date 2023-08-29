@@ -6,16 +6,17 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 18:14:14 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	ft_prep(t_childproc *child, t_list *lst)
+bool	ft_prep(t_process *child, t_list *lst)
 {
 	child->errorcode = 0;
 	child->oldout = -1;
+	child->oldin = -1;
 	child->pipes = NULL;
 	child->i = 0;
 	child->pipe_count = ft_count_pipes(lst);

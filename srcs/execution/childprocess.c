@@ -6,13 +6,13 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 18:20:08 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	ft_store_output(t_childproc *child)
+static bool	ft_store_old_fd(t_process *child)
 {
 	child->oldout = dup(STDOUT_FILENO);
 	if (child->oldout == -1)
@@ -20,10 +20,16 @@ static bool	ft_store_output(t_childproc *child)
 		ft_putstr_fd("BabyBash: old fd dup failed.", STDERR_FILENO);
 		return (false);
 	}
+	child->oldin = dup(STDIN_FILENO);
+	if (child->oldin == -1)
+	{
+		ft_putstr_fd("BabyBash: old fd dup failed.", STDERR_FILENO);
+		return (false);
+	}
 	return (true);
 }
 
-static void	ft_wait_for_last_child(t_childproc *child)
+static void	ft_wait_for_last_child(t_process *child)
 {
 	ft_close_fds(child);
 	waitpid(child->ids[child->nr_of_cmds - 1], &child->status, 0);
@@ -54,7 +60,7 @@ void	ft_run_builtin(t_cmd *cmd)
 		ft_exit_builtin(cmd);
 }
 
-static void	ft_child_process(t_childproc *child)
+static void	ft_child_process(t_process *child)
 {
 	if ((child->i == 0 && child->nr_of_cmds > 1) || \
 		(child->i != (child->nr_of_cmds - 1)))
@@ -69,12 +75,12 @@ static void	ft_child_process(t_childproc *child)
 	}
 	ft_close_fds(child);
 	if (child->cmd->builtin == false)
-		ft_execute(child->cmd);
+		ft_execve(child->cmd);
 	else
 		ft_run_builtin(child->cmd);
 }
 
-static void	ft_find_cmd(t_childproc *child, t_scmd_list *lst)
+static void	ft_find_cmd(t_process *child, t_scmd_list *lst)
 {
 	while (lst)
 	{
@@ -91,9 +97,9 @@ static void	ft_find_cmd(t_childproc *child, t_scmd_list *lst)
 
 void	ft_create_child(t_list *lst)
 {
-	t_childproc	child;
+	t_process	child;
 
-	if (!ft_prep(&child, lst) || !ft_store_output(&child))
+	if (!ft_prep(&child, lst) || !ft_store_old_fd(&child))
 		return ;
 	while (lst)
 	{
@@ -113,7 +119,7 @@ void	ft_create_child(t_list *lst)
 		}
 		lst = lst->next;
 	}
-	if (child.oldout != -1)
-		ft_restore_output(&child);
+	if (child.oldout != -1 || child.oldin != -1)
+		ft_restore_old_fd(&child);
 	ft_wait_for_last_child(&child);
 }

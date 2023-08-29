@@ -6,19 +6,27 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 18:19:53 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_restore_output(t_childproc *child)
+void	ft_restore_old_fd(t_process *child)
 {
-	if (dup2(child->oldout, STDOUT_FILENO) == -1 || close (child->oldout) == -1)
-		perror("BabyBash: ");
+	if (child->oldout != -1)
+	{
+		if (dup2(child->oldout, STDOUT_FILENO) == -1 || close (child->oldout) == -1)
+			perror("BabyBash: ");
+	}
+	if (child->oldin != -1)
+	{
+		if (dup2(child->oldin, STDIN_FILENO) == -1 || close (child->oldin) == -1)
+			perror("BabyBash: ");
+	}
 }
 
-void	ft_close_fds(t_childproc *child)
+void	ft_close_fds(t_process *child)
 {
 	int	i;
 
@@ -31,7 +39,7 @@ void	ft_close_fds(t_childproc *child)
 	}
 }
 
-bool	ft_infile(t_childproc *child, t_rdr *rdr)
+bool	ft_infile(t_process *child, t_rdr *rdr)
 {
 	child->fdin = open(rdr->data, O_RDONLY);
 	if (child->fdin == -1 || dup2(child->fdin, STDIN_FILENO) == -1 || \
@@ -44,7 +52,7 @@ bool	ft_infile(t_childproc *child, t_rdr *rdr)
 	return (true);
 }
 
-bool	ft_outfile(t_childproc *child, t_rdr *rdr)
+bool	ft_outfile(t_process *child, t_rdr *rdr)
 {
 	if (rdr->type == RDR_APPEND)
 		child->fdout = open(rdr->data, O_WRONLY | O_CREAT | O_APPEND, 0644);
@@ -59,7 +67,7 @@ bool	ft_outfile(t_childproc *child, t_rdr *rdr)
 	return (true);
 }
 
-void	ft_check_for_files(t_childproc *child, t_scmd_list *lst)
+void	ft_check_for_files(t_process *child, t_scmd_list *lst)
 {
 	t_rdr	*rdr;
 
@@ -81,6 +89,5 @@ void	ft_check_for_files(t_childproc *child, t_scmd_list *lst)
 		lst = lst->next;
 	}
 }
-// edgecases and testing..
 // bash checks all for existing, if not existing infile, error, dont check the rest.
 // if all infiles exist, only read out of last one. if all outfiles are created or existing, only send to last one.

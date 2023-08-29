@@ -6,19 +6,39 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:23:16 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 18:20:49 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_single_scmd(void)
+void	ft_single_scmd(t_list *cmdlist)
 {
-	// if 1 builtin send to right function, if not make child to exec.
-	return ;
+	t_scmd_list	*scmd;
+	t_process	parent;
+	t_cmd		*cmd;
+
+	scmd = cmdlist->content;
+	parent.oldout = -1;
+	while (scmd)
+	{
+		if (scmd->type == CMD)
+		{
+			cmd = scmd->data;
+			if (cmd->builtin == true)
+			{
+				ft_check_for_files(&parent, scmd);
+				ft_run_builtin(scmd->data);
+				if (parent.oldout != -1)
+					ft_restore_old_fd(&parent);
+			}
+			else
+				ft_create_child(cmdlist); // doesn't work yet
+		}
+	}
 }
 
-static void	ft_try_paths(char **path, t_cmd *cmd)
+void	ft_try_paths(char **path, t_cmd *cmd)
 {
 	int32_t	i;
 	char	*cmdpath;
@@ -40,7 +60,7 @@ static void	ft_try_paths(char **path, t_cmd *cmd)
 	}
 }
 
-static void	ft_find_path(t_list *cmdlist)
+void	ft_find_path(t_list *cmdlist)
 {
 	t_list		*temp;
 	t_scmd_list	*tempscmd;
@@ -71,7 +91,6 @@ static void	ft_find_path(t_list *cmdlist)
 						i++;
 					}
 					ft_try_paths(path, tempcmd);
-					puts(tempcmd->path);
 				}
 			}
 			tempscmd = tempscmd->next;
@@ -97,17 +116,18 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		str = readline("BabyBash: ");
-		cmdlist = parse(&env, str);
+		if (str)
+			cmdlist = parse(&env, str);
 		if (!cmdlist)
 			continue ;
 		ft_find_path(cmdlist);
 		if (!cmdlist->next)
-			ft_single_scmd();
+			ft_single_scmd(cmdlist); // fix this!
 		else
 			ft_create_child(cmdlist);
+		free(str);
+		str = NULL;
 	}
-	free(str);
-	str = NULL;
 	temp = cmdlist;
 	while (temp)
 	{

@@ -79,7 +79,7 @@ typedef struct s_export
 	char	*new_var;
 }	t_export;
 
-typedef struct s_childproc
+typedef struct s_process
 {
 	pid_t		*ids;
 	t_cmd		*cmd;
@@ -92,8 +92,9 @@ typedef struct s_childproc
 	int			fdin;
 	int			fdout;
 	int			oldout;
+	int			oldin;
 	t_scmd_list	*temp;
-}	t_childproc;
+}	t_process;
 
 typedef struct s_token
 {
@@ -120,6 +121,7 @@ typedef struct s_expand_length_info
 	char	*data;
 }	t_expand_length_info;
 
+void			ft_run_builtin(t_cmd *cmd); // find where this one needs to go
 void			ft_test_child(t_list *head); // tester, remove at end
 void			ft_test_signals(void); // tester, remove at end
 // builtins
@@ -147,7 +149,7 @@ void			ft_unset_builtin(t_cmd *cmd);
 // execution
 void			ft_create_child(t_list *lst);
 
-bool			ft_prep(t_childproc *child, t_list *lst);
+bool			ft_prep(t_process *child, t_list *lst);
 
 void			ft_free_all(void);
 void			ft_error_export_unset(char *name, char *option);
@@ -155,13 +157,13 @@ void			ft_error_exit(char *str);
 void			ft_error_env(int errnr, char *str);
 void			ft_throw_error(int errnr, char *str);
 
-void			ft_execute(t_cmd *info);
+void			ft_execve(t_cmd *info);
 
-void			ft_restore_output(t_childproc *child);
-void			ft_close_fds(t_childproc *child);
-bool			ft_infile(t_childproc *child, t_rdr *which);
-bool			ft_outfile(t_childproc *child, t_rdr *which);
-void			ft_check_for_files(t_childproc *child, t_scmd_list *lst);
+void			ft_restore_old_fd(t_process *child);
+void			ft_close_fds(t_process *child);
+bool			ft_infile(t_process *child, t_rdr *which);
+bool			ft_outfile(t_process *child, t_rdr *which);
+void			ft_check_for_files(t_process *child, t_scmd_list *lst);
 
 void			ft_heredoc(char *data);
 

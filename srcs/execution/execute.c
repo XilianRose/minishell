@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 18:20:08 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
  * 
  * @param cmd 
  */
-void	ft_execute(t_cmd *cmd)
+void	ft_execve(t_cmd *cmd)
 {
 	if (access(cmd->path, F_OK) == -1)
 	{
@@ -30,6 +30,9 @@ void	ft_execute(t_cmd *cmd)
 	else
 	{
 		if (execve(cmd->path, cmd->arg, cmd->env->new_env) == -1)
+		{
 			ft_throw_error(errno, "BabyBash: ");
+			exit(99999);
+		}
 	}
 }
