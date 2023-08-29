@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/25 14:24:26 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/29 11:57:28 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static t_token	*init_token(const char *str)
 		return (new_token(str, PIPE_TOKEN));
 	else if ((ft_strncmp(str, ">", 2) == 0) || (ft_strncmp(str, "<", 2) == 0)
 		|| (ft_strncmp(str, ">>", 3) == 0) || (ft_strncmp(str, "<<", 3) == 0))
-		return (new_token(str, REDIRECTION_TOKEN));
+		return (new_token(str, RDR_TOKEN));
 	else
 		return (new_token(str, CMD_OR_FILE_TOKEN));
 }

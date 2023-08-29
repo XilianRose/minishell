@@ -92,7 +92,7 @@
 // 	bool	expandable;
 // 	char	*old_data;
 
-// 	if (token->type == REDIRECTION_TOKEN || token->type == PIPE_TOKEN
+// 	if (token->type == RDR_TOKEN || token->type == PIPE_TOKEN
 // 		|| is_here_doc_argument(token, previous_token))
 // 		return (true);
 // 	expand_data_length = determine_expand_data_length(token->data);

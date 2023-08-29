@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/28 17:52:36 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/29 11:57:28 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 		return (ft_putstr_fd("minishell: syntax error \
 		near unexpected token\n", 2), NULL);
 	if (ft_strncmp(token->data, ">", 2) == 0)
-		rdr = allocate_mem_redirect(next_token->data, RDR_OUTPUT);
+		rdr = allocate_mem_rdr(next_token->data, RDR_OUTPUT);
 	else if (ft_strncmp(token->data, "<", 2) == 0)
-		rdr = allocate_mem_redirect(next_token->data, RDR_INPUT);
+		rdr = allocate_mem_rdr(next_token->data, RDR_INPUT);
 	else if (ft_strncmp(token->data, ">>", 3) == 0)
-		rdr = allocate_mem_redirect(next_token->data, RDR_APPEND);
+		rdr = allocate_mem_rdr(next_token->data, RDR_APPEND);
 	else
-		rdr = allocate_mem_redirect(next_token->data, HERE_DOC);
+		rdr = allocate_mem_rdr(next_token->data, HERE_DOC);
 	return (ft_lstnewscmd(rdr, RDR));
 }
 
@@ -75,7 +75,7 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 			while (count-- > 0)
 				tokens = tokens->next;
 		}
-		else if (token->type == REDIRECTION_TOKEN)
+		else if (token->type == RDR_TOKEN)
 		{
 			node = init_rdrstruct(tokens);
 			tokens = tokens->next->next;

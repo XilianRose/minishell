@@ -85,7 +85,7 @@
 // 		return (false);
 // 	if (token->type != CMD_OR_FILE_TOKEN)
 // 		return (false);
-// 	if (previous_token->type != REDIRECTION_TOKEN)
+// 	if (previous_token->type != RDR_TOKEN)
 // 		return (false);
 // 	return (str_equals(previous_token->data, "<<"));
 // }

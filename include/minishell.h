@@ -27,25 +27,25 @@ typedef enum e_struct_type
 	RDR = 1
 }	t_struct_type;
 
-typedef enum e_redirect_type
+typedef enum e_rdr_type
 {
 	RDR_INPUT,
 	RDR_OUTPUT,
 	HERE_DOC,
 	RDR_APPEND
-}	t_redirect_type;
+}	t_rdr_type;
 
 typedef enum e_token_type
 {
 	CMD_OR_FILE_TOKEN	= 1,
-	REDIRECTION_TOKEN	= 2,
+	RDR_TOKEN	= 2,
 	PIPE_TOKEN			= 3
 }	t_token_type;
 
 typedef struct s_rdr
 {
-	char			*data;
-	t_redirect_type	type;
+	char		*data;
+	t_rdr_type	type;
 }	t_rdr;
 
 typedef struct s_env
@@ -132,14 +132,12 @@ void			ft_free_env(char **new_env, char *arg_copy);
 void			ft_env_builtin(t_cmd *info);
 void			ft_copy_env(t_env *env, char **old_env);
 
-void			ft_export_append(t_cmd *info, t_env *env, char *arg, \
-	int j);
+void			ft_export_append(t_cmd *info, t_env *env, char *arg, int j);
 
 void			ft_add_new_var(t_cmd *info, t_env *env, char *arg);
 void			ft_export_builtin(t_cmd *info, t_env *env);
 
-void			ft_fill_env(t_cmd *info, t_env *env, t_export *exp, \
-	int i);
+void			ft_fill_env(t_cmd *info, t_env *env, t_export *exp, int i);
 void			ft_check_for_plus(char *arg);
 int				ft_find_value(char *var);
 void			ft_write_export(char **sortedenv);
@@ -154,7 +152,7 @@ bool			ft_prep(t_childproc *child, t_list *lst);
 void			ft_free_all(void);
 void			ft_error_export_unset(char *name, char *option);
 void			ft_error_exit(char *str);
-void 			ft_error_env(int errnr, char *str);
+void			ft_error_env(int errnr, char *str);
 void			ft_throw_error(int errnr, char *str);
 
 void			ft_execute(t_cmd *info);
@@ -197,8 +195,7 @@ void			ft_freescmdlst(t_scmd_list *lst);
 void			scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);
 void			ft_freelst(t_list *lst);
 
-t_rdr			*allocate_mem_redirect(char *data, \
-	t_redirect_type type);
+t_rdr			*allocate_mem_rdr(char *data, t_rdr_type type);
 t_cmd			*allocate_mem_cmd_info(char **arg, t_env *env, bool builtin);
 
 bool			str_contains_any(const char *str, const char *chars);

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/26 18:40:55 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/25 16:37:40 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 11:56:35 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,12 @@ void	ft_test_child(t_env *env, char **argv)
 	cmd2 = ft_split(argv[3], ' ');
 	cmd3 = ft_split(argv[4], ' ');
 	cmd4 = ft_split(argv[5], ' ');
-	infile = allocate_mem_redirect(argv[1], RDR_INPUT);
+	infile = allocate_mem_rdr(argv[1], RDR_INPUT);
 	data1 = allocate_mem_cmd_info(cmd1, env, false);
 	data2 = allocate_mem_cmd_info(cmd2, env, false);
 	data3 = allocate_mem_cmd_info(cmd3, env, false);
 	data4 = allocate_mem_cmd_info(cmd4, env, false);
-	outfile = allocate_mem_redirect(argv[6], RDR_OUTPUT);
+	outfile = allocate_mem_rdr(argv[6], RDR_OUTPUT);
 	data1->path = "/bin/cat";
 	data2->path = "/usr/bin/head";
 	data3->path = "/bin/cat";

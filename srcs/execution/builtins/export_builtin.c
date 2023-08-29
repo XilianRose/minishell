@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/28 17:25:02 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/08/29 11:59:40 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,7 @@ static void	ft_overwrite_var(t_cmd *info, char *arg, int c)
 	ft_memcpy(info->env->new_env[c], arg, (len + 1));
 }
 
-static bool	ft_check_export_input(t_cmd *info, t_env *env, char *arg, \
-	int j)
+static bool	ft_check_export_input(t_cmd *info, t_env *env, char *arg, int j)
 {
 	int	c;
 
