@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 11:57:28 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 13:26:20 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,21 +103,18 @@ static size_t	make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 			return (ft_lstclear(cmds, &free), 1);
 		ft_lstadd_back(cmds, node);
 		tokens = tokens->next;
-
 	}
 	return (0);
 }
 
-t_list	*parse(const char *user_input)
+t_list	*parse(t_env *env, const char *user_input)
 {
 	t_list	*tokens;
 	t_list	*cmds;
-	t_env	*env;
 
 	tokens = NULL;
 	tokens = tokenisation(user_input);
 	cmds = NULL;
-	env = NULL;
 	make_cmdlist(tokens, &cmds, env);
 	return (cmds);
 }

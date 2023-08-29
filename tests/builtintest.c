@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/04 14:48:42 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/28 16:57:32 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/08/29 13:28:01 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,10 +151,10 @@ void	ft_test_unset(t_env *env)
 	free(info2);
 }
 
-static void	ft_leaks(void)
-{
-	system("leaks -q minishell_test");
-}
+// static void	ft_leaks(void)
+// {
+// 	system("leaks -q minishell_test");
+// }
 
 // int	main(int argc, char **argv, char **envp)
 // {

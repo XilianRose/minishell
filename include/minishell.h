@@ -120,7 +120,7 @@ typedef struct s_expand_length_info
 	char	*data;
 }	t_expand_length_info;
 
-void			ft_test_child(t_env *env, char **argv); // tester, remove at end
+void			ft_test_child(t_list *head); // tester, remove at end
 void			ft_test_signals(void); // tester, remove at end
 // builtins
 void			ft_echo_builtin(t_cmd *info);
@@ -179,9 +179,7 @@ t_token			*new_token(const char *data, t_token_type type);
 t_list			*tokenisation(const char *user_input);
 
 // parser here
-// -----------------------------------------------------------------------------
-
-t_list			*parse(const char *user_input);
+t_list			*parse(t_env *env, const char *user_input);
 size_t			count_cmdtokens(t_list **tokens);
 bool			is_builtin(t_list **tokens);
 
