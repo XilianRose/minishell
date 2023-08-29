@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   main.c                                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 15:21:09 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 15:24:03 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		str = readline("BabyBash: ");
+		// str = "cat";
 		puts(str);
 		cmdlist = parse(&env, str);
 		ft_find_path(cmdlist);
