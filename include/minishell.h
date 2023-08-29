@@ -123,26 +123,26 @@ typedef struct s_expand_length_info
 void			ft_test_child(t_list *head); // tester, remove at end
 void			ft_test_signals(void); // tester, remove at end
 // builtins
-void			ft_echo_builtin(t_cmd *info);
-void			ft_cd_builtin(t_cmd *info);
+void			ft_echo_builtin(t_cmd *cmd);
+void			ft_cd_builtin(t_cmd *cmd);
 void			ft_pwd_builtin(void);
-void			ft_exit_builtin(t_cmd *info);
+void			ft_exit_builtin(t_cmd *cmd);
 
 void			ft_free_env(char **new_env, char *arg_copy);
-void			ft_env_builtin(t_cmd *info);
+void			ft_env_builtin(t_cmd *cmd);
 void			ft_copy_env(t_env *env, char **old_env);
 
-void			ft_export_append(t_cmd *info, t_env *env, char *arg, int j);
+void			ft_export_append(t_cmd *cmd, t_env *env, char *arg, int j);
 
-void			ft_add_new_var(t_cmd *info, t_env *env, char *arg);
-void			ft_export_builtin(t_cmd *info, t_env *env);
+void			ft_add_new_var(t_cmd *cmd, t_env *env, char *arg);
+void			ft_export_builtin(t_cmd *cmd);
 
-void			ft_fill_env(t_cmd *info, t_env *env, t_export *exp, int i);
+void			ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int i);
 void			ft_check_for_plus(char *arg);
 int				ft_find_value(char *var);
 void			ft_write_export(char **sortedenv);
 
-void			ft_unset_builtin(t_cmd *info);
+void			ft_unset_builtin(t_cmd *cmd);
 
 // execution
 void			ft_create_child(t_list *lst);
@@ -194,7 +194,7 @@ void			scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);
 void			ft_freelst(t_list *lst);
 
 t_rdr			*allocate_mem_rdr(char *data, t_rdr_type type);
-t_cmd			*allocate_mem_cmd_info(char **arg, t_env *env, bool builtin);
+t_cmd			*allocate_mem_cmd(char **arg, t_env *env, bool builtin);
 
 bool			str_contains_any(const char *str, const char *chars);
 bool			str_equals(char *lhs, char *rhs);

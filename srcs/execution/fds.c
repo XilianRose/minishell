@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 11:58:58 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_restore_output(t_childproc *child)
 {
 	if (dup2(child->oldout, STDOUT_FILENO) == -1 || close (child->oldout) == -1)
-		perror("minishell: ");
+		perror("BabyBash: ");
 }
 
 void	ft_close_fds(t_childproc *child)
@@ -26,7 +26,7 @@ void	ft_close_fds(t_childproc *child)
 	while (i < child->nr_of_cmds - 1)
 	{
 		if (close(child->pipes[i][0]) == -1 || close(child->pipes[i][1]) == -1)
-			perror("minishell: ");
+			perror("BabyBash: ");
 		i++;
 	}
 }
@@ -38,7 +38,7 @@ bool	ft_infile(t_childproc *child, t_rdr *rdr)
 		close(child->fdin) == -1)
 	{
 		child->errorcode = errno;
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
 		return (perror(rdr->data), false);
 	}
 	return (true);
@@ -53,7 +53,7 @@ bool	ft_outfile(t_childproc *child, t_rdr *rdr)
 	if (child->fdout == -1 || dup2(child->fdout, STDOUT_FILENO) == -1 || \
 		close(child->fdout) == -1)
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
 		return (perror(rdr->data), false);
 	}
 	return (true);

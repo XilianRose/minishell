@@ -6,24 +6,24 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:14:27 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/28 17:32:41 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_fill_env(t_cmd *info, t_env *env, t_export *exp, int i)
+void	ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int i)
 {
-	while (info->env->new_env[i])
+	while (cmd->env->new_env[i])
 	{
-		exp->var_len = ft_strlen(info->env->new_env[i]);
+		exp->var_len = ft_strlen(cmd->env->new_env[i]);
 		exp->new_env[i] = malloc((exp->var_len + 1) * sizeof(char));
 		if (!exp->new_env[i])
 		{
 			ft_free_env(exp->new_env, exp->arg_copy);
-			ft_throw_error(ENOMEM, "minishell: ");
+			ft_throw_error(ENOMEM, "BabyBash: ");
 		}
-		ft_memcpy(exp->new_env[i], info->env->new_env[i], (exp->var_len + 1));
+		ft_memcpy(exp->new_env[i], cmd->env->new_env[i], (exp->var_len + 1));
 		i++;
 	}
 	exp->new_env[i] = exp->arg_copy;
@@ -31,7 +31,7 @@ void	ft_fill_env(t_cmd *info, t_env *env, t_export *exp, int i)
 	ft_free_env(env->new_env, NULL);
 	env->new_env = exp->new_env;
 	env->env_len++;
-	info->env->new_env = env->new_env;
+	cmd->env->new_env = env->new_env;
 }
 
 void	ft_check_for_plus(char *arg)
@@ -99,7 +99,7 @@ void	ft_write_export(char **sortedenv)
 	{
 		name = ft_find_name(sortedenv[i]);
 		if (!name)
-			ft_throw_error(ENOMEM, "minishell: ");
+			ft_throw_error(ENOMEM, "BabyBash: ");
 		value = ft_find_value(sortedenv[i]);
 		if (value == -1)
 			printf("declare -x %s\n", name);

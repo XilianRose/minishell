@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/10 14:31:26 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ int	**ft_create_pipes(int **pipes, int pipe_count)
 	i = 0;
 	pipes = malloc(pipe_count * sizeof(int *));
 	if (!pipes)
-		return (perror("minishell: "), NULL);
+		return (perror("BabyBash: "), NULL);
 	while (i < pipe_count)
 	{
 		pipes[i] = malloc(2 * sizeof(int));
 		if (!pipes[i] || pipe(pipes[i]) == -1)
 		{
-			perror("minishell: ");
+			perror("BabyBash: ");
 			ft_free_pipes(pipes, pipe_count);
 			return (NULL);
 		}

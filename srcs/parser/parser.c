@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 15:06:20 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static t_scmd_list	*init_cmdstruct(t_list *tokens, size_t count, t_env *env)
 		i++;
 		tokens = tokens->next;
 	}
-	cmd = allocate_mem_cmd_info(data, env, builtin);
+	cmd = allocate_mem_cmd(data, env, builtin);
 	return (ft_lstnewscmd(cmd, CMD));
 }
 
@@ -46,7 +46,7 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 	token = tokens->content;
 	next_token = tokens->next->content;
 	if (next_token->type != CMD_OR_FILE_TOKEN)
-		return (ft_putstr_fd("minishell: syntax error \
+		return (ft_putstr_fd("BabyBash: syntax error \
 		near unexpected token\n", 2), NULL);
 	if (ft_strncmp(token->data, ">", 2) == 0)
 		rdr = allocate_mem_rdr(next_token->data, RDR_OUTPUT);

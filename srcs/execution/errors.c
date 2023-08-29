@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 13:31:37 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/28 16:59:45 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_free_all(void)
 
 void	ft_error_export_unset(char *name, char *option)
 {
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd("BabyBash: ", STDERR_FILENO);
 	ft_putstr_fd(name, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putchar_fd('`', STDERR_FILENO);

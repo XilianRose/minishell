@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/16 17:55:31 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static bool	ft_store_output(t_childproc *child)
 	child->oldout = dup(STDOUT_FILENO);
 	if (child->oldout == -1)
 	{
-		ft_putstr_fd("minishell: old fd dup failed.", STDERR_FILENO);
+		ft_putstr_fd("BabyBash: old fd dup failed.", STDERR_FILENO);
 		return (false);
 	}
 	return (true);
@@ -36,21 +36,42 @@ static void	ft_wait_for_last_child(t_childproc *child)
 	ft_free_pipes(child->pipes, child->pipe_count);
 }
 
+void	ft_run_builtin(t_cmd *cmd)
+{
+	if (!ft_strncmp("echo", cmd->arg[0], 5))
+		ft_echo_builtin(cmd);
+	if (!ft_strncmp("cd", cmd->arg[0], 3))
+		ft_cd_builtin(cmd);
+	if (!ft_strncmp("pwd", cmd->arg[0], 4))
+		ft_pwd_builtin();
+	if (!ft_strncmp("export", cmd->arg[0], 7))
+		ft_export_builtin(cmd);
+	if (!ft_strncmp("unset", cmd->arg[0], 6))
+		ft_unset_builtin(cmd);
+	if (!ft_strncmp("env", cmd->arg[0], 4))
+		ft_env_builtin(cmd);
+	if (!ft_strncmp("exit", cmd->arg[0], 5))
+		ft_exit_builtin(cmd);
+}
+
 static void	ft_child_process(t_childproc *child)
 {
 	if ((child->i == 0 && child->nr_of_cmds > 1) || \
 		(child->i != (child->nr_of_cmds - 1)))
 	{
 		if (dup2(child->pipes[child->i][1], STDOUT_FILENO) == -1)
-			ft_throw_error(errno, "minishell: "); // free all and exit
+			ft_throw_error(errno, "BabyBash: "); // free all and exit
 	}
 	if (child->i != 0)
 	{
 		if (dup2(child->pipes[child->i - 1][0], STDIN_FILENO) == -1)
-			ft_throw_error(errno, "minishell: "); // free all and exit
+			ft_throw_error(errno, "BabyBash: "); // free all and exit
 	}
 	ft_close_fds(child);
-	ft_execute(child->cmd);
+	if (child->cmd->builtin == false)
+		ft_execute(child->cmd);
+	else
+		ft_run_builtin(child->cmd);
 }
 
 static void	ft_find_cmd(t_childproc *child, t_scmd_list *lst)
@@ -65,9 +86,7 @@ static void	ft_find_cmd(t_childproc *child, t_scmd_list *lst)
 		lst = lst->next;
 	}
 	if (!lst)
-	{
 		child->cmd = NULL;
-	}
 }
 
 void	ft_create_child(t_list *lst)
@@ -85,7 +104,7 @@ void	ft_create_child(t_list *lst)
 			child.ids[child.i] = fork();
 			if (child.ids[child.i] == -1)
 			{
-				perror("minishell: ");
+				perror("BabyBash: ");
 				break ;
 			}
 			if (child.ids[child.i] == 0)

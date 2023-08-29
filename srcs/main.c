@@ -6,16 +6,16 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 15:24:03 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:23:16 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_check_for_builtin()
+static void	ft_single_scmd(void)
 {
 	// if 1 builtin send to right function, if not make child to exec.
-	
+	return ;
 }
 
 static void	ft_try_paths(char **path, t_cmd *cmd)
@@ -97,11 +97,14 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		str = readline("BabyBash: ");
-		// str = "cat";
-		puts(str);
 		cmdlist = parse(&env, str);
+		if (!cmdlist)
+			continue ;
 		ft_find_path(cmdlist);
-		ft_create_child(cmdlist);
+		if (!cmdlist->next)
+			ft_single_scmd();
+		else
+			ft_create_child(cmdlist);
 	}
 	free(str);
 	str = NULL;

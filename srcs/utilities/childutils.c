@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/16 18:06:12 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ bool	ft_prep(t_childproc *child, t_list *lst)
 	child->nr_of_cmds = child->pipe_count + 1;
 	child->ids = malloc(child->nr_of_cmds * sizeof(pid_t));
 	if (!child->ids)
-		return (perror("minishell: "), false);
+		return (perror("BabyBash: "), false);
 	if (child->pipe_count)
 	{
 		child->pipes = ft_create_pipes(child->pipes, child->pipe_count);

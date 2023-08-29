@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/18 15:29:21 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 11:57:49 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 15:52:39 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_rdr	*allocate_mem_rdr(char *data, t_rdr_type type)
 	return (rdr);
 }
 
-t_cmd	*allocate_mem_cmd_info(char **arg, t_env *env, bool builtin)
+t_cmd	*allocate_mem_cmd(char **arg, t_env *env, bool builtin)
 {
 	t_cmd	*exec;
 

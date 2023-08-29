@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/24 16:09:21 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	ft_heredoc(char *data)
 	expand = true;
 	if (pipe(fd) == -1)
 	{
-		perror("minishell: ");
+		perror("BabyBash: ");
 		return ;
 	}
 	datalen = ft_strlen(data);
