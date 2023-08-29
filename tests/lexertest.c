@@ -6,35 +6,35 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 15:09:45 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/24 16:47:40 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/28 14:18:36 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	print_array(char **array)
-{
-	while (array[0] != '\0')
-	{
-		printf("array str: [%s]\n", *array);
-		array++;
-	}
-}
+// static void	print_array(char **array)
+// {
+// 	while (array[0] != '\0')
+// 	{
+// 		printf("array str: [%s]\n", *array);
+// 		array++;
+// 	}
+// }
 
-static void	print_tlist(t_list *list)
-{
-	t_token	*current;
+// static void	print_tlist(t_list *list)
+// {
+// 	t_token	*current;
 
-	current = list->content;
-	while (list != NULL && list->next != NULL)
-	{
-		printf("data: [%s]	type: [%d]\n", current->data, current->type);
-		list = list->next;
-		current = list->content;
-	}
-	if (list != NULL)
-		printf("data: [%s]	type: [%d]\n", current->data, current->type);
-}
+// 	current = list->content;
+// 	while (list != NULL && list->next != NULL)
+// 	{
+// 		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+// 		list = list->next;
+// 		current = list->content;
+// 	}
+// 	if (list != NULL)
+// 		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+// }
 
 // t_list	*tokenisation(const char *user_input)
 // {
