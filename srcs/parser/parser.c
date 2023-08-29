@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 15:47:59 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:00:47 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 	return (tokens);
 }
 
-static size_t	make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
+static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 {
 	t_list		*node;
 	t_scmd_list	*scmds;
@@ -102,13 +102,13 @@ static size_t	make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 		node = ft_lstnew(scmds);
 		scmds = NULL;
 		if (!node)
-			return (ft_lstclear(cmds, &free), 1);
+			return (ft_lstclear(cmds, &free), NULL);
 		ft_lstadd_back(cmds, node);
 		if (tokens == NULL)
-			return (0);
+			return (*cmds);
 		tokens = tokens->next;
 	}
-	return (0);
+	return (*cmds);
 }
 
 t_list	*parse(t_env *env, const char *user_input)
@@ -119,6 +119,6 @@ t_list	*parse(t_env *env, const char *user_input)
 	tokens = NULL;
 	tokens = tokenisation(user_input);
 	cmds = NULL;
-	make_cmdlist(tokens, &cmds, env);
+	cmds = make_cmdlist(tokens, &cmds, env);
 	return (cmds);
 }
