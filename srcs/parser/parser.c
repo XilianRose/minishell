@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/29 16:25:30 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 
 	rdr = NULL;
 	token = tokens->content;
-	next_token = tokens->next->content;
-	if (next_token->type != CMD_OR_FILE_TOKEN)
-		return (ft_putstr_fd("BabyBash: syntax error \
-		near unexpected token\n", 2), NULL);
+	if (tokens->next)
+		next_token = tokens->next->content;
+	if (tokens->next == NULL || next_token->type != CMD_OR_FILE_TOKEN)
+		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
+		2), NULL);
 	if (ft_strncmp(token->data, ">", 2) == 0)
 		rdr = allocate_mem_rdr(next_token->data, RDR_OUTPUT);
 	else if (ft_strncmp(token->data, "<", 2) == 0)
@@ -78,7 +79,8 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 		else if (token->type == RDR_TOKEN)
 		{
 			node = init_rdrstruct(tokens);
-			tokens = tokens->next->next;
+			if (node)
+				tokens = tokens->next->next;
 		}
 		if (!node || token->type == PIPE_TOKEN)
 			return (tokens);
@@ -87,7 +89,7 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 	return (tokens);
 }
 
-static size_t	make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
+static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 {
 	t_list		*node;
 	t_scmd_list	*scmds;
@@ -100,13 +102,13 @@ static size_t	make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 		node = ft_lstnew(scmds);
 		scmds = NULL;
 		if (!node)
-			return (ft_lstclear(cmds, &free), 1);
+			return (ft_lstclear(cmds, &free), NULL);
 		ft_lstadd_back(cmds, node);
 		if (tokens == NULL)
-			return (0);
+			return (*cmds);
 		tokens = tokens->next;
 	}
-	return (0);
+	return (*cmds);
 }
 
 t_list	*parse(t_env *env, const char *user_input)
@@ -117,6 +119,6 @@ t_list	*parse(t_env *env, const char *user_input)
 	tokens = NULL;
 	tokens = tokenisation(user_input);
 	cmds = NULL;
-	make_cmdlist(tokens, &cmds, env);
+	cmds = make_cmdlist(tokens, &cmds, env);
 	return (cmds);
 }
