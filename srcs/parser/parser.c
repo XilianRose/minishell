@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:25:30 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 15:24:40 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static t_scmd_list	*init_cmdstruct(t_list *tokens, size_t count, t_env *env)
 	return (ft_lstnewscmd(cmd, CMD));
 }
 
+//handle
 static t_scmd_list	*init_rdrstruct(t_list *tokens)
 {
 	t_rdr	*rdr;
@@ -118,6 +119,7 @@ t_list	*parse(t_env *env, const char *user_input)
 
 	tokens = NULL;
 	tokens = tokenisation(user_input);
+	// expand(tokens);
 	cmds = NULL;
 	cmds = make_cmdlist(tokens, &cmds, env);
 	return (cmds);

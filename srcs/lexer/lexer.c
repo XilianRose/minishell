@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/29 11:57:28 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 15:20:38 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 	return (0);
 }
 
+// <infile (all rdr) should still work without space delimiter
 t_list	*tokenisation(const char *user_input)
 {
 	t_list	*tokens;
