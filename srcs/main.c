@@ -6,20 +6,18 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 18:20:49 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 15:29:24 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_single_scmd(t_list *cmdlist)
+void	ft_single_scmd(t_list *cmdlist, t_init *process)
 {
 	t_scmd_list	*scmd;
-	t_process	parent;
 	t_cmd		*cmd;
 
 	scmd = cmdlist->content;
-	parent.oldout = -1;
 	while (scmd)
 	{
 		if (scmd->type == CMD)
@@ -27,14 +25,13 @@ void	ft_single_scmd(t_list *cmdlist)
 			cmd = scmd->data;
 			if (cmd->builtin == true)
 			{
-				ft_check_for_files(&parent, scmd);
+				ft_check_for_files(process, scmd);
 				ft_run_builtin(scmd->data);
-				if (parent.oldout != -1)
-					ft_restore_old_fd(&parent);
 			}
 			else
-				ft_create_child(cmdlist); // doesn't work yet
+				ft_create_child(cmdlist, process);
 		}
+		scmd = scmd->next;
 	}
 }
 
@@ -99,43 +96,49 @@ void	ft_find_path(t_list *cmdlist)
 	}
 }
 
-// test example: ./minishell_test infile "cat /dev/urandom" "head -n 5" cat cat outfile
-// copy env, make history, make tokens, expand tokens, parse, execute, handle signals, repeat?
+void	ft_executor(t_list *cmdlist, t_init *process)
+{
+	ft_find_path(cmdlist);
+	if (!ft_prep(process, cmdlist) || !ft_store_old_fd(process))
+	{
+		ft_putendl_fd("Something went wrong, exiting..", STDERR_FILENO);
+		exit(1); // or how else?
+	}
+	if (!cmdlist->next)
+		ft_single_scmd(cmdlist, process); //something gets freed but doesnt need freeing?
+	else
+		ft_create_child(cmdlist, process);
+	if (process->oldout != -1 || process->oldin != -1)
+		ft_restore_old_fd(process);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	t_env	env;
-	t_list	*cmdlist;
-	t_list	*temp;
 	char	*str;
+	t_list	*cmdlist;
+	t_env	env;
+	t_init	process;
 
 	(void)argv;
-	if (argc != 1)
-		return (1);
+	(void)argc;
 	ft_copy_env(&env, envp);
 	// ft_test_signals();
 	while (1)
 	{
 		str = readline("BabyBash: ");
-		if (str)
-			cmdlist = parse(&env, str);
+		if (!str)
+			break ;
+		cmdlist = parse(&env, str);
+		add_history(str);
 		if (!cmdlist)
 			continue ;
-		ft_find_path(cmdlist);
-		if (!cmdlist->next)
-			ft_single_scmd(cmdlist); // fix this!
-		else
-			ft_create_child(cmdlist);
+		ft_executor(cmdlist, &process);
 		free(str);
 		str = NULL;
 	}
-	temp = cmdlist;
-	while (temp)
-	{
-		ft_freescmdlst(temp->content);
-		temp = temp->next;
-	}
-	ft_freelst(cmdlist);
-	ft_free_env(env.new_env, NULL);
-	// system("leaks -q minishell_test");
+	ft_free_all(cmdlist, &env);
 	return (EXIT_SUCCESS);
 }
+
+// to do: signals, freeing everything, expander, history, testing.
+// system("leaks -q minishell_test");
