@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 12:58:29 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 18:27:40 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,26 +43,30 @@ int	ft_count_pipes(t_list *lst)
 	return (pipe_count);
 }
 
-int	**ft_create_pipes(int **pipes, int pipe_count)
+void	ft_create_pipes(t_init *process, int pipe_count)
 {
 	int	i;
 
 	i = 0;
-	pipes = malloc(pipe_count * sizeof(int *));
-	if (!pipes)
-		return (perror("BabyBash: "), NULL);
+	process->pipes = malloc(pipe_count * sizeof(int *));
+	if (!process->pipes)
+	{
+		// free all
+		ft_throw_error(errno, "BabyBash: ");
+	}
 	while (i < pipe_count)
 	{
-		pipes[i] = malloc(2 * sizeof(int));
-		if (!pipes[i] || pipe(pipes[i]) == -1)
+		process->pipes[i] = malloc(2 * sizeof(int));
+		if (!process->pipes[i] || pipe(process->pipes[i]) == -1)
 		{
-			if (!pipes[i])
+			if (!process->pipes[i])
 				errno = ENOMEM;
 			perror("BabyBash: ");
-			ft_free_pipes(pipes, pipe_count);
-			return (NULL);
+			ft_close_fds(process);
+			ft_free_pipes(process->pipes, pipe_count);
+			// free all
+			exit(1);
 		}
 		i++;
 	}
-	return (pipes);
 }

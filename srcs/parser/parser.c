@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:25:30 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 18:30:46 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static t_scmd_list	*init_cmdstruct(t_list *tokens, size_t count, t_env *env)
 		i++;
 		tokens = tokens->next;
 	}
-	cmd = allocate_mem_cmd(data, env, builtin);
+	cmd = ft_allocate_mem_cmd(data, env, builtin);
 	return (ft_lstnewscmd(cmd, CMD));
 }
 
@@ -50,13 +50,13 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
 		2), NULL);
 	if (ft_strncmp(token->data, ">", 2) == 0)
-		rdr = allocate_mem_rdr(next_token->data, RDR_OUTPUT);
+		rdr = ft_allocate_mem_rdr(next_token->data, RDR_OUTPUT);
 	else if (ft_strncmp(token->data, "<", 2) == 0)
-		rdr = allocate_mem_rdr(next_token->data, RDR_INPUT);
+		rdr = ft_allocate_mem_rdr(next_token->data, RDR_INPUT);
 	else if (ft_strncmp(token->data, ">>", 3) == 0)
-		rdr = allocate_mem_rdr(next_token->data, RDR_APPEND);
+		rdr = ft_allocate_mem_rdr(next_token->data, RDR_APPEND);
 	else
-		rdr = allocate_mem_rdr(next_token->data, HERE_DOC);
+		rdr = ft_allocate_mem_rdr(next_token->data, HERE_DOC);
 	return (ft_lstnewscmd(rdr, RDR));
 }
 

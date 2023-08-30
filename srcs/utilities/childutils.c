@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 15:26:55 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 18:16:29 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,16 +74,11 @@ bool	ft_prep(t_init *process, t_list *lst)
 	process->nr_of_cmds = process->pipe_count + 1;
 	process->ids = malloc(process->nr_of_cmds * sizeof(pid_t));
 	if (!process->ids)
-		return (perror("BabyBash: "), false);
-	if (process->nr_of_cmds > 1)
 	{
-		process->pipes = ft_create_pipes(process->pipes, process->pipe_count);
-		if (!process->pipes)
-		{
-			free(process->ids);
-			process->ids = NULL;
-			return (false);
-		}
+		// free all
+		ft_throw_error(errno, "BabyBash: ");
 	}
+	if (process->nr_of_cmds > 1)
+		ft_create_pipes(process, process->pipe_count);
 	return (true);
 }

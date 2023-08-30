@@ -6,14 +6,12 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 17:44:54 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// one builtin doesnt create child processes, but does when pipes are used. 
-// needs to be able to write into pipe too, also handle $?
 void	ft_echo_builtin(t_cmd *cmd)
 {
 	int	i;
@@ -42,8 +40,6 @@ void	ft_echo_builtin(t_cmd *cmd)
 	printf("%s\n", cmd->arg[i]);
 }
 
-// only changes directory inside the process, which exits.
-// I can print current dir with getcwd to test if it actually changed.
 void	ft_cd_builtin(t_cmd *cmd)
 {
 	if (chdir(cmd->arg[1]) == -1)
@@ -59,7 +55,6 @@ void	ft_pwd_builtin(void)
 	printf("%s\n", buffer);
 }
 
-// I made it so it always exits with an int between 0-255 just like bash does.
 void	ft_exit_builtin(t_cmd *cmd)
 {
 	int				i;

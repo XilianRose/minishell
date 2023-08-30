@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 15:29:24 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 18:31:31 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	ft_single_scmd(t_list *cmdlist, t_init *process)
 			{
 				ft_check_for_files(process, scmd);
 				ft_run_builtin(scmd->data);
+				break ;
 			}
 			else
 				ft_create_child(cmdlist, process);
@@ -102,10 +103,10 @@ void	ft_executor(t_list *cmdlist, t_init *process)
 	if (!ft_prep(process, cmdlist) || !ft_store_old_fd(process))
 	{
 		ft_putendl_fd("Something went wrong, exiting..", STDERR_FILENO);
-		exit(1); // or how else?
+		exit(1); // free all
 	}
 	if (!cmdlist->next)
-		ft_single_scmd(cmdlist, process); //something gets freed but doesnt need freeing?
+		ft_single_scmd(cmdlist, process);
 	else
 		ft_create_child(cmdlist, process);
 	if (process->oldout != -1 || process->oldin != -1)
@@ -128,8 +129,8 @@ int	main(int argc, char **argv, char **envp)
 		str = readline("BabyBash: ");
 		if (!str)
 			break ;
-		cmdlist = parse(&env, str);
 		add_history(str);
+		cmdlist = parse(&env, str); // in parse, if errors, must use rl_clear_history(); + free mallocs, str and env before exit.
 		if (!cmdlist)
 			continue ;
 		ft_executor(cmdlist, &process);
@@ -140,5 +141,5 @@ int	main(int argc, char **argv, char **envp)
 	return (EXIT_SUCCESS);
 }
 
-// to do: signals, freeing everything, expander, history, testing.
+// to do: signals, freeing everything, expander, testing.
 // system("leaks -q minishell_test");
