@@ -6,17 +6,27 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 13:31:37 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:15:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 13:15:59 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_all(void)
+void	ft_free_all(t_list *cmdlist, t_env *env)
 {
+	t_list	*temp;
+
+	temp = cmdlist;
+	while (temp)
+	{
+		ft_freescmdlst(temp->content);
+		temp = temp->next;
+	}
+	ft_freelst(cmdlist);
+	ft_free_env(env->new_env, NULL);
+	// rl_clear_history(); // how dis work? is needed?
 	// free all malloced things:
 	// env, data in nodes, nodes from list, list itself, pipes, child->ids
-	return ;
 }
 
 void	ft_error_export_unset(char *name, char *option)
