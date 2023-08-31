@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   execute.c                                          :+:    :+:            */
+/*   execve.c                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 16:41:11 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 14:54:11 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	ft_execve(t_cmd *cmd)
 	else
 	{
 		if (execve(cmd->path, cmd->arg, cmd->env->new_env) == -1)
-			ft_throw_error(errno, "BabyBash: ");
+			ft_throw_error(errno, "BabyBash");
+			// free all
 	}
 }

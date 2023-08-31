@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 15:27:35 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 14:53:55 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ static void	ft_child_process(t_init *process)
 		(process->i != (process->nr_of_cmds - 1)))
 	{
 		if (dup2(process->pipes[process->i][1], STDOUT_FILENO) == -1)
-			ft_throw_error(errno, "BabyBash: "); // free all and exit
+			ft_throw_error(errno, "BabyBash"); // free all and exit
 	}
 	if (process->i != 0)
 	{
 		if (dup2(process->pipes[process->i - 1][0], STDIN_FILENO) == -1)
-			ft_throw_error(errno, "BabyBash: "); // free all and exit
+			ft_throw_error(errno, "BabyBash"); // free all and exit
 	}
 	ft_close_fds(process);
 	if (process->cmd->builtin == false)
@@ -71,7 +71,7 @@ void	ft_create_child(t_list *lst, t_init *process)
 			process->ids[process->i] = fork();
 			if (process->ids[process->i] == -1)
 			{
-				perror("BabyBash: ");
+				perror("BabyBash");
 				break ;
 			}
 			if (process->ids[process->i] == 0)

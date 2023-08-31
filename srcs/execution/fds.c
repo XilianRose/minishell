@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 18:28:43 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 14:54:20 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_close_fds(t_init *process)
 	while (i < process->nr_of_cmds - 1)
 	{
 		if (close(process->pipes[i][0]) == -1 || close(process->pipes[i][1]) == -1)
-			perror("BabyBash: "); // free all and exit
+			perror("BabyBash"); // free all and exit
 		i++;
 	}
 }

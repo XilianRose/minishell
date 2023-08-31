@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 18:31:31 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 15:03:03 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,39 +58,45 @@ void	ft_try_paths(char **path, t_cmd *cmd)
 	}
 }
 
+void	ft_idkname(t_scmd_list *tempscmd)
+{
+	t_cmd	*tempcmd;
+	char	**path;
+	int		i;
+
+	i = 0;
+	if (tempscmd->type == CMD)
+	{
+		tempcmd = tempscmd->data;
+		if (tempcmd->builtin == false)
+		{
+			while (tempcmd->env->new_env[i])
+			{
+				if (ft_strncmp(tempcmd->env->new_env[i], "PATH=", 5) == 0)
+				{
+					path = ft_split(tempcmd->env->new_env[i] + 5, ':');
+					if (!path)
+						ft_putendl_fd("split error :c", STDERR_FILENO); // free all exit
+				}
+				i++;
+			}
+			ft_try_paths(path, tempcmd);
+		}
+	}
+}
+
 void	ft_find_path(t_list *cmdlist)
 {
 	t_list		*temp;
 	t_scmd_list	*tempscmd;
-	t_cmd		*tempcmd;
-	int			i;
-	char		**path;
 
-	i = 0;
 	temp = cmdlist;
 	while (temp)
 	{
 		tempscmd = temp->content;
 		while (tempscmd)
 		{
-			if (tempscmd->type == CMD)
-			{
-				tempcmd = tempscmd->data;
-				if (tempcmd->builtin == false)
-				{
-					while (tempcmd->env->new_env[i])
-					{
-						if (ft_strncmp(tempcmd->env->new_env[i], "PATH=", 5) == 0)
-						{
-							path = ft_split(tempcmd->env->new_env[i] + 5, ':');
-							if (!path)
-								ft_putendl_fd("ft_find_paths split error", STDERR_FILENO);
-						}
-						i++;
-					}
-					ft_try_paths(path, tempcmd);
-				}
-			}
+			ft_idkname(tempscmd);
 			tempscmd = tempscmd->next;
 		}
 		temp = temp->next;
@@ -113,6 +119,11 @@ void	ft_executor(t_list *cmdlist, t_init *process)
 		ft_restore_old_fd(process);
 }
 
+// static void	ft_leaks(void)
+// {
+// 	system("leaks -q minishell");
+// }
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*str;
@@ -122,15 +133,16 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argv;
 	(void)argc;
+	// atexit(ft_leaks);
 	ft_copy_env(&env, envp);
 	// ft_test_signals();
 	while (1)
 	{
-		str = readline("BabyBash: ");
+		str = readline("BabyBash$ ");
 		if (!str)
 			break ;
 		add_history(str);
-		cmdlist = parse(&env, str); // in parse, if errors, must use rl_clear_history(); + free mallocs, str and env before exit.
+		cmdlist = parse(&env, str);
 		if (!cmdlist)
 			continue ;
 		ft_executor(cmdlist, &process);
@@ -142,4 +154,3 @@ int	main(int argc, char **argv, char **envp)
 }
 
 // to do: signals, freeing everything, expander, testing.
-// system("leaks -q minishell_test");

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 18:27:40 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 14:55:39 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,14 @@ void	ft_create_pipes(t_init *process, int pipe_count)
 	if (!process->pipes)
 	{
 		// free all
-		ft_throw_error(errno, "BabyBash: ");
+		ft_throw_error(errno, "BabyBash");
 	}
 	while (i < pipe_count)
 	{
 		process->pipes[i] = malloc(2 * sizeof(int));
 		if (!process->pipes[i] || pipe(process->pipes[i]) == -1)
 		{
-			if (!process->pipes[i])
-				errno = ENOMEM;
-			perror("BabyBash: ");
+			perror("BabyBash");
 			ft_close_fds(process);
 			ft_free_pipes(process->pipes, pipe_count);
 			// free all

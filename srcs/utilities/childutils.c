@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 18:16:29 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 14:57:11 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ void	ft_restore_old_fd(t_init *process)
 	{
 		if (dup2(process->oldout, STDOUT_FILENO) == -1 || \
 			close (process->oldout) == -1)
-			perror("BabyBash: ");
+			perror("BabyBash");
 	}
 	if (process->oldin != -1)
 	{
 		if (dup2(process->oldin, STDIN_FILENO) == -1 || \
 			close (process->oldin) == -1)
-			perror("BabyBash: ");
+			perror("BabyBash");
 	}
 }
 
@@ -76,7 +76,7 @@ bool	ft_prep(t_init *process, t_list *lst)
 	if (!process->ids)
 	{
 		// free all
-		ft_throw_error(errno, "BabyBash: ");
+		ft_throw_error(errno, "BabyBash");
 	}
 	if (process->nr_of_cmds > 1)
 		ft_create_pipes(process, process->pipe_count);
