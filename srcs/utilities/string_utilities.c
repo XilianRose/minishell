@@ -6,31 +6,11 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:25:42 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/24 15:09:12 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/31 17:57:12 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	str_contains_any(const char *str, const char *chars)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		j = 0;
-		while (chars[j] != '\0')
-		{
-			if (str[i] == chars[j])
-				return (true);
-			j++;
-		}
-		i++;
-	}
-	return (false);
-}
 
 bool	str_equals(char *lhs, char *rhs)
 {

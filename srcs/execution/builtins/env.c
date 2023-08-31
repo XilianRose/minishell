@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 17:05:10 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 17:56:08 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	ft_env_builtin(t_cmd *cmd)
 		}
 		while (cmd->env->new_env[i])
 		{
-			if (str_contains_any(cmd->env->new_env[i], "="))
+			if (ft_strchr(cmd->env->new_env[i], '='))
 				printf("%s\n", cmd->env->new_env[i]);
 			i++;
 		}

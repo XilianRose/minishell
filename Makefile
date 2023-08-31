@@ -6,14 +6,14 @@
 #    By: mstegema <mstegema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/08/01 18:15:02 by cschabra      #+#    #+#                  #
-#    Updated: 2023/08/30 17:18:05 by cschabra      ########   odam.nl          #
+#    Updated: 2023/08/31 17:34:10 by cschabra      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 TEST_NAME = minishell_test
 
-CFLAGS = -Wall -Werror -Wextra ${HEADERS} #-fsanitize=address #-Wunreachable-code -Ofast
+CFLAGS = -Wall -Werror -Wextra ${HEADERS} -fsanitize=address #-Wunreachable-code -Ofast
 
 LIBFT = 42lib
 

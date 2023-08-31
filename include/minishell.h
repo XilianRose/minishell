@@ -199,7 +199,6 @@ void			ft_freelst(t_list *lst);
 t_rdr			*ft_allocate_mem_rdr(char *data, t_rdr_type type);
 t_cmd			*ft_allocate_mem_cmd(char **arg, t_env *env, bool builtin);
 
-bool			str_contains_any(const char *str, const char *chars);
 bool			str_equals(char *lhs, char *rhs);
 bool			ft_cmpname(const char *s1, const char *s2, int n);
 void			free_array(char **array);
