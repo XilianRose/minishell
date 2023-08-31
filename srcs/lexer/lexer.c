@@ -6,11 +6,58 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/30 15:20:38 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/31 15:38:46 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_token	*is_splitable(t_token *token)
+{
+	char	*data;
+	char	*new_data;
+	size_t	len;
+	t_token	*new;
+
+	data = token->data;
+	new_data = NULL;
+	len = ft_strlen(data);
+	new = NULL;
+	if (len > 2 && ft_strchr("<>", data[0]) && ft_strchr("<>", data[1]) \
+	&& ft_strchr("<>", data[2]) == NULL)
+		new_data = ft_substr(data, 2, len);
+	else if (len > 1 && ft_strchr("<>", data[0]) \
+	&& ft_strchr("<>", data[1]) == NULL)
+		new_data = ft_substr(data, 1, len);
+	if (new_data)
+		new = new_token(new_data, CMD_OR_FILE_TOKEN);
+	return (new);
+}
+
+static size_t	split_rdrtokens(t_list *tokens)
+{
+	t_token	*token;
+	t_list	*next;
+	t_token	*new;
+	t_list	*new_node;
+
+	while (tokens != NULL)
+	{
+		token = tokens->content;
+		next = tokens->next;
+		new = NULL;
+		if (token->type == RDR_TOKEN)
+			new = is_splitable(token);
+		if (new)
+		{
+			new_node = ft_lstnew(new);
+			tokens->next = new_node;
+			new_node->next = next;
+		}
+		tokens = tokens->next;
+	}
+	return (0);
+}
 
 static size_t	merge_tokens(t_list *tokens)
 {
@@ -44,8 +91,8 @@ static t_token	*init_token(const char *str)
 {
 	if (ft_strncmp(str, "|", 2) == 0)
 		return (new_token(str, PIPE_TOKEN));
-	else if ((ft_strncmp(str, ">", 2) == 0) || (ft_strncmp(str, "<", 2) == 0)
-		|| (ft_strncmp(str, ">>", 3) == 0) || (ft_strncmp(str, "<<", 3) == 0))
+	else if ((ft_strncmp(str, ">", 1) == 0) || (ft_strncmp(str, "<", 1) == 0)
+		|| (ft_strncmp(str, ">>", 2) == 0) || (ft_strncmp(str, "<<", 2) == 0))
 		return (new_token(str, RDR_TOKEN));
 	else
 		return (new_token(str, CMD_OR_FILE_TOKEN));
@@ -73,6 +120,7 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 }
 
 // <infile (all rdr) should still work without space delimiter
+// malloc fail > throw error
 t_list	*tokenisation(const char *user_input)
 {
 	t_list	*tokens;
@@ -84,5 +132,6 @@ t_list	*tokenisation(const char *user_input)
 		exit(1); //exit "failed to parse"?
 	make_tlist((const char **) ui_array, &tokens);
 	merge_tokens(tokens);
+	split_rdrtokens(tokens);
 	return (tokens);
 }

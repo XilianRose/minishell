@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 15:24:40 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/31 15:48:24 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static t_scmd_list	*init_cmdstruct(t_list *tokens, size_t count, t_env *env)
 	return (ft_lstnewscmd(cmd, CMD));
 }
 
-//handle
+
 static t_scmd_list	*init_rdrstruct(t_list *tokens)
 {
 	t_rdr	*rdr;
@@ -50,17 +50,18 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 	if (tokens->next == NULL || next_token->type != CMD_OR_FILE_TOKEN)
 		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
 		2), NULL);
-	if (ft_strncmp(token->data, ">", 2) == 0)
-		rdr = allocate_mem_rdr(next_token->data, RDR_OUTPUT);
-	else if (ft_strncmp(token->data, "<", 2) == 0)
-		rdr = allocate_mem_rdr(next_token->data, RDR_INPUT);
-	else if (ft_strncmp(token->data, ">>", 3) == 0)
+	if (ft_strncmp(token->data, ">>", 2) == 0)
 		rdr = allocate_mem_rdr(next_token->data, RDR_APPEND);
-	else
+	else if (ft_strncmp(token->data, "<<", 2) == 0)
 		rdr = allocate_mem_rdr(next_token->data, HERE_DOC);
+	else if (ft_strncmp(token->data, ">", 1) == 0)
+		rdr = allocate_mem_rdr(next_token->data, RDR_OUTPUT);
+	else
+		rdr = allocate_mem_rdr(next_token->data, RDR_INPUT);
 	return (ft_lstnewscmd(rdr, RDR));
 }
 
+// if first token == cmd && has rdr, all cmd tokens after belong to first struct.
 t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 {
 	t_scmd_list		*node;
