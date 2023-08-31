@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 15:03:03 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 15:51:59 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void	ft_single_scmd(t_list *cmdlist, t_init *process)
 	scmd = cmdlist->content;
 	while (scmd)
 	{
-		if (scmd->type == CMD)
+		if (!scmd->next && scmd->type == RDR)
+			ft_check_for_files(process, scmd);
+		else if (scmd->type == CMD)
 		{
 			cmd = scmd->data;
 			if (cmd->builtin == true)
