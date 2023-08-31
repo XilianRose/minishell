@@ -6,11 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-<<<<<<< HEAD
-/*   Updated: 2023/08/31 15:48:24 by mstegema      ########   odam.nl         */
-=======
-/*   Updated: 2023/08/30 18:39:24 by cschabra      ########   odam.nl         */
->>>>>>> 52ad270f13170c91725ecf68935cca26cc06e7fb
+/*   Updated: 2023/08/31 15:59:10 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
