@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 14:49:53 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 15:57:48 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 17:24:48 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	ft_find_unset_arg(char **env, char *arg, int len)
 void	ft_unset_builtin(t_cmd *cmd)
 {
 	int		i;
-	int		len;
+	size_t	len;
 	char	**arg;
 	char	**env;
 

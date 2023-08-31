@@ -50,7 +50,7 @@ typedef struct s_rdr
 typedef struct s_env
 {
 	char	**new_env;
-	int		env_len;
+	size_t	env_len;
 }	t_env;
 
 typedef struct s_cmd
@@ -72,8 +72,8 @@ typedef struct s_export
 {
 	char	**new_env;
 	char	*arg_copy;
-	int		arg_len;
-	int		var_len;
+	size_t	arg_len;
+	size_t	var_len;
 	int		name_len;
 	char	*new_var;
 }	t_export;
@@ -85,9 +85,9 @@ typedef struct s_init
 	char	*str;
 	int		status;
 	int		errorcode;
-	int		i;
-	int		nr_of_cmds;
-	int		pipe_count;
+	size_t	i;
+	size_t	nr_of_cmds;
+	size_t	pipe_count;
 	int		**pipes;
 	int		fdin;
 	int		fdout;
@@ -170,7 +170,7 @@ void			ft_heredoc(char *data);
 
 void			ft_free_pipes(int **pipes, int pipe_count);
 int				ft_count_pipes(t_list *arglst);
-void			ft_create_pipes(t_init *process, int pipe_count);
+void			ft_create_pipes(t_init *process, size_t pipe_count);
 
 // expander here
 // -----------------------------------------------------------------------------

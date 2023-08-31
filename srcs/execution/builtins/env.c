@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 14:47:06 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 17:05:10 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ void	ft_env_builtin(t_cmd *cmd)
 
 void	ft_copy_env(t_env *env, char **old_env)
 {
-	int	i;
-	int	var_len;
+	int		i;
+	size_t	var_len;
 
 	i = 0;
 	env->env_len = 0;

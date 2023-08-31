@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 14:53:55 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 16:57:43 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,11 @@ static void	ft_child_process(t_init *process)
 	if (process->cmd->builtin == false)
 		ft_execve(process->cmd);
 	else
+	{
 		ft_run_builtin(process->cmd);
+		// free all
+		exit(0);
+	}
 }
 
 static void	ft_find_cmd(t_init *process, t_scmd_list *lst)
