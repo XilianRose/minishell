@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/04 14:48:42 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 16:14:08 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/30 17:15:58 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_test_exit(t_env *env)
 	j = 0;
 	arg = ft_split("exit 9223372036854775806", ' ');
 	cmd = NULL;
-	cmd = allocate_mem_cmd(arg, env, true);
+	cmd = ft_allocate_mem_cmd(arg, env, true);
 	ft_exit_builtin(cmd);
 	while (arg[j])
 		free(arg[j++]);
@@ -41,7 +41,7 @@ void	ft_test_echo(t_env *env)
 	i = 0;
 	arg = ft_split("echo -n -n blep -n -n -n", ' ');
 	cmd = NULL;
-	cmd = allocate_mem_cmd(arg, env, true);
+	cmd = ft_allocate_mem_cmd(arg, env, true);
 	ft_echo_builtin(cmd);
 	while (arg[i])
 		free(arg[i++]);
@@ -58,7 +58,7 @@ void	ft_test_cd(t_env *env)
 	i = 0;
 	arg = ft_split("cd ../Minishell/srcs", ' ');
 	cmd = NULL;
-	cmd = allocate_mem_cmd(arg, env, true);
+	cmd = ft_allocate_mem_cmd(arg, env, true);
 	ft_cd_builtin(cmd);
 	while (arg[i])
 		free(arg[i++]);
@@ -80,7 +80,7 @@ void	ft_test_env(t_env *env)
 	i = 0;
 	arg = ft_split("env", ' ');
 	cmd = NULL;
-	cmd = allocate_mem_cmd(arg, env, true);
+	cmd = ft_allocate_mem_cmd(arg, env, true);
 	ft_env_builtin(cmd);
 	while (arg[i])
 		free(arg[i++]);
@@ -99,14 +99,14 @@ void	ft_test_export(t_env *env)
 	i = 0;
 	cmd = NULL;
 	arg = ft_split("export _+= _= _ __=ok _s0_=kek _s0=ok s0_=ok TERM USER+= here=replaceme here=ok this=a b c noexist+=ok b=ok test=ap/pen+dhere test+=sumfin = 2test=sumfin", ' ');
-	cmd = allocate_mem_cmd(arg, env, true);
+	cmd = ft_allocate_mem_cmd(arg, env, true);
 	ft_export_builtin(cmd);
 	while (arg[i])
 		free(arg[i++]);
 	free(arg);
 	arg2 = ft_split("export", ' ');
 	cmd2 = NULL;
-	cmd2 = allocate_mem_cmd(arg2, env, true);
+	cmd2 = ft_allocate_mem_cmd(arg2, env, true);
 	ft_export_builtin(cmd2);
 	i = 0;
 	while (arg2[i])
@@ -134,14 +134,14 @@ void	ft_test_unset(t_env *env)
 	i = 0;
 	cmd = NULL;
 	arg = ft_split("unset _ __ _0test PATH TERM 1test HOME thismust.error=something test=error test+=error", ' ');
-	cmd = allocate_mem_cmd(arg, env, true);
+	cmd = ft_allocate_mem_cmd(arg, env, true);
 	ft_unset_builtin(cmd);
 	while (arg[i])
 		free(arg[i++]);
 	free(arg);
 	arg2 = ft_split("env", ' ');
 	cmd2 = NULL;
-	cmd2 = allocate_mem_cmd(arg2, env, true);
+	cmd2 = ft_allocate_mem_cmd(arg2, env, true);
 	ft_env_builtin(cmd2);
 	i = 0;
 	while (arg2[i])

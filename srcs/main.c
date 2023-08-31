@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 15:29:24 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 15:51:59 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,16 @@ void	ft_single_scmd(t_list *cmdlist, t_init *process)
 	scmd = cmdlist->content;
 	while (scmd)
 	{
-		if (scmd->type == CMD)
+		if (!scmd->next && scmd->type == RDR)
+			ft_check_for_files(process, scmd);
+		else if (scmd->type == CMD)
 		{
 			cmd = scmd->data;
 			if (cmd->builtin == true)
 			{
 				ft_check_for_files(process, scmd);
 				ft_run_builtin(scmd->data);
+				break ;
 			}
 			else
 				ft_create_child(cmdlist, process);
@@ -57,39 +60,45 @@ void	ft_try_paths(char **path, t_cmd *cmd)
 	}
 }
 
+void	ft_idkname(t_scmd_list *tempscmd)
+{
+	t_cmd	*tempcmd;
+	char	**path;
+	int		i;
+
+	i = 0;
+	if (tempscmd->type == CMD)
+	{
+		tempcmd = tempscmd->data;
+		if (tempcmd->builtin == false)
+		{
+			while (tempcmd->env->new_env[i])
+			{
+				if (ft_strncmp(tempcmd->env->new_env[i], "PATH=", 5) == 0)
+				{
+					path = ft_split(tempcmd->env->new_env[i] + 5, ':');
+					if (!path)
+						ft_putendl_fd("split error :c", STDERR_FILENO); // free all exit
+				}
+				i++;
+			}
+			ft_try_paths(path, tempcmd);
+		}
+	}
+}
+
 void	ft_find_path(t_list *cmdlist)
 {
 	t_list		*temp;
 	t_scmd_list	*tempscmd;
-	t_cmd		*tempcmd;
-	int			i;
-	char		**path;
 
-	i = 0;
 	temp = cmdlist;
 	while (temp)
 	{
 		tempscmd = temp->content;
 		while (tempscmd)
 		{
-			if (tempscmd->type == CMD)
-			{
-				tempcmd = tempscmd->data;
-				if (tempcmd->builtin == false)
-				{
-					while (tempcmd->env->new_env[i])
-					{
-						if (ft_strncmp(tempcmd->env->new_env[i], "PATH=", 5) == 0)
-						{
-							path = ft_split(tempcmd->env->new_env[i] + 5, ':');
-							if (!path)
-								ft_putendl_fd("ft_find_paths split error", STDERR_FILENO);
-						}
-						i++;
-					}
-					ft_try_paths(path, tempcmd);
-				}
-			}
+			ft_idkname(tempscmd);
 			tempscmd = tempscmd->next;
 		}
 		temp = temp->next;
@@ -102,15 +111,20 @@ void	ft_executor(t_list *cmdlist, t_init *process)
 	if (!ft_prep(process, cmdlist) || !ft_store_old_fd(process))
 	{
 		ft_putendl_fd("Something went wrong, exiting..", STDERR_FILENO);
-		exit(1); // or how else?
+		exit(1); // free all
 	}
 	if (!cmdlist->next)
-		ft_single_scmd(cmdlist, process); //something gets freed but doesnt need freeing?
+		ft_single_scmd(cmdlist, process);
 	else
 		ft_create_child(cmdlist, process);
 	if (process->oldout != -1 || process->oldin != -1)
 		ft_restore_old_fd(process);
 }
+
+// static void	ft_leaks(void)
+// {
+// 	system("leaks -q minishell");
+// }
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -121,15 +135,16 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argv;
 	(void)argc;
+	// atexit(ft_leaks);
 	ft_copy_env(&env, envp);
 	// ft_test_signals();
 	while (1)
 	{
-		str = readline("BabyBash: ");
+		str = readline("BabyBash$ ");
 		if (!str)
 			break ;
-		cmdlist = parse(&env, str);
 		add_history(str);
+		cmdlist = parse(&env, str);
 		if (!cmdlist)
 			continue ;
 		ft_executor(cmdlist, &process);
@@ -140,5 +155,4 @@ int	main(int argc, char **argv, char **envp)
 	return (EXIT_SUCCESS);
 }
 
-// to do: signals, freeing everything, expander, history, testing.
-// system("leaks -q minishell_test");
+// to do: signals, freeing everything, expander, testing.

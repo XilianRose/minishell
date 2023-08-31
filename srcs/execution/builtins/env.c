@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 13:15:02 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 14:47:06 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	ft_copy_env(t_env *env, char **old_env)
 		env->env_len++;
 	env->new_env = malloc((env->env_len + 1) * sizeof(char *));
 	if (!env->new_env)
-		ft_throw_error(errno, "BabyBash: ");
+		ft_throw_error(errno, "BabyBash");
 	while (old_env[i])
 	{
 		var_len = ft_strlen(old_env[i]);
@@ -75,7 +75,7 @@ void	ft_copy_env(t_env *env, char **old_env)
 		if (!env->new_env[i])
 		{
 			ft_free_env(env->new_env, NULL);
-			ft_throw_error(ENOMEM, "BabyBash: ");
+			ft_throw_error(ENOMEM, "BabyBash");
 		}
 		ft_memcpy(env->new_env[i], old_env[i], (var_len + 1));
 		i++;

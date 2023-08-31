@@ -6,7 +6,7 @@
 #    By: mstegema <mstegema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/08/01 18:15:02 by cschabra      #+#    #+#                  #
-#    Updated: 2023/08/30 14:23:50 by cschabra      ########   odam.nl          #
+#    Updated: 2023/08/30 17:18:05 by cschabra      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,9 +51,9 @@ fclean: clean
 	@rm -f ${TEST_NAME}
 	@${MAKE} -C ${LIBFT} fclean
 
-re: fclean
+re: fclean all
 
 debug: CFLAGS += -g
-debug: re all
+debug: re
 
 .PHONY: all, tests, clean, fclean, re, debug

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 13:31:37 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 13:15:59 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 15:00:18 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,7 @@ void	ft_free_all(t_list *cmdlist, t_env *env)
 	}
 	ft_freelst(cmdlist);
 	ft_free_env(env->new_env, NULL);
-	// rl_clear_history(); // how dis work? is needed?
-	// free all malloced things:
-	// env, data in nodes, nodes from list, list itself, pipes, child->ids
+	rl_clear_history();
 }
 
 void	ft_error_export_unset(char *name, char *option)
@@ -45,10 +43,11 @@ void	ft_error_exit(char *str)
 	ft_putstr_fd("exit\nminishell: exit: ", STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-	exit(255);
+	rl_clear_history();
+	exit(255); // free all
 }
 
-void ft_error_env(int errnr, char *str)
+void	ft_error_env(int errnr, char *str)
 {
 	char	*newstr;
 
@@ -61,5 +60,8 @@ void ft_error_env(int errnr, char *str)
 void	ft_throw_error(int errnr, char *str)
 {
 	errno = errnr;
-	perror(str);
+	if (str)
+		perror(str);
+	rl_clear_history();
+	exit(1); // free all
 }

@@ -19,7 +19,6 @@
 # include <sys/errno.h>
 # include <sys/param.h>
 # include <signal.h>
-# include <stdbool.h>
 
 typedef enum e_struct_type
 {
@@ -38,7 +37,7 @@ typedef enum e_rdr_type
 typedef enum e_token_type
 {
 	CMD_OR_FILE_TOKEN	= 1,
-	RDR_TOKEN	= 2,
+	RDR_TOKEN			= 2,
 	PIPE_TOKEN			= 3
 }	t_token_type;
 
@@ -81,19 +80,19 @@ typedef struct s_export
 
 typedef struct s_init
 {
-	pid_t		*ids;
-	t_cmd		*cmd;
-	int			status;
-	int			errorcode;
-	int			i;
-	int			nr_of_cmds;
-	int			pipe_count;
-	int			**pipes;
-	int			fdin;
-	int			fdout;
-	int			oldout;
-	int			oldin;
-	t_scmd_list	*temp;
+	pid_t	*ids;
+	t_cmd	*cmd;
+	char	*str;
+	int		status;
+	int		errorcode;
+	int		i;
+	int		nr_of_cmds;
+	int		pipe_count;
+	int		**pipes;
+	int		fdin;
+	int		fdout;
+	int		oldout;
+	int		oldin;
 }	t_init;
 
 typedef struct s_token
@@ -120,6 +119,9 @@ typedef struct s_expand_length_info
 	int		quote_i;
 	char	*data;
 }	t_expand_length_info;
+
+// signals
+void			ft_test_signals(void);
 
 // builtins
 void			ft_echo_builtin(t_cmd *cmd);
@@ -168,7 +170,7 @@ void			ft_heredoc(char *data);
 
 void			ft_free_pipes(int **pipes, int pipe_count);
 int				ft_count_pipes(t_list *arglst);
-int				**ft_create_pipes(int **pipes, int pipe_count);
+void			ft_create_pipes(t_init *process, int pipe_count);
 
 // expander here
 // -----------------------------------------------------------------------------
@@ -194,8 +196,8 @@ void			ft_freescmdlst(t_scmd_list *lst);
 void			scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);
 void			ft_freelst(t_list *lst);
 
-t_rdr			*allocate_mem_rdr(char *data, t_rdr_type type);
-t_cmd			*allocate_mem_cmd(char **arg, t_env *env, bool builtin);
+t_rdr			*ft_allocate_mem_rdr(char *data, t_rdr_type type);
+t_cmd			*ft_allocate_mem_cmd(char **arg, t_env *env, bool builtin);
 
 bool			str_contains_any(const char *str, const char *chars);
 bool			str_equals(char *lhs, char *rhs);

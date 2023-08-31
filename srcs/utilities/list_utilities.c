@@ -6,12 +6,11 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:25:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/28 17:50:29 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/31 13:01:59 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type)
 {
@@ -36,6 +35,7 @@ void	ft_freescmdlst(t_scmd_list *lst)
 	temp = lst;
 	while (temp)
 	{
+		// free rdr and cmd structs
 		next = temp->next;
 		free(temp);
 		temp = next;
