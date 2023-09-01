@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 17:00:38 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 18:30:07 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,12 @@ void	ft_execve(t_cmd *cmd)
 		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->arg[0], STDERR_FILENO);
 		ft_putendl_fd(": command not found", STDERR_FILENO);
-		// free all
 		exit(127);
 	}
 	else
 	{
 		if (execve(cmd->path, cmd->arg, cmd->env->new_env) == -1)
 			ft_throw_error(errno, "BabyBash");
-			// free all
 	}
 }
 
@@ -62,13 +60,13 @@ static void	ft_single_scmd(t_list *lst, t_init *process)
 	}
 }
 
-void	ft_executor(t_list *lst, t_init *process)
+bool	ft_executor(t_list *lst, t_init *process)
 {
-	ft_find_path(lst);
-	if (!ft_prep(process, lst) || !ft_store_old_fd(process))
+	if (!ft_find_path(lst) || !ft_prep(process, lst) || \
+		!ft_store_old_fd(process))
 	{
-		ft_putendl_fd("Something went wrong, exiting..", STDERR_FILENO);
-		exit(1); // free all
+		ft_putendl_fd("Something went wrong", STDERR_FILENO);
+		return (false); // free all
 	}
 	if (!lst->next)
 		ft_single_scmd(lst, process);
@@ -76,4 +74,5 @@ void	ft_executor(t_list *lst, t_init *process)
 		ft_create_child(lst, process);
 	if (process->oldout != -1 || process->oldin != -1)
 		ft_restore_old_fd(process);
+	return (true);
 }

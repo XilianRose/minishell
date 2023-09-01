@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 16:38:10 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 17:40:54 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	ft_free_env(char **new_env, char *arg_copy)
 		while (new_env[i])
 		{
 			free(new_env[i]);
-			new_env[i++] = NULL;
+			new_env[i] = NULL;
+			i++;
 		}
 		free(new_env);
 		new_env = NULL;

@@ -161,7 +161,7 @@ void			ft_error_env(int errnr, char *str);
 void			ft_throw_error(int errnr, char *str);
 
 void			ft_execve(t_cmd *info);
-void			ft_executor(t_list *lst, t_init *process);
+bool			ft_executor(t_list *lst, t_init *process);
 
 void			ft_close_fds(t_init *process);
 bool			ft_infile(t_init *process, t_rdr *which);
@@ -170,7 +170,7 @@ void			ft_check_for_files(t_init *process, t_scmd_list *lst);
 
 void			ft_heredoc(char *data);
 
-void			ft_find_path(t_list *lst);
+bool			ft_find_path(t_list *lst);
 
 void			ft_free_pipes(int **pipes, int pipe_count);
 int				ft_count_pipes(t_list *arglst);
@@ -181,6 +181,7 @@ void			ft_create_pipes(t_init *process, size_t pipe_count);
 
 // lexer
 t_token			*is_splitable(t_token *token);
+size_t			join_datastr(t_list *tokens, t_list *end);
 t_list			*quote_begin(t_list *tokens);
 t_list			*quote_end(t_list *tokens);
 t_token			*init_token(const char *str);

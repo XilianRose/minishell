@@ -6,13 +6,13 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/01 16:57:17 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 16:58:24 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 18:05:38 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_try_paths(char **path, t_cmd *cmd)
+static bool	ft_try_paths(char **path, t_cmd *cmd)
 {
 	int32_t	i;
 	char	*cmdpath;
@@ -23,18 +23,22 @@ static void	ft_try_paths(char **path, t_cmd *cmd)
 	{
 		temp = ft_strjoin(path[i], "/");
 		if (!temp)
-			ft_putendl_fd("ft_try_paths strjoin error", STDERR_FILENO);
+			return (false);
 		cmdpath = ft_strjoin(temp, cmd->arg[0]);
 		if (!cmdpath)
-			ft_putendl_fd("ft_try_paths strjoin error", STDERR_FILENO);
-		free(temp);
+			return (free(temp), false);
 		if (access(cmdpath, F_OK) == 0)
+		{
 			cmd->path = cmdpath;
+			break ;
+		}
 		i++;
+		free(temp);
 	}
+	return (true);
 }
 
-static void	ft_find_path2(t_scmd_list *tempscmd)
+static bool	ft_find_path2(t_scmd_list *tempscmd)
 {
 	t_cmd	*tempcmd;
 	char	**path;
@@ -51,15 +55,18 @@ static void	ft_find_path2(t_scmd_list *tempscmd)
 			{
 				path = ft_split(tempcmd->env->new_env[i] + 5, ':');
 				if (!path)
-					ft_putendl_fd("no", STDERR_FILENO); // free all exit
+					return (false);
 			}
 			i++;
 		}
-		ft_try_paths(path, tempcmd);
+		if (!ft_try_paths(path, tempcmd))
+			return (ft_free_env(path, NULL), false);
+		return (ft_free_env(path, NULL), true);
 	}
+	return (true);
 }
 
-void	ft_find_path(t_list *lst)
+bool	ft_find_path(t_list *lst)
 {
 	t_list		*temp;
 	t_scmd_list	*tempscmd;
@@ -71,9 +78,13 @@ void	ft_find_path(t_list *lst)
 		while (tempscmd)
 		{
 			if (tempscmd->type == CMD)
-				ft_find_path2(tempscmd);
+			{
+				if (!ft_find_path2(tempscmd))
+					return (false);
+			}
 			tempscmd = tempscmd->next;
 		}
 		temp = temp->next;
 	}
+	return (true);
 }
