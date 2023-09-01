@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 14:57:11 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 13:12:38 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ bool	ft_prep(t_init *process, t_list *lst)
 	process->i = 0;
 	process->pipe_count = ft_count_pipes(lst);
 	process->nr_of_cmds = process->pipe_count + 1;
+	process->heredoc = false;
 	process->ids = malloc(process->nr_of_cmds * sizeof(pid_t));
 	if (!process->ids)
 	{

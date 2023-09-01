@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 14:54:52 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 13:53:59 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,14 @@ static void	ft_expand(void)
 static void	ft_read_input(char *data, int datalen, int *fd, bool expand)
 {
 	char	*temp;
-	int		templen;
+	size_t	templen;
 
 	while (1)
 	{
 		temp = readline("> ");
 		if (!temp)
-		{
-			perror("minishell :");
 			break ;
-		}
+		// or free all and exit?
 		if (!ft_strncmp(temp, data, datalen))
 		{
 			free(temp);
@@ -68,7 +66,7 @@ static void	ft_remove_quotes(char *data)
 void	ft_heredoc(char *data)
 {
 	int		fd[2];
-	int		datalen;
+	size_t	datalen;
 	bool	expand;
 
 	expand = true;
@@ -76,6 +74,7 @@ void	ft_heredoc(char *data)
 	{
 		perror("BabyBash");
 		return ;
+		// free all and exit???
 	}
 	datalen = ft_strlen(data);
 	if (ft_strchr(data, '"') || ft_strchr(data, '\''))
@@ -85,7 +84,7 @@ void	ft_heredoc(char *data)
 	}
 	ft_read_input(data, datalen, fd, expand);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
-		perror("minishell :");
+		perror("BabyBash"); // free all and exit?
 	close(fd[0]);
 	close(fd[1]);
 }

@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 15:59:10 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/31 16:01:02 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static t_scmd_list	*init_cmdstruct(t_list *tokens, size_t count, t_env *env)
 	cmd = ft_allocate_mem_cmd(data, env, builtin);
 	return (ft_lstnewscmd(cmd, CMD));
 }
-
 
 static t_scmd_list	*init_rdrstruct(t_list *tokens)
 {

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 14:54:20 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 13:34:16 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 void	ft_close_fds(t_init *process)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (i < process->nr_of_cmds - 1)
+	while (i < (process->nr_of_cmds - 1))
 	{
-		if (close(process->pipes[i][0]) == -1 || close(process->pipes[i][1]) == -1)
+		if (close(process->pipes[i][0]) == -1 || \
+			close(process->pipes[i][1]) == -1)
 			perror("BabyBash"); // free all and exit
 		i++;
 	}
@@ -53,15 +54,16 @@ bool	ft_outfile(t_init *process, t_rdr *rdr)
 	return (true);
 }
 
-void	ft_check_for_files(t_init *process, t_scmd_list *lst)
+void	ft_check_for_files(t_init *process, t_scmd_list *scmd)
 {
 	t_rdr	*rdr;
 
-	while (lst)
+	process->heredoc = false;
+	while (scmd)
 	{
-		if (lst->type == RDR)
+		if (scmd->type == RDR)
 		{
-			rdr = lst->data;
+			rdr = scmd->data;
 			if (rdr->type == RDR_INPUT)
 			{
 				if (!ft_infile(process, rdr))
@@ -70,9 +72,14 @@ void	ft_check_for_files(t_init *process, t_scmd_list *lst)
 			if (rdr->type == RDR_OUTPUT || rdr->type == RDR_APPEND)
 				ft_outfile(process, rdr);
 			if (rdr->type == HERE_DOC)
+			{
+				if (dup2(process->oldin, STDIN_FILENO) == -1)
+					perror("BabyBash");
+				process->heredoc = true;
 				ft_heredoc(rdr->data);
+			}
 		}
-		lst = lst->next;
+		scmd = scmd->next;
 	}
 }
 // bash checks all for existing, if not existing infile, error, dont check the rest.

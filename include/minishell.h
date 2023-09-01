@@ -50,7 +50,7 @@ typedef struct s_rdr
 typedef struct s_env
 {
 	char	**new_env;
-	int		env_len;
+	size_t	env_len;
 }	t_env;
 
 typedef struct s_cmd
@@ -72,8 +72,8 @@ typedef struct s_export
 {
 	char	**new_env;
 	char	*arg_copy;
-	int		arg_len;
-	int		var_len;
+	size_t	arg_len;
+	size_t	var_len;
 	int		name_len;
 	char	*new_var;
 }	t_export;
@@ -85,14 +85,15 @@ typedef struct s_init
 	char	*str;
 	int		status;
 	int		errorcode;
-	int		i;
-	int		nr_of_cmds;
-	int		pipe_count;
+	size_t	i;
+	size_t	nr_of_cmds;
+	size_t	pipe_count;
 	int		**pipes;
 	int		fdin;
 	int		fdout;
 	int		oldout;
 	int		oldin;
+	bool	heredoc;
 }	t_init;
 
 typedef struct s_token
@@ -153,7 +154,7 @@ bool			ft_store_old_fd(t_init *process);
 void			ft_run_builtin(t_cmd *cmd);
 bool			ft_prep(t_init *process, t_list *lst);
 
-void			ft_free_all(t_list *cmdlist, t_env *env);
+void			ft_free_all(t_list *lst, t_env *env);
 void			ft_error_export_unset(char *name, char *option);
 void			ft_error_exit(char *str);
 void			ft_error_env(int errnr, char *str);
@@ -170,7 +171,7 @@ void			ft_heredoc(char *data);
 
 void			ft_free_pipes(int **pipes, int pipe_count);
 int				ft_count_pipes(t_list *arglst);
-void			ft_create_pipes(t_init *process, int pipe_count);
+void			ft_create_pipes(t_init *process, size_t pipe_count);
 
 // expander here
 // -----------------------------------------------------------------------------
@@ -201,7 +202,6 @@ void			ft_freelst(t_list *lst);
 t_rdr			*ft_allocate_mem_rdr(char *data, t_rdr_type type);
 t_cmd			*ft_allocate_mem_cmd(char **arg, t_env *env, bool builtin);
 
-bool			str_contains_any(const char *str, const char *chars);
 bool			str_equals(char *lhs, char *rhs);
 bool			ft_cmpname(const char *s1, const char *s2, int n);
 void			free_array(char **array);

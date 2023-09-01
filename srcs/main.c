@@ -6,18 +6,18 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 15:51:59 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 12:41:51 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_single_scmd(t_list *cmdlist, t_init *process)
+void	ft_single_scmd(t_list *lst, t_init *process)
 {
 	t_scmd_list	*scmd;
 	t_cmd		*cmd;
 
-	scmd = cmdlist->content;
+	scmd = lst->content;
 	while (scmd)
 	{
 		if (!scmd->next && scmd->type == RDR)
@@ -32,7 +32,7 @@ void	ft_single_scmd(t_list *cmdlist, t_init *process)
 				break ;
 			}
 			else
-				ft_create_child(cmdlist, process);
+				ft_create_child(lst, process);
 		}
 		scmd = scmd->next;
 	}
@@ -87,12 +87,12 @@ void	ft_idkname(t_scmd_list *tempscmd)
 	}
 }
 
-void	ft_find_path(t_list *cmdlist)
+void	ft_find_path(t_list *lst)
 {
 	t_list		*temp;
 	t_scmd_list	*tempscmd;
 
-	temp = cmdlist;
+	temp = lst;
 	while (temp)
 	{
 		tempscmd = temp->content;
@@ -105,18 +105,18 @@ void	ft_find_path(t_list *cmdlist)
 	}
 }
 
-void	ft_executor(t_list *cmdlist, t_init *process)
+void	ft_executor(t_list *lst, t_init *process)
 {
-	ft_find_path(cmdlist);
-	if (!ft_prep(process, cmdlist) || !ft_store_old_fd(process))
+	ft_find_path(lst);
+	if (!ft_prep(process, lst) || !ft_store_old_fd(process))
 	{
 		ft_putendl_fd("Something went wrong, exiting..", STDERR_FILENO);
 		exit(1); // free all
 	}
-	if (!cmdlist->next)
-		ft_single_scmd(cmdlist, process);
+	if (!lst->next)
+		ft_single_scmd(lst, process);
 	else
-		ft_create_child(cmdlist, process);
+		ft_create_child(lst, process);
 	if (process->oldout != -1 || process->oldin != -1)
 		ft_restore_old_fd(process);
 }
@@ -129,12 +129,11 @@ void	ft_executor(t_list *cmdlist, t_init *process)
 int	main(int argc, char **argv, char **envp)
 {
 	char	*str;
-	t_list	*cmdlist;
+	t_list	*lst;
 	t_env	env;
 	t_init	process;
 
-	(void)argv;
-	(void)argc;
+	(void)argv, (void)argc;
 	// atexit(ft_leaks);
 	ft_copy_env(&env, envp);
 	// ft_test_signals();
@@ -144,14 +143,14 @@ int	main(int argc, char **argv, char **envp)
 		if (!str)
 			break ;
 		add_history(str);
-		cmdlist = parse(&env, str);
-		if (!cmdlist)
+		lst = parse(&env, str);
+		if (!lst)
 			continue ;
-		ft_executor(cmdlist, &process);
+		ft_executor(lst, &process);
 		free(str);
 		str = NULL;
 	}
-	ft_free_all(cmdlist, &env);
+	ft_free_all(lst, &env);
 	return (EXIT_SUCCESS);
 }
 

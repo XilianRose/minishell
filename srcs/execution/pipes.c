@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 14:55:39 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 17:28:51 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ int	ft_count_pipes(t_list *lst)
 	return (pipe_count);
 }
 
-void	ft_create_pipes(t_init *process, int pipe_count)
+void	ft_create_pipes(t_init *process, size_t pipe_count)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
 	process->pipes = malloc(pipe_count * sizeof(int *));

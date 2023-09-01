@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 14:56:26 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/08/31 17:23:41 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	ft_add_new_var(t_cmd *cmd, t_env *env, char *arg)
 
 static void	ft_overwrite_var(t_cmd *cmd, char *arg, int c)
 {
-	int	len;
+	size_t	len;
 
 	if (!ft_strchr(arg, '='))
 		return ;
@@ -77,7 +77,7 @@ static bool	ft_check_export_input(t_cmd *cmd, t_env *env, char *arg, int j)
 static void	ft_export_no_args(t_cmd *cmd)
 {
 	char	**sortedenv;
-	int		len;
+	size_t	len;
 
 	len = 0;
 	while (cmd->env->new_env[len])
