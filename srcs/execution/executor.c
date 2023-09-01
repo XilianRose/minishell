@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   execve.c                                           :+:    :+:            */
+/*   executor.c                                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 14:54:11 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 17:00:38 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,46 @@ void	ft_execve(t_cmd *cmd)
 			ft_throw_error(errno, "BabyBash");
 			// free all
 	}
+}
+
+static void	ft_single_scmd(t_list *lst, t_init *process)
+{
+	t_scmd_list	*scmd;
+	t_cmd		*cmd;
+
+	scmd = lst->content;
+	while (scmd)
+	{
+		if (!scmd->next && scmd->type == RDR)
+			ft_check_for_files(process, scmd);
+		else if (scmd->type == CMD)
+		{
+			cmd = scmd->data;
+			if (cmd->builtin == true)
+			{
+				ft_check_for_files(process, scmd);
+				ft_run_builtin(scmd->data);
+				break ;
+			}
+			else
+				ft_create_child(lst, process);
+		}
+		scmd = scmd->next;
+	}
+}
+
+void	ft_executor(t_list *lst, t_init *process)
+{
+	ft_find_path(lst);
+	if (!ft_prep(process, lst) || !ft_store_old_fd(process))
+	{
+		ft_putendl_fd("Something went wrong, exiting..", STDERR_FILENO);
+		exit(1); // free all
+	}
+	if (!lst->next)
+		ft_single_scmd(lst, process);
+	else
+		ft_create_child(lst, process);
+	if (process->oldout != -1 || process->oldin != -1)
+		ft_restore_old_fd(process);
 }
