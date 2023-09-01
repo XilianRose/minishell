@@ -6,9 +6,10 @@
 #    By: mstegema <mstegema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/08/01 18:15:02 by cschabra      #+#    #+#                  #
-#    Updated: 2023/09/01 13:49:20 by cschabra      ########   odam.nl          #
+#    Updated: 2023/09/01 15:40:05 by cschabra      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
+
 
 NAME = minishell
 TEST_NAME = minishell_test

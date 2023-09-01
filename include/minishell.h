@@ -177,8 +177,10 @@ void			ft_create_pipes(t_init *process, size_t pipe_count);
 // -----------------------------------------------------------------------------
 
 // lexer
+t_token			*is_splitable(t_token *token);
 t_list			*quote_begin(t_list *tokens);
 t_list			*quote_end(t_list *tokens);
+t_token			*init_token(const char *str);
 t_token			*new_token(const char *data, t_token_type type);
 t_list			*tokenisation(const char *user_input);
 

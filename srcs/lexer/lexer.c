@@ -6,33 +6,11 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/31 15:38:46 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/01 15:29:47 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_token	*is_splitable(t_token *token)
-{
-	char	*data;
-	char	*new_data;
-	size_t	len;
-	t_token	*new;
-
-	data = token->data;
-	new_data = NULL;
-	len = ft_strlen(data);
-	new = NULL;
-	if (len > 2 && ft_strchr("<>", data[0]) && ft_strchr("<>", data[1]) \
-	&& ft_strchr("<>", data[2]) == NULL)
-		new_data = ft_substr(data, 2, len);
-	else if (len > 1 && ft_strchr("<>", data[0]) \
-	&& ft_strchr("<>", data[1]) == NULL)
-		new_data = ft_substr(data, 1, len);
-	if (new_data)
-		new = new_token(new_data, CMD_OR_FILE_TOKEN);
-	return (new);
-}
 
 static size_t	split_rdrtokens(t_list *tokens)
 {
@@ -59,45 +37,6 @@ static size_t	split_rdrtokens(t_list *tokens)
 	return (0);
 }
 
-static size_t	merge_tokens(t_list *tokens)
-{
-	t_list	*begin;
-	t_list	*end;
-	t_token	*token;
-	t_token	*next_token;
-
-	while (tokens != NULL)
-	{
-		begin = quote_begin(tokens);
-		end = quote_end(begin);
-		if (begin == NULL || end == NULL)
-			return (1); //no quotes || no ending quotes
-		token = begin->content;
-		tokens = begin;
-		while (tokens != end)
-		{
-			next_token = tokens->next->content;
-			token->data = ft_strjoin(token->data, " ");
-			token->data = ft_strjoin(token->data, next_token->data);
-			tokens = tokens->next;
-		}
-		begin->next = end->next;
-		tokens = tokens->next;
-	}
-	return (0);
-}
-
-static t_token	*init_token(const char *str)
-{
-	if (ft_strncmp(str, "|", 2) == 0)
-		return (new_token(str, PIPE_TOKEN));
-	else if ((ft_strncmp(str, ">", 1) == 0) || (ft_strncmp(str, "<", 1) == 0)
-		|| (ft_strncmp(str, ">>", 2) == 0) || (ft_strncmp(str, "<<", 2) == 0))
-		return (new_token(str, RDR_TOKEN));
-	else
-		return (new_token(str, CMD_OR_FILE_TOKEN));
-}
-
 static size_t	make_tlist(const char **ui_array, t_list **tokens)
 {
 	t_list	*node;
@@ -119,7 +58,58 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 	return (0);
 }
 
-// <infile (all rdr) should still work without space delimiter
+static size_t	*close_quotes(t_list *begin)
+{
+	t_token	*token;
+	char	*user_input;
+
+	token = begin->content;
+	user_input = "";
+	while (1)
+	{
+		user_input = ft_strjoin(user_input, readline("> "));
+		if (token->data[0] == '\'' && ft_strchr(user_input, '\'') != NULL)
+			break ;
+		else if (token->data[0] == '\"' && ft_strchr(user_input, '\"') != NULL)
+			break ;
+	}
+	token->data = ft_strjoin(token->data, user_input);
+	return (0);
+}
+
+static size_t	merge_tokens(t_list *tokens)
+{
+	t_list	*begin;
+	t_list	*end;
+	t_token	*token;
+	t_token	*next_token;
+
+	while (tokens != NULL)
+	{
+		begin = quote_begin(tokens);
+		if (begin == NULL)
+			return (1);
+		end = quote_end(begin);
+		if (end == NULL && begin != NULL)
+		{
+			close_quotes(begin);
+			continue ;
+		}
+		token = begin->content;
+		tokens = begin;
+		while (tokens != end)
+		{
+			next_token = tokens->next->content;
+			token->data = ft_strjoin(token->data, " ");
+			token->data = ft_strjoin(token->data, next_token->data);
+			tokens = tokens->next;
+		}
+		begin->next = end->next;
+		tokens = tokens->next;
+	}
+	return (0);
+}
+
 // malloc fail > throw error
 t_list	*tokenisation(const char *user_input)
 {
