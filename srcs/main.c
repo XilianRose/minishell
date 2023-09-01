@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 12:41:51 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 17:56:50 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,51 @@ void	ft_executor(t_list *lst, t_init *process)
 		ft_restore_old_fd(process);
 }
 
+static char	*close_quotes(char *input)
+{
+	char	*user_input;
+	char	*temp;
+	size_t	singleq;
+	size_t	doubleq;
+	char	c;
+	size_t	i;
+
+	user_input = "";
+	temp = "";
+	singleq = 0;
+	doubleq = 0;
+	i = 0;
+	while (input[i] != '\0')
+	{
+		if (input[i] == '\'')
+			singleq++;
+		else if (input[i] == '\"')
+			doubleq++;
+		i++;
+	}
+	if (singleq % 2 != 0)
+		c = '\'';
+	else if (doubleq % 2 != 0)
+		c = '\"';
+	else
+		return (0);
+	while (1)
+	{
+		temp = ft_strjoin(user_input, "\n");
+		user_input = ft_strjoin(temp, readline("> "));
+		free(temp);
+		if (c == '\'' && ft_strchr(user_input, '\'') != NULL)
+			break ;
+		else if (c == '\"' && ft_strchr(user_input, '\"') != NULL)
+			break ;
+	}
+	temp = input;
+	input = ft_strjoin(temp, user_input);
+	free(temp);
+	free(user_input);
+	return (input);
+}
+
 // static void	ft_leaks(void)
 // {
 // 	system("leaks -q minishell");
@@ -140,6 +185,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		str = readline("BabyBash$ ");
+		str = close_quotes(str);
 		if (!str)
 			break ;
 		add_history(str);
