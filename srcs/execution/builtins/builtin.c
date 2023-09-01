@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 15:00:43 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 15:13:44 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_echo_builtin(t_cmd *cmd)
 void	ft_cd_builtin(t_cmd *cmd)
 {
 	if (chdir(cmd->arg[1]) == -1)
-		ft_throw_error(errno, "BabyBash");
+		perror("BabyBash"); // set exitcode to 1?
 }
 
 void	ft_pwd_builtin(void)

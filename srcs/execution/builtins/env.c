@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 17:56:08 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 15:32:29 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_env_builtin(t_cmd *cmd)
 		if (cmd->arg[1])
 		{
 			ft_putstr_fd(cmd->arg[0], STDERR_FILENO);
-			ft_error_env(ENOENT, cmd->arg[1]);
+			ft_error_env(ENOENT, cmd->arg[1]); // set exitcode to 1
 			return ;
 		}
 		while (cmd->env->new_env[i])
