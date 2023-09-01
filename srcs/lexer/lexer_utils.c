@@ -1,16 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   utils_lexer.c                                      :+:    :+:            */
+/*   lexer_utils.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/24 16:19:00 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/08/31 16:30:14 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_token	*is_splitable(t_token *token)
+{
+	char	*data;
+	char	*new_data;
+	size_t	len;
+	t_token	*new;
+
+	data = token->data;
+	new_data = NULL;
+	len = ft_strlen(data);
+	new = NULL;
+	if (len > 2 && ft_strchr("<>", data[0]) && ft_strchr("<>", data[1]) \
+	&& ft_strchr("<>", data[2]) == NULL)
+		new_data = ft_substr(data, 2, len);
+	else if (len > 1 && ft_strchr("<>", data[0]) \
+	&& ft_strchr("<>", data[1]) == NULL)
+		new_data = ft_substr(data, 1, len);
+	if (new_data)
+		new = new_token(new_data, CMD_OR_FILE_TOKEN);
+	return (new);
+}
 
 t_list	*quote_begin(t_list *tokens)
 {
@@ -44,6 +66,17 @@ t_list	*quote_end(t_list *tokens)
 		tokens = tokens->next;
 	}
 	return (NULL);
+}
+
+t_token	*init_token(const char *str)
+{
+	if (ft_strncmp(str, "|", 2) == 0)
+		return (new_token(str, PIPE_TOKEN));
+	else if ((ft_strncmp(str, ">", 1) == 0) || (ft_strncmp(str, "<", 1) == 0)
+		|| (ft_strncmp(str, ">>", 2) == 0) || (ft_strncmp(str, "<<", 2) == 0))
+		return (new_token(str, RDR_TOKEN));
+	else
+		return (new_token(str, CMD_OR_FILE_TOKEN));
 }
 
 t_token	*new_token(const char *data, t_token_type type)
