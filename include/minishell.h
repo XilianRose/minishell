@@ -93,6 +93,7 @@ typedef struct s_init
 	int		fdout;
 	int		oldout;
 	int		oldin;
+	bool	heredoc;
 }	t_init;
 
 typedef struct s_token
@@ -153,7 +154,7 @@ bool			ft_store_old_fd(t_init *process);
 void			ft_run_builtin(t_cmd *cmd);
 bool			ft_prep(t_init *process, t_list *lst);
 
-void			ft_free_all(t_list *cmdlist, t_env *env);
+void			ft_free_all(t_list *lst, t_env *env);
 void			ft_error_export_unset(char *name, char *option);
 void			ft_error_exit(char *str);
 void			ft_error_env(int errnr, char *str);
