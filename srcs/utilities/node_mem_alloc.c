@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   node_mem_alloc.c                                   :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/18 15:29:21 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 17:16:27 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/01 16:03:06 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,16 @@ t_cmd	*ft_allocate_mem_cmd(char **arg, t_env *env, bool builtin)
 	exec->builtin = builtin;
 	exec->path = NULL;
 	return (exec);
+}
+
+t_token	*new_token(const char *data, t_token_type type)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (token == NULL)
+		return (NULL);
+	token->data = (char *)data;
+	token->type = type;
+	return (token);
 }
