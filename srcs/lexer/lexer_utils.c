@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/01 15:24:12 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/01 16:23:09 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,24 @@ t_token	*is_splitable(t_token *token)
 	return (new);
 }
 
-t_list	*quote_begin(t_list *tokens)
+size_t	join_datastr(t_list *tokens, t_list *end)
 {
 	t_token	*token;
-	size_t	len;
+	t_token	*next_token;
+	char	*temp;
 
-	while (tokens != NULL)
+	token = tokens->content;
+	while (tokens != end)
 	{
-		token = tokens->content;
-		len = ft_strlen(token->data) - 1;
-		if ((token->data[0] == '\'' || token->data[0] == '\"')
-			&& (token->data[len] != '\'' || token->data[len] != '\"'))
-			return (tokens);
+		next_token = tokens->next->content;
+		temp = ft_strjoin(token->data, " ");
+		free(token->data);
+		token->data = ft_strjoin(temp, next_token->data);
+		free(temp);
+		free(next_token->data);
 		tokens = tokens->next;
 	}
-	return (NULL);
+	return (0);
 }
 
 t_list	*quote_end(t_list *tokens)
@@ -71,6 +74,23 @@ t_list	*quote_end(t_list *tokens)
 	return (NULL);
 }
 
+t_list	*quote_begin(t_list *tokens)
+{
+	t_token	*token;
+	size_t	len;
+
+	while (tokens != NULL)
+	{
+		token = tokens->content;
+		len = ft_strlen(token->data) - 1;
+		if ((token->data[0] == '\'' || token->data[0] == '\"')
+			&& (token->data[len] != '\'' || token->data[len] != '\"'))
+			return (tokens);
+		tokens = tokens->next;
+	}
+	return (NULL);
+}
+
 t_token	*init_token(const char *str)
 {
 	if (ft_strncmp(str, "|", 2) == 0)
@@ -80,16 +100,4 @@ t_token	*init_token(const char *str)
 		return (new_token(str, RDR_TOKEN));
 	else
 		return (new_token(str, CMD_OR_FILE_TOKEN));
-}
-
-t_token	*new_token(const char *data, t_token_type type)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (token == NULL)
-		return (NULL);
-	token->data = (char *)data;
-	token->type = type;
-	return (token);
 }
