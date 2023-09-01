@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/31 18:15:20 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/01 15:29:47 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ static size_t	split_rdrtokens(t_list *tokens)
 	}
 	return (0);
 }
+
 static size_t	make_tlist(const char **ui_array, t_list **tokens)
 {
 	t_list	*node;
@@ -57,34 +58,23 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 	return (0);
 }
 
-static t_list	*close_quotes(t_list *begin)
+static size_t	*close_quotes(t_list *begin)
 {
-	t_list	*append_list;
-	t_list	*next;
-	t_list	*last;
 	t_token	*token;
 	char	*user_input;
 
-	append_list = NULL;
-	next = begin->next;
-	last = NULL;
 	token = begin->content;
 	user_input = "";
 	while (1)
 	{
 		user_input = ft_strjoin(user_input, readline("> "));
 		if (token->data[0] == '\'' && ft_strchr(user_input, '\'') != NULL)
-			break;
+			break ;
 		else if (token->data[0] == '\"' && ft_strchr(user_input, '\"') != NULL)
-			break;
+			break ;
 	}
-	append_list = tokenisation(user_input);
-	if (!append_list)
-		return (NULL); //throw error;
-	begin->next = append_list;
-	last = ft_lstlast(append_list);
-	last->next = next;
-	return (begin);
+	token->data = ft_strjoin(token->data, user_input);
+	return (0);
 }
 
 static size_t	merge_tokens(t_list *tokens)
@@ -101,7 +91,10 @@ static size_t	merge_tokens(t_list *tokens)
 			return (1);
 		end = quote_end(begin);
 		if (end == NULL && begin != NULL)
-			merge_tokens(close_quotes(begin)); //check with lldb what happens here
+		{
+			close_quotes(begin);
+			continue ;
+		}
 		token = begin->content;
 		tokens = begin;
 		while (tokens != end)
