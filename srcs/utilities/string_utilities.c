@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:25:42 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 17:57:12 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 14:12:00 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,4 @@ bool	ft_cmpname(const char *s1, const char *s2, int n)
 			return (false);
 	}
 	return (true);
-}
-
-void	free_array(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (array != NULL && array[i] != NULL)
-	{
-		free(array[i]);
-		array[i] = NULL;
-		i++;
-	}
-	if (array != NULL)
-	{
-		free(array);
-		array = NULL;
-	}
 }

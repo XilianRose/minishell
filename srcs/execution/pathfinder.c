@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/01 16:57:17 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 18:05:38 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 15:56:23 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,16 @@ static bool	ft_try_paths(char **path, t_cmd *cmd)
 		if (!temp)
 			return (false);
 		cmdpath = ft_strjoin(temp, cmd->arg[0]);
+		free(temp);
 		if (!cmdpath)
-			return (free(temp), false);
+			return (false);
 		if (access(cmdpath, F_OK) == 0)
 		{
 			cmd->path = cmdpath;
 			break ;
 		}
+		free(cmdpath);
 		i++;
-		free(temp);
 	}
 	return (true);
 }
@@ -45,7 +46,6 @@ static bool	ft_find_path2(t_scmd_list *tempscmd)
 	int		i;
 
 	i = 0;
-
 	tempcmd = tempscmd->data;
 	if (tempcmd->builtin == false)
 	{
@@ -60,8 +60,8 @@ static bool	ft_find_path2(t_scmd_list *tempscmd)
 			i++;
 		}
 		if (!ft_try_paths(path, tempcmd))
-			return (ft_free_env(path, NULL), false);
-		return (ft_free_env(path, NULL), true);
+			return (ft_free_str_array(path, NULL), false);
+		return (ft_free_str_array(path, NULL), true);
 	}
 	return (true);
 }

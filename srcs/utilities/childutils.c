@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 13:12:38 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 16:47:56 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@ void	ft_restore_old_fd(t_init *process)
 		if (dup2(process->oldout, STDOUT_FILENO) == -1 || \
 			close (process->oldout) == -1)
 			perror("BabyBash");
+		process->oldout = -1;
 	}
 	if (process->oldin != -1)
 	{
 		if (dup2(process->oldin, STDIN_FILENO) == -1 || \
 			close (process->oldin) == -1)
 			perror("BabyBash");
+		process->oldin = -1;
 	}
 }
 
@@ -45,7 +47,7 @@ bool	ft_store_old_fd(t_init *process)
 	return (true);
 }
 
-void	ft_run_builtin(t_cmd *cmd)
+void	ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd)
 {
 	if (!ft_strncmp("echo", cmd->arg[0], 5))
 		ft_echo_builtin(cmd);
@@ -60,11 +62,14 @@ void	ft_run_builtin(t_cmd *cmd)
 	if (!ft_strncmp("env", cmd->arg[0], 4))
 		ft_env_builtin(cmd);
 	if (!ft_strncmp("exit", cmd->arg[0], 5))
-		ft_exit_builtin(cmd);
+		ft_exit_builtin(lst, process, cmd);
 }
 
-bool	ft_prep(t_init *process, t_list *lst)
+bool	ft_prep(t_list *lst, t_init *process)
 {
+	process->ids = NULL;
+	process->cmd = NULL;
+	process->status = 0;
 	process->errorcode = 0;
 	process->oldout = -1;
 	process->oldin = -1;
@@ -75,11 +80,11 @@ bool	ft_prep(t_init *process, t_list *lst)
 	process->heredoc = false;
 	process->ids = malloc(process->nr_of_cmds * sizeof(pid_t));
 	if (!process->ids)
-	{
-		// free all
-		ft_throw_error(errno, "BabyBash");
-	}
+		return (perror("BabyBash"), false);
 	if (process->nr_of_cmds > 1)
-		ft_create_pipes(process, process->pipe_count);
+	{
+		if (!ft_create_pipes(process, process->pipe_count))
+			return (perror("BabyBash"), false);
+	}
 	return (true);
 }

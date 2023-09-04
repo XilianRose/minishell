@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:50:56 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/28 16:51:39 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/04 16:52:05 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	skip_white_space_ll(const char *str, int *multiplyer)
 	return (i);
 }
 
-long long int	ft_atollong(const char *str)
+long long int	ft_atollong(t_list *lst, t_init *process, const char *str)
 {
 	unsigned long long int	result;
 	long long int			return_result;
@@ -71,7 +71,7 @@ long long int	ft_atollong(const char *str)
 	}
 	if (((result - 1) > LLONG_MAX && multiplyer == -1) \
 		|| (result > LLONG_MAX && multiplyer == 1))
-		ft_error_exit((char *)str);
+		ft_error_exit(lst, process, (char *)str);
 	return_result = result * multiplyer;
 	return (return_result);
 }

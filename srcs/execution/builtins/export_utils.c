@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:14:27 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 17:17:21 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 14:30:45 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int i)
 		exp->new_env[i] = malloc((exp->var_len + 1) * sizeof(char));
 		if (!exp->new_env[i])
 		{
-			ft_free_env(exp->new_env, exp->arg_copy);
+			ft_free_str_array(exp->new_env, exp->arg_copy);
 			ft_throw_error(ENOMEM, "BabyBash");
 		}
 		ft_memcpy(exp->new_env[i], cmd->env->new_env[i], (exp->var_len + 1));
@@ -28,7 +28,7 @@ void	ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int i)
 	}
 	exp->new_env[i] = exp->arg_copy;
 	exp->new_env[i + 1] = NULL;
-	ft_free_env(env->new_env, NULL);
+	ft_free_str_array(env->new_env, NULL);
 	env->new_env = exp->new_env;
 	env->env_len++;
 	cmd->env->new_env = env->new_env;

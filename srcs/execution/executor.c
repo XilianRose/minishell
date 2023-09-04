@@ -6,11 +6,34 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 18:30:07 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 18:26:53 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_reset_process(t_list *lst, t_init *process)
+{
+	ft_freelst(lst);
+	if (process->ids)
+	{
+		free(process->ids);
+		process->ids = NULL;
+	}
+	process->cmd = NULL;
+	process->status = 0;
+	process->errorcode = 0;
+	process->i = 0;
+	process->nr_of_cmds = 0;
+	if (process->pipes)
+		ft_free_pipes(process->pipes, process->pipe_count);
+	process->pipe_count = 0;
+	process->fdin = -1;
+	process->fdout = -1;
+	if (process->oldout != -1 || process->oldin != -1)
+		ft_restore_old_fd(process);
+	process->heredoc = false;
+}
 
 /**
  * @brief execve returns -1 if it fails and sets errno, 
@@ -40,17 +63,16 @@ static void	ft_single_scmd(t_list *lst, t_init *process)
 	t_cmd		*cmd;
 
 	scmd = lst->content;
+	if (!ft_check_for_files(scmd, process))
+		return ;
 	while (scmd)
 	{
-		if (!scmd->next && scmd->type == RDR)
-			ft_check_for_files(process, scmd);
-		else if (scmd->type == CMD)
+		if (scmd->type == CMD)
 		{
 			cmd = scmd->data;
 			if (cmd->builtin == true)
 			{
-				ft_check_for_files(process, scmd);
-				ft_run_builtin(scmd->data);
+				ft_run_builtin(lst, process, scmd->data);
 				break ;
 			}
 			else
@@ -60,19 +82,27 @@ static void	ft_single_scmd(t_list *lst, t_init *process)
 	}
 }
 
-bool	ft_executor(t_list *lst, t_init *process)
+void	ft_executor(t_list *lst, t_init *process)
 {
-	if (!ft_find_path(lst) || !ft_prep(process, lst) || \
+	if (!ft_find_path(lst) || !ft_prep(lst, process) || \
 		!ft_store_old_fd(process))
 	{
-		ft_putendl_fd("Something went wrong", STDERR_FILENO);
-		return (false); // free all
+		ft_reset_process(lst, process);
+		ft_putendl_fd("Something went wrong in preparations..", STDERR_FILENO);
+		return ;
 	}
 	if (!lst->next)
 		ft_single_scmd(lst, process);
 	else
-		ft_create_child(lst, process);
-	if (process->oldout != -1 || process->oldin != -1)
-		ft_restore_old_fd(process);
-	return (true);
+	{
+		while (lst)
+		{
+			if (!ft_check_for_files(lst->content, process))
+				break ;
+			ft_create_child(lst, process);
+			lst = lst->next;
+		}
+		ft_wait_for_last_child(process);
+	}
+	ft_reset_process(lst, process);
 }

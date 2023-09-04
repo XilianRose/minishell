@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:25:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 13:01:59 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 14:12:33 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,6 @@ t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type)
 	return (newnode);
 }
 
-void	ft_freescmdlst(t_scmd_list *lst)
-{
-	t_scmd_list	*temp;
-	t_scmd_list	*next;
-
-	if (!lst)
-		return ;
-	temp = lst;
-	while (temp)
-	{
-		// free rdr and cmd structs
-		next = temp->next;
-		free(temp);
-		temp = next;
-	}
-	lst = NULL;
-}
-
 void	scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new)
 {
 	t_scmd_list	*temp;
@@ -58,21 +40,4 @@ void	scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new)
 	while (temp != NULL && temp -> next != NULL)
 		temp = temp -> next;
 	temp -> next = new;
-}
-
-void	ft_freelst(t_list *lst)
-{
-	t_list	*temp;
-	t_list	*next;
-
-	if (!lst)
-		return ;
-	temp = lst;
-	while (temp)
-	{
-		next = temp->next;
-		free(temp);
-		temp = next;
-	}
-	lst = NULL;
 }

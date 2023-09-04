@@ -6,13 +6,13 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 18:31:54 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 18:14:30 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_wait_for_last_child(t_init *process)
+void	ft_wait_for_last_child(t_init *process)
 {
 	ft_close_fds(process);
 	waitpid(process->ids[process->nr_of_cmds - 1], &process->status, 0);
@@ -22,10 +22,9 @@ static void	ft_wait_for_last_child(t_init *process)
 		process->errorcode = -1; // is this needed?
 	free(process->ids);
 	process->ids = NULL;
-	ft_free_pipes(process->pipes, process->pipe_count);
 }
 
-static void	ft_child_process(t_init *process)
+static void	ft_child_process(t_list *lst, t_init *process)
 {
 	if ((process->i == 0 && process->nr_of_cmds > 1) || \
 		(process->i != (process->nr_of_cmds - 1)))
@@ -43,12 +42,12 @@ static void	ft_child_process(t_init *process)
 		ft_execve(process->cmd);
 	else
 	{
-		ft_run_builtin(process->cmd);
+		ft_run_builtin(lst, process, process->cmd);
 		exit(0);
 	}
 }
 
-static void	ft_find_cmd(t_init *process, t_scmd_list *lst)
+static void	ft_find_cmd(t_scmd_list *lst, t_init *process)
 {
 	while (lst)
 	{
@@ -65,23 +64,17 @@ static void	ft_find_cmd(t_init *process, t_scmd_list *lst)
 
 void	ft_create_child(t_list *lst, t_init *process)
 {
-	while (lst)
+	ft_find_cmd(lst->content, process);
+	if (process->cmd && !process->errorcode)
 	{
-		ft_find_cmd(process, lst->content);
-		ft_check_for_files(process, lst->content); // make sure this checks if all infiles exist & make all outfiles, write to last one only.
-		if (process->cmd && !process->errorcode)
+		process->ids[process->i] = fork();
+		if (process->ids[process->i] == -1)
 		{
-			process->ids[process->i] = fork();
-			if (process->ids[process->i] == -1)
-			{
-				perror("BabyBash");
-				break ;
-			}
-			if (process->ids[process->i] == 0)
-				ft_child_process(process);
-			process->i++;
+			perror("BabyBash");
+			return ;
 		}
-		lst = lst->next;
+		if (process->ids[process->i] == 0)
+			ft_child_process(lst, process);
+		process->i++;
 	}
-	ft_wait_for_last_child(process);
 }

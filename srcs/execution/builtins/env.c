@@ -6,34 +6,11 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 17:40:54 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 15:23:46 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_free_env(char **new_env, char *arg_copy)
-{
-	int	i;
-
-	i = 0;
-	if (new_env)
-	{
-		while (new_env[i])
-		{
-			free(new_env[i]);
-			new_env[i] = NULL;
-			i++;
-		}
-		free(new_env);
-		new_env = NULL;
-	}
-	if (arg_copy)
-	{
-		free(arg_copy);
-		arg_copy = NULL;
-	}
-}
 
 void	ft_env_builtin(t_cmd *cmd)
 {
@@ -60,7 +37,7 @@ void	ft_env_builtin(t_cmd *cmd)
 void	ft_copy_env(t_env *env, char **old_env)
 {
 	int		i;
-	size_t	var_len;
+	size_t	str_len;
 
 	i = 0;
 	env->env_len = 0;
@@ -71,14 +48,14 @@ void	ft_copy_env(t_env *env, char **old_env)
 		ft_throw_error(errno, "BabyBash");
 	while (old_env[i])
 	{
-		var_len = ft_strlen(old_env[i]);
-		env->new_env[i] = malloc((var_len + 1) * sizeof(char));
+		str_len = ft_strlen(old_env[i]);
+		env->new_env[i] = malloc((str_len + 1) * sizeof(char));
 		if (!env->new_env[i])
 		{
-			ft_free_env(env->new_env, NULL);
+			ft_free_str_array(env->new_env, NULL);
 			ft_throw_error(ENOMEM, "BabyBash");
 		}
-		ft_memcpy(env->new_env[i], old_env[i], (var_len + 1));
+		ft_memcpy(env->new_env[i], old_env[i], (str_len + 1));
 		i++;
 	}
 	env->new_env[i] = NULL;

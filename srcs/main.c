@@ -6,16 +6,16 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 18:25:26 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 17:51:07 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	ft_leaks(void)
-// {
-// 	system("leaks -q minishell");
-// }
+void	ft_leaks(void)
+{
+	system("leaks -q minishell");
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -25,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 	t_init	process;
 
 	(void)argv, (void)argc;
-	// atexit(ft_leaks);
+	atexit(ft_leaks);
 	ft_copy_env(&env, envp);
 	// ft_test_signals();
 	while (1)
@@ -39,12 +39,12 @@ int	main(int argc, char **argv, char **envp)
 		str = NULL;
 		if (!lst)
 			continue ;
-		if (!ft_executor(lst, &process))
-			break ;
+		ft_executor(lst, &process);
 	}
-	ft_free_all(lst, &env);
+	rl_clear_history();
+	ft_free_str_array(env.new_env, NULL);
 	return (EXIT_SUCCESS);
 }
 
-// free in parse: only free own allocated tokens etc 
-// to do: signals, freeing everything, expander, testing.
+// free in parse: only free own allocated tokens etc that isn't send to executor
+// to do: signals, freeing, expander, testing.

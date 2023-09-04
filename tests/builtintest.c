@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/04 14:48:42 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/30 17:15:58 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 14:30:45 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,6 @@ void	ft_test_unset(t_env *env)
 // 	// ft_putendl_fd(buffer, STDOUT_FILENO);
 
 // 	// ft_test_pwd();
-// 	ft_free_env(env.new_env, NULL);
+// 	ft_free_str_array(env.new_env, NULL);
 // 	// while (1);
 // }
