@@ -189,6 +189,7 @@ t_list			*tokenisation(const char *user_input);
 t_list			*parse(t_env *env, const char *user_input);
 size_t			count_cmdtokens(t_list **tokens);
 bool			is_builtin(t_list **tokens);
+char			*complete_input(char *input);
 
 // utilities
 long long int	ft_atollong(const char *str);
