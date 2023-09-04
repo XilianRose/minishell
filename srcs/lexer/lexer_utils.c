@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/01 18:33:09 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/04 18:08:55 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ t_list	*quote_end(t_list *tokens)
 	return (NULL);
 }
 
+
+//close quotes correctly
 t_list	*quote_begin(t_list *tokens)
 {
 	t_token	*token;
@@ -83,13 +85,29 @@ t_list	*quote_begin(t_list *tokens)
 	{
 		token = tokens->content;
 		len = ft_strlen(token->data) - 1;
-		if ((token->data[0] == '\'' || token->data[0] == '\"')
-			&& (token->data[len] != '\'' || token->data[len] != '\"'))
+		if (ft_strchr(token->data, '\'')
 			return (tokens);
 		tokens = tokens->next;
 	}
 	return (NULL);
 }
+
+// t_list	*quote_begin(t_list *tokens)
+// {
+// 	t_token	*token;
+// 	size_t	len;
+
+// 	while (tokens != NULL)
+// 	{
+// 		token = tokens->content;
+// 		len = ft_strlen(token->data) - 1;
+// 		if ((token->data[0] == '\'' || token->data[0] == '\"')
+// 			&& (token->data[len] != '\'' || token->data[len] != '\"'))
+// 			return (tokens);
+// 		tokens = tokens->next;
+// 	}
+// 	return (NULL);
+// }
 
 t_token	*init_token(const char *str)
 {
