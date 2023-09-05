@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 17:51:07 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/05 17:33:57 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 	t_init	process;
 
 	(void)argv, (void)argc;
-	atexit(ft_leaks);
+	// atexit(ft_leaks);
 	ft_copy_env(&env, envp);
 	// ft_test_signals();
 	while (1)

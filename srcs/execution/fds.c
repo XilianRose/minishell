@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 18:29:45 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/05 17:27:21 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,38 @@ bool	ft_outfile(t_init *process, t_rdr *rdr)
 	return (true);
 }
 
+bool	ft_check_for_heredoc(t_scmd_list *scmd, t_init *process)
+{
+	t_rdr	*rdr;
+	
+	while (scmd)
+	{
+		if (scmd->type == RDR)
+		{
+			rdr = scmd->data;
+			if (rdr->type == HERE_DOC)
+			{
+				if (dup2(process->oldin, STDIN_FILENO) == -1)
+				{
+					perror("BabyBash");
+					return (false);
+				}
+				if (!ft_heredoc(rdr->data))
+					return (false);
+				process->heredoc = true;
+			}
+		}
+		scmd = scmd->next;
+	}
+	return (true);
+}
+
 bool	ft_check_for_files(t_scmd_list *scmd, t_init *process)
 {
 	t_rdr	*rdr;
 
+	if (!ft_check_for_heredoc(scmd, process))
+		return (false);
 	while (scmd)
 	{
 		if (scmd->type == RDR)
@@ -77,13 +105,6 @@ bool	ft_check_for_files(t_scmd_list *scmd, t_init *process)
 			}
 			if (rdr->type == RDR_OUTPUT || rdr->type == RDR_APPEND)
 				ft_outfile(process, rdr);
-			if (rdr->type == HERE_DOC)
-			{
-				if (dup2(process->oldin, STDIN_FILENO) == -1)
-					perror("BabyBash");
-				process->heredoc = true;
-				ft_heredoc(rdr->data);
-			}
 		}
 		scmd = scmd->next;
 	}

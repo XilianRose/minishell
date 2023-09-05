@@ -170,7 +170,7 @@ bool			ft_infile(t_init *process, t_rdr *rdr);
 bool			ft_outfile(t_init *process, t_rdr *rdr);
 bool			ft_check_for_files(t_scmd_list *lst, t_init *process);
 
-void			ft_heredoc(char *data);
+bool			ft_heredoc(char *data);
 
 bool			ft_find_path(t_list *lst);
 

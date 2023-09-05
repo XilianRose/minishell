@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 16:47:56 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/05 13:23:42 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ bool	ft_store_old_fd(t_init *process)
 	process->oldout = dup(STDOUT_FILENO);
 	if (process->oldout == -1)
 	{
-		ft_putstr_fd("BabyBash: old fd dup failed.", STDERR_FILENO);
+		perror("BabyBash");
 		return (false);
 	}
 	process->oldin = dup(STDIN_FILENO);
 	if (process->oldin == -1)
 	{
-		ft_putstr_fd("BabyBash: old fd dup failed.", STDERR_FILENO);
+		perror("BabyBash");
 		return (false);
 	}
 	return (true);
@@ -73,6 +73,8 @@ bool	ft_prep(t_list *lst, t_init *process)
 	process->errorcode = 0;
 	process->oldout = -1;
 	process->oldin = -1;
+	process->fdin = 0;
+	process->fdout = 0;
 	process->pipes = NULL;
 	process->i = 0;
 	process->pipe_count = ft_count_pipes(lst);
@@ -84,7 +86,7 @@ bool	ft_prep(t_list *lst, t_init *process)
 	if (process->nr_of_cmds > 1)
 	{
 		if (!ft_create_pipes(process, process->pipe_count))
-			return (perror("BabyBash"), false);
+			return (false);
 	}
 	return (true);
 }

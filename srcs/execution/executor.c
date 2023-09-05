@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 18:26:53 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/05 17:08:27 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ void	ft_reset_process(t_list *lst, t_init *process)
 	if (process->pipes)
 		ft_free_pipes(process->pipes, process->pipe_count);
 	process->pipe_count = 0;
-	process->fdin = -1;
-	process->fdout = -1;
+	process->fdin = 0;
+	process->fdout = 0;
 	if (process->oldout != -1 || process->oldin != -1)
 		ft_restore_old_fd(process);
 	process->heredoc = false;
@@ -76,7 +76,10 @@ static void	ft_single_scmd(t_list *lst, t_init *process)
 				break ;
 			}
 			else
+			{
 				ft_create_child(lst, process);
+				ft_wait_for_last_child(process);		
+			}
 		}
 		scmd = scmd->next;
 	}
@@ -100,6 +103,8 @@ void	ft_executor(t_list *lst, t_init *process)
 			if (!ft_check_for_files(lst->content, process))
 				break ;
 			ft_create_child(lst, process);
+			ft_restore_old_fd(process);
+			ft_store_old_fd(process);
 			lst = lst->next;
 		}
 		ft_wait_for_last_child(process);

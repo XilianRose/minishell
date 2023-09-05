@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 18:14:30 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/05 16:43:53 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ void	ft_wait_for_last_child(t_init *process)
 
 static void	ft_child_process(t_list *lst, t_init *process)
 {
-	if ((process->i == 0 && process->nr_of_cmds > 1) || \
-		(process->i != (process->nr_of_cmds - 1)))
+	if (!process->fdout && ((!process->i && process->nr_of_cmds > 1) || \
+		(process->i != (process->nr_of_cmds - 1))))
 	{
 		if (dup2(process->pipes[process->i][1], STDOUT_FILENO) == -1)
 			ft_throw_error(errno, "BabyBash");
 	}
-	if (process->i != 0 && process->heredoc == false)
+	if (process->i != 0 && process->heredoc == false && !process->fdin)
 	{
 		if (dup2(process->pipes[process->i - 1][0], STDIN_FILENO) == -1)
 			ft_throw_error(errno, "BabyBash");
@@ -43,7 +43,7 @@ static void	ft_child_process(t_list *lst, t_init *process)
 	else
 	{
 		ft_run_builtin(lst, process, process->cmd);
-		exit(0);
+		exit(0); // exit with exitstatus if builtin failed..
 	}
 }
 
@@ -77,4 +77,7 @@ void	ft_create_child(t_list *lst, t_init *process)
 			ft_child_process(lst, process);
 		process->i++;
 	}
+	process->heredoc = false;
+	process->fdout = 0;
+	process->fdin = 0;
 }

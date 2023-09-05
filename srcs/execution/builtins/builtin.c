@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 19:39:48 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/05 13:33:24 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,22 @@ void	ft_echo_builtin(t_cmd *cmd)
 	{
 		while (cmd->arg[i + 1])
 		{
-			write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i]));
-			write(STDOUT_FILENO, " ", 1);
+			if (write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i])) == -1 || \
+				write(STDOUT_FILENO, " ", 1) == -1)
+				perror("BabyBash");
 			i++;
 		}
-		write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i]));
+		if (write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i])) == -1)
+			perror("BabyBash");
+			
 	}
 	if (cmd->arg[1] && cmd->arg[1][0])
 	{
 		if (str_equals("-n", cmd->arg[1]))
 			return ;
 	}
-	write(STDOUT_FILENO, "\n", 1);
+	if (write(STDOUT_FILENO, "\n", 1) == -1)
+		perror("BabyBash");
 }
 
 // void	ft_echo_builtin(t_cmd *cmd)
