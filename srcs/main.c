@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/05 17:33:57 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/06 19:04:27 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,32 +17,49 @@ void	ft_leaks(void)
 	system("leaks -q minishell");
 }
 
-int	main(int argc, char **argv, char **envp)
+static void	ft_loop(t_init *process, t_env *env)
 {
 	char	*str;
 	t_list	*lst;
-	t_env	env;
-	t_init	process;
 
-	(void)argv, (void)argc;
-	// atexit(ft_leaks);
-	ft_copy_env(&env, envp);
-	// ft_test_signals();
 	while (1)
 	{
+		ft_setup_interactive();
 		str = readline("BabyBash$ ");
 		if (!str)
+		{
+			ft_putendl_fd("Exit", STDERR_FILENO);
 			break ;
+		}
+		ft_setup_noninteractive();
 		add_history(str);
-		lst = parse(&env, str);
+		lst = parse(env, str);
 		free(str);
 		str = NULL;
 		if (!lst)
 			continue ;
-		ft_executor(lst, &process);
+		ft_executor(lst, process);
 	}
 	rl_clear_history();
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	// struct termios	term;
+	// struct termios	original;
+	t_env			env;
+	t_init			process;
+
+	(void)argv, (void)argc;
+	// atexit(ft_leaks);
+	// tcgetattr(STDIN_FILENO, &original);
+	// tcgetattr(STDIN_FILENO, &term);
+	// term.c_lflag &= ~ECHOCTL;
+	// tcsetattr(STDIN_FILENO, TCSAFLUSH, &term);
+	ft_copy_env(&env, envp);
+	ft_loop(&process, &env);
 	ft_free_str_array(env.new_env, NULL);
+	// tcsetattr(STDIN_FILENO, TCSAFLUSH, &original);
 	return (EXIT_SUCCESS);
 }
 

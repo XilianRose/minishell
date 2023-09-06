@@ -20,6 +20,7 @@
 # include <sys/param.h>
 # include <signal.h>
 # include <sys/wait.h>
+// # include <termios.h>
 
 typedef enum e_struct_type
 {
@@ -123,7 +124,8 @@ typedef struct s_expand_length_info
 }	t_expand_length_info;
 
 // signals
-void			ft_test_signals(void);
+void			ft_setup_interactive(void);
+void			ft_setup_noninteractive(void);
 
 // builtins
 void			ft_echo_builtin(t_cmd *cmd);
