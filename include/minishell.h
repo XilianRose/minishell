@@ -19,6 +19,7 @@
 # include <sys/errno.h>
 # include <sys/param.h>
 # include <signal.h>
+# include <sys/wait.h>
 
 typedef enum e_struct_type
 {

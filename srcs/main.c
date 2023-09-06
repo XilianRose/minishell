@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/06 14:15:15 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/06 14:29:24 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ int	main(int argc, char **argv, char **envp)
 		str = NULL;
 		if (!lst)
 			continue ;
-		ft_executor(lst, &process);
 		print_commandlist(lst);
+		ft_executor(lst, &process);
 		free(str);
 		str = NULL;
 	}

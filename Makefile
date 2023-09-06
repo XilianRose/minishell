@@ -6,7 +6,7 @@
 #    By: mstegema <mstegema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/08/01 18:15:02 by cschabra      #+#    #+#                  #
-#    Updated: 2023/09/01 15:40:05 by cschabra      ########   odam.nl          #
+#    Updated: 2023/09/06 14:41:31 by mstegema      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,9 @@ CFLAGS = -Wall -Werror -Wextra ${HEADERS} #-Wunreachable-code -Ofast
 
 LIBFT = 42lib
 
-READLINE_DIR = $(shell brew --prefix readline)
-READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
+# READLINE_DIR = $(shell brew --prefix readline)
+# READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
+READLINE_LIB = -lreadline -lhistory
 
 HEADERS	= -I include -I ${LIBFT}/include -I $(READLINE_DIR)/include
 LIBS	= ${LIBFT}/libft.a
@@ -54,7 +55,7 @@ fclean: clean
 
 re: fclean all
 
-debug: CFLAGS += -g -fsanitize=address
+debug: CFLAGS += -g #-fsanitize=address
 debug: re
 
 .PHONY: all, tests, clean, fclean, re, debug

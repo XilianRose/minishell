@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/04 17:00:39 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/06 14:25:03 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 	t_token	*token;
 	char	*str;
 
-	while (ui_array[0] != '\0')
+	while (ui_array[0] != NULL)
 	{
 		str = (char *)*ui_array;
 		token = init_token(str);
