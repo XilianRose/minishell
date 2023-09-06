@@ -6,26 +6,11 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 13:31:37 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 12:39:52 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/04 16:44:20 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_free_all(t_list *lst, t_env *env)
-{
-	t_list	*temp;
-
-	temp = lst;
-	while (temp)
-	{
-		ft_freescmdlst(temp->content);
-		temp = temp->next;
-	}
-	ft_freelst(lst);
-	ft_free_env(env->new_env, NULL);
-	rl_clear_history();
-}
 
 void	ft_error_export_unset(char *name, char *option)
 {
@@ -38,13 +23,14 @@ void	ft_error_export_unset(char *name, char *option)
 	ft_putendl_fd(": not a valid identifier", STDERR_FILENO);
 }
 
-void	ft_error_exit(char *str)
+void	ft_error_exit(t_list *lst, t_init *process, char *str)
 {
 	ft_putstr_fd("exit\nBabyBash: exit: ", STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
 	rl_clear_history();
-	exit(255); // free all
+	ft_reset_process(lst, process);
+	exit(255);
 }
 
 void	ft_error_env(int errnr, char *str)
@@ -60,8 +46,7 @@ void	ft_error_env(int errnr, char *str)
 void	ft_throw_error(int errnr, char *str)
 {
 	errno = errnr;
-	if (str)
-		perror(str);
+	perror(str);
 	rl_clear_history();
-	exit(1); // free all
+	exit(EXIT_FAILURE);
 }

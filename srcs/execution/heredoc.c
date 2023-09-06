@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/01 13:53:59 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/05 17:25:24 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	ft_expand(void)
 	return ;
 }
 
-static void	ft_read_input(char *data, int datalen, int *fd, bool expand)
+static bool	ft_read_input(char *data, int datalen, int *fd, bool expand)
 {
 	char	*temp;
 	size_t	templen;
@@ -26,8 +26,7 @@ static void	ft_read_input(char *data, int datalen, int *fd, bool expand)
 	{
 		temp = readline("> ");
 		if (!temp)
-			break ;
-		// or free all and exit?
+			return (false);
 		if (!ft_strncmp(temp, data, datalen))
 		{
 			free(temp);
@@ -36,10 +35,11 @@ static void	ft_read_input(char *data, int datalen, int *fd, bool expand)
 		if (expand == true)
 			ft_expand();
 		templen = ft_strlen(temp);
-		write(fd[1], temp, templen);
-		write(fd[1], "\n", 1);
+		if (write(fd[1], temp, templen) == -1 || write(fd[1], "\n", 1) == -1)
+			return (free(temp), false);	
 		free(temp);
 	}
+	return (true);
 }
 
 static void	ft_remove_quotes(char *data)
@@ -63,7 +63,7 @@ static void	ft_remove_quotes(char *data)
 	}
 }
 
-void	ft_heredoc(char *data)
+bool	ft_heredoc(char *data)
 {
 	int		fd[2];
 	size_t	datalen;
@@ -71,20 +71,21 @@ void	ft_heredoc(char *data)
 
 	expand = true;
 	if (pipe(fd) == -1)
-	{
-		perror("BabyBash");
-		return ;
-		// free all and exit???
-	}
+		return (perror("BabyBash"), false);
 	datalen = ft_strlen(data);
 	if (ft_strchr(data, '"') || ft_strchr(data, '\''))
 	{
 		ft_remove_quotes(data);
 		expand = false;
 	}
-	ft_read_input(data, datalen, fd, expand);
-	if (dup2(fd[0], STDIN_FILENO) == -1)
-		perror("BabyBash"); // free all and exit?
-	close(fd[0]);
-	close(fd[1]);
+	if (!ft_read_input(data, datalen, fd, expand))
+	{
+		if (close(fd[0]) == -1 || close(fd[1]) == -1)
+			perror("BabyBash");
+		return (false);
+	}
+	if (dup2(fd[0], STDIN_FILENO) == -1 || close(fd[0]) == -1 || \
+		close(fd[1]) == -1)
+		return (perror("BabyBash"), false);
+	return (true);
 }
