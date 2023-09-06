@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/06 13:28:13 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/06 19:54:40 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,31 +37,6 @@ static size_t	split_rdrtokens(t_list *tokens)
 	return (0);
 }
 
-static size_t	*close_quotes(t_list *begin)
-{
-	t_token	*token;
-	char	*user_input;
-	char	*temp;
-
-	token = begin->content;
-	user_input = "";
-	while (1)
-	{
-		temp = ft_strjoin(user_input, "\n");
-		user_input = ft_strjoin(temp, readline("> "));
-		free(temp);
-		if (token->data[0] == '\'' && ft_strchr(user_input, '\'') != NULL)
-			break ;
-		else if (token->data[0] == '\"' && ft_strchr(user_input, '\"') != NULL)
-			break ;
-	}
-	temp = token->data;
-	token->data = ft_strjoin(temp, user_input);
-	free(temp);
-	free(user_input);
-	return (0);
-}
-
 static size_t	merge_tokens(t_list *tokens)
 {
 	t_list	*begin;
@@ -73,8 +48,8 @@ static size_t	merge_tokens(t_list *tokens)
 		if (begin == NULL)
 			return (1);
 		end = quote_end(begin);
-		if (end == NULL && begin != NULL)
-			return (close_quotes(begin), 0);
+		if (end == NULL)
+			return (1);
 		tokens = begin;
 		join_datastr(tokens, end);
 		begin->next = end->next;

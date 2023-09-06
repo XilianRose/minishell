@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/01 16:23:09 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/06 15:05:40 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,23 @@ size_t	join_datastr(t_list *tokens, t_list *end)
 t_list	*quote_end(t_list *tokens)
 {
 	t_token	*token;
-	size_t	len;
+	size_t	i;
 	char	delim;
 
 	token = tokens->content;
-	delim = token->data[0];
 	while (tokens != NULL)
 	{
+		i = 0;
 		token = tokens->content;
-		len = ft_strlen(token->data) - 1;
-		if ((token->data[0] != '\'' || token->data[0] != '\"')
-			&& (token->data[len] == delim))
-			return (tokens);
+		while (token->data[i] != '\0')
+		{
+			if ((token->data[i] == '\'' || token->data[i] == '\"') \
+			&& delim == 0)
+				delim = token->data[i];
+			else if (token->data[i] == delim)
+				return (tokens);
+			i++;
+		}
 		tokens = tokens->next;
 	}
 	return (NULL);
@@ -77,15 +82,18 @@ t_list	*quote_end(t_list *tokens)
 t_list	*quote_begin(t_list *tokens)
 {
 	t_token	*token;
-	size_t	len;
+	size_t	i;
 
 	while (tokens != NULL)
 	{
+		i = 0;
 		token = tokens->content;
-		len = ft_strlen(token->data) - 1;
-		if ((token->data[0] == '\'' || token->data[0] == '\"')
-			&& (token->data[len] != '\'' || token->data[len] != '\"'))
-			return (tokens);
+		while (token->data[i] != '\0')
+		{
+			if (token->data[i] == '\'' || token->data[i] == '\"')
+				return (tokens);
+			i++;
+		}
 		tokens = tokens->next;
 	}
 	return (NULL);

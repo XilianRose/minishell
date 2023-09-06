@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/06 19:04:27 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/06 19:54:29 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static void	ft_loop(t_init *process, t_env *env)
 	{
 		ft_setup_interactive();
 		str = readline("BabyBash$ ");
+		str = complete_input(str);
 		if (!str)
 		{
 			ft_putendl_fd("Exit", STDERR_FILENO);

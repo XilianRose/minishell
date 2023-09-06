@@ -189,6 +189,7 @@ t_token			*is_splitable(t_token *token);
 size_t			join_datastr(t_list *tokens, t_list *end);
 t_list			*quote_begin(t_list *tokens);
 t_list			*quote_end(t_list *tokens);
+size_t			join_datastr(t_list *tokens, t_list *end);
 t_token			*init_token(const char *str);
 t_token			*new_token(const char *data, t_token_type type);
 t_list			*tokenisation(const char *user_input);
@@ -197,6 +198,7 @@ t_list			*tokenisation(const char *user_input);
 t_list			*parse(t_env *env, const char *user_input);
 size_t			count_cmdtokens(t_list **tokens);
 bool			is_builtin(t_list **tokens);
+char			*complete_input(char *input);
 
 // utilities
 long long int	ft_atollong(t_list *lst, t_init *process, const char *str);
