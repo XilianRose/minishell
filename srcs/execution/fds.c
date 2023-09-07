@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 12:48:08 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 18:04:26 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_close_fds(t_init *process)
 	{
 		if (close(process->pipes[i][0]) == -1 || \
 			close(process->pipes[i][1]) == -1)
-			perror("BabyBash");
+			ft_throw_error(process, errno);
 		i++;
 	}
 }
@@ -36,6 +36,7 @@ bool	ft_infile(t_init *process, t_rdr *rdr)
 	{
 		temp = errno;
 		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
+		process->errorcode = 1;
 		errno = temp;
 		return (perror(rdr->data), false);
 	}
@@ -55,6 +56,7 @@ bool	ft_outfile(t_init *process, t_rdr *rdr)
 	{
 		temp = errno;
 		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
+		process->errorcode = 1;
 		errno = temp;
 		return (perror(rdr->data), false);
 	}
@@ -74,10 +76,10 @@ bool	ft_check_for_heredoc(t_scmd_list *scmd, t_init *process)
 			{
 				if (dup2(process->oldin, STDIN_FILENO) == -1)
 				{
-					perror("BabyBash");
+					ft_throw_error(process, errno);
 					return (false);
 				}
-				if (!ft_heredoc(rdr->data))
+				if (!ft_heredoc(process, rdr->data))
 					return (false);
 				process->heredoc = true;
 			}

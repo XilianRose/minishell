@@ -20,7 +20,7 @@
 # include <sys/param.h>
 # include <signal.h>
 # include <sys/wait.h>
-// # include <termios.h>
+# include <termios.h>
 
 typedef enum e_struct_type
 {
@@ -124,18 +124,18 @@ typedef struct s_expand_length_info
 }	t_expand_length_info;
 
 // signals
-void		ft_setup_interactive(void);
-void		ft_setup_noninteractive(void);
+void		ft_setup_interactive(t_init *process);
+void		ft_setup_noninteractive(t_init *process);
 
 // builtins
-void		ft_echo_builtin(t_cmd *cmd);
-void		ft_cd_builtin(t_cmd *cmd);
-void		ft_pwd_builtin(void);
+void		ft_echo_builtin(t_init *process, t_cmd *cmd);
+void		ft_cd_builtin(t_init *process, t_cmd *cmd);
+void		ft_pwd_builtin(t_init *process);
 void		ft_exit_builtin(t_list *lst, t_init *process, t_cmd *cmd);
 
 void		ft_free_str_array(char **arr, char *str);
-void		ft_env_builtin(t_cmd *cmd);
-void		ft_copy_env(t_env *env, char **old_env);
+void		ft_env_builtin(t_init *process, t_cmd *cmd);
+bool		ft_copy_env(t_init *process, t_env *env, char **old_env);
 
 void		ft_export_append(t_cmd *cmd, t_env *env, char *arg, int32_t j);
 
@@ -162,7 +162,7 @@ void		ft_free_all(t_list *lst, t_env *env);
 void		ft_error_export_unset(char *name, char *option);
 void		ft_error_exit(t_list *lst, t_init *process, char *str);
 void		ft_error_env(int32_t errnr, char *str);
-void		ft_throw_error(int32_t errnr, char *str);
+void		ft_throw_error(t_init *process, int32_t errnr);
 
 void		ft_reset_process(t_list *lst, t_init *process);
 void		ft_execve(t_cmd *info);
@@ -173,7 +173,7 @@ bool		ft_infile(t_init *process, t_rdr *rdr);
 bool		ft_outfile(t_init *process, t_rdr *rdr);
 bool		ft_check_for_files(t_scmd_list *lst, t_init *process);
 
-bool		ft_heredoc(char *data);
+bool		ft_heredoc(t_init *process, char *data);
 
 bool		ft_find_path(t_list *lst);
 

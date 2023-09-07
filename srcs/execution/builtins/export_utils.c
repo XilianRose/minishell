@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:14:27 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 13:16:27 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 17:25:03 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ void	ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int32_t i)
 		exp->new_env[i] = malloc((exp->var_len + 1) * sizeof(char));
 		if (!exp->new_env[i])
 		{
+			perror("BabyBash"); // set errorcode to 1
 			ft_free_str_array(exp->new_env, exp->arg_copy);
-			ft_throw_error(ENOMEM, "BabyBash");
+			return ;
 		}
 		ft_memcpy(exp->new_env[i], cmd->env->new_env[i], (exp->var_len + 1));
 		i++;
@@ -64,7 +65,7 @@ static char	*ft_find_name(char *var)
 		i++;
 	name = malloc((i + 1) * sizeof(char));
 	if (!name)
-		return (NULL);
+		return (perror("BabyBash"), NULL); // set errorcode to 1
 	name[i--] = '\0';
 	while (i + 1)
 	{
@@ -99,7 +100,7 @@ void	ft_write_export(char **sortedenv)
 	{
 		name = ft_find_name(sortedenv[i]);
 		if (!name)
-			ft_throw_error(ENOMEM, "BabyBash");
+			return ;
 		value = ft_find_value(sortedenv[i]);
 		if (value == -1)
 			printf("declare -x %s\n", name);
