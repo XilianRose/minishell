@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 12:57:43 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 13:16:27 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_env_builtin(t_cmd *cmd)
 		while (cmd->env->new_env[i])
 		{
 			if (ft_strchr(cmd->env->new_env[i], '='))
-				print32_tf("%s\n", cmd->env->new_env[i]);
+				printf("%s\n", cmd->env->new_env[i]);
 			i++;
 		}
 	}

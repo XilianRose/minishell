@@ -168,7 +168,7 @@ void	ft_test_unset(t_env *env)
 // 	i = 0;
 // 	ft_copy_env(&env, envp);
 // 	// while (env.new_env[i])
-// 	// 	print32_tf("%s\n", env.new_env[i++]);
+// 	// 	printf("%s\n", env.new_env[i++]);
 // 	// puts("-----------------------------------------------------");
 // 	// ft_test_env(&env);
 // 	// ft_test_export(&env);

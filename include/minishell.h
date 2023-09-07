@@ -124,8 +124,8 @@ typedef struct s_expand_length_info
 }	t_expand_length_info;
 
 // signals
-void		ft_setup_int32_teractive(void);
-void		ft_setup_nonint32_teractive(void);
+void		ft_setup_interactive(void);
+void		ft_setup_noninteractive(void);
 
 // builtins
 void		ft_echo_builtin(t_cmd *cmd);

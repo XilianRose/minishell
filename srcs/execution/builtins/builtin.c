@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 12:51:43 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 13:16:27 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_echo_builtin(t_cmd *cmd)
 // 	i = 1;
 // 	if (!cmd->arg[i] || !cmd->arg[i][0])
 // 	{
-// 		dprint32_tf(STDOUT_FILENO, "\n");
+// 		dprintf(STDOUT_FILENO, "\n");
 // 		return ;
 // 	}
 // 	if (cmd->arg[i] && str_equals("-n", cmd->arg[1]))
@@ -60,13 +60,13 @@ void	ft_echo_builtin(t_cmd *cmd)
 // 				return ;
 // 		}
 // 		while (cmd->arg[i + 1])
-// 			dprint32_tf(STDOUT_FILENO, "%s ", cmd->arg[i++]);
-// 		dprint32_tf(STDOUT_FILENO, "%s", cmd->arg[i++]);
+// 			dprintf(STDOUT_FILENO, "%s ", cmd->arg[i++]);
+// 		dprintf(STDOUT_FILENO, "%s", cmd->arg[i++]);
 // 		return ;
 // 	}
 // 	while (cmd->arg[i + 1])
-// 		dprint32_tf(STDOUT_FILENO, "%s ", cmd->arg[i++]);
-// 	dprint32_tf(STDOUT_FILENO, "%s\n", cmd->arg[i]);
+// 		dprintf(STDOUT_FILENO, "%s ", cmd->arg[i++]);
+// 	dprintf(STDOUT_FILENO, "%s\n", cmd->arg[i]);
 // }
 
 void	ft_cd_builtin(t_cmd *cmd)
@@ -81,7 +81,7 @@ void	ft_pwd_builtin(void)
 
 	if (getcwd(buffer, MAXPATHLEN) == NULL)
 		ft_throw_error(errno, "BabyBash"); // set exitcode to 1?
-	print32_tf("%s\n", buffer);
+	printf("%s\n", buffer);
 }
 
 void	ft_exit_builtin(t_list *lst, t_init *process, t_cmd *cmd)

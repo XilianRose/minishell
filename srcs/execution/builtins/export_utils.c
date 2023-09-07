@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:14:27 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 12:59:05 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 13:16:27 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,9 @@ void	ft_write_export(char **sortedenv)
 			ft_throw_error(ENOMEM, "BabyBash");
 		value = ft_find_value(sortedenv[i]);
 		if (value == -1)
-			print32_tf("declare -x %s\n", name);
+			printf("declare -x %s\n", name);
 		else
-			print32_tf("declare -x %s=\"%s\"\n", name, &sortedenv[i][value]);
+			printf("declare -x %s=\"%s\"\n", name, &sortedenv[i][value]);
 		free(name);
 		name = NULL;
 		i++;

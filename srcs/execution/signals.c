@@ -6,13 +6,13 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/25 14:20:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 13:01:39 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 13:19:45 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_int32_teractive_handler(int32_t signum)
+static void	ft_interactive_handler(int32_t signum)
 {
 	if (signum == SIGINT)
 	{
@@ -30,7 +30,7 @@ static void	ft_int32_teractive_handler(int32_t signum)
 	}
 }
 
-static void	ft_nonint32_teractive_handler(int32_t signum)
+static void	ft_noninteractive_handler(int32_t signum)
 {
 	if (signum == SIGINT)
 		ft_putchar_fd('\n', STDERR_FILENO);
@@ -38,20 +38,20 @@ static void	ft_nonint32_teractive_handler(int32_t signum)
 		ft_putendl_fd("Quit", STDIN_FILENO);
 }
 
-void	ft_setup_nonint32_teractive(void)
+void	ft_setup_noninteractive(void)
 {
 	struct sigaction	sa;
 
-	sa.sa_handler = &ft_nonint32_teractive_handler;
+	sa.sa_handler = &ft_noninteractive_handler;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	ft_setup_int32_teractive(void)
+void	ft_setup_interactive(void)
 {
 	struct sigaction	sa;
 
-	sa.sa_handler = &ft_int32_teractive_handler;
+	sa.sa_handler = &ft_interactive_handler;
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 }
