@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/06 19:54:29 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/07 12:48:08 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void	ft_loop(t_init *process, t_env *env)
 
 	while (1)
 	{
-		ft_setup_interactive();
+		ft_setup_int32_teractive();
 		str = readline("BabyBash$ ");
 		str = complete_input(str);
 		if (!str)
@@ -32,7 +32,7 @@ static void	ft_loop(t_init *process, t_env *env)
 			ft_putendl_fd("Exit", STDERR_FILENO);
 			break ;
 		}
-		ft_setup_noninteractive();
+		ft_setup_nonint32_teractive();
 		add_history(str);
 		lst = parse(env, str);
 		free(str);
@@ -44,7 +44,7 @@ static void	ft_loop(t_init *process, t_env *env)
 	rl_clear_history();
 }
 
-int	main(int argc, char **argv, char **envp)
+int32_t	main(int32_t argc, char **argv, char **envp)
 {
 	// struct termios	term;
 	// struct termios	original;

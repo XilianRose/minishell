@@ -6,13 +6,13 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:14:27 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 14:30:45 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/07 12:59:05 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int i)
+void	ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int32_t i)
 {
 	while (cmd->env->new_env[i])
 	{
@@ -36,7 +36,7 @@ void	ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int i)
 
 void	ft_check_for_plus(char *arg)
 {
-	int	i;
+	int32_t	i;
 
 	i = 0;
 	while (arg[i] && arg[i] != '=')
@@ -56,7 +56,7 @@ void	ft_check_for_plus(char *arg)
 
 static char	*ft_find_name(char *var)
 {
-	int		i;
+	int32_t	i;
 	char	*name;
 
 	i = 0;
@@ -74,10 +74,10 @@ static char	*ft_find_name(char *var)
 	return (name);
 }
 
-int	ft_find_value(char *var)
+int32_t	ft_find_value(char *var)
 {
-	int		i;
-	int		c;
+	int32_t	i;
+	int32_t	c;
 
 	i = 0;
 	c = 0;
@@ -90,9 +90,9 @@ int	ft_find_value(char *var)
 
 void	ft_write_export(char **sortedenv)
 {
-	int		i;
 	char	*name;
-	int		value;
+	int32_t	i;
+	int32_t	value;
 
 	i = 0;
 	while (sortedenv[i])
@@ -102,9 +102,9 @@ void	ft_write_export(char **sortedenv)
 			ft_throw_error(ENOMEM, "BabyBash");
 		value = ft_find_value(sortedenv[i]);
 		if (value == -1)
-			printf("declare -x %s\n", name);
+			print32_tf("declare -x %s\n", name);
 		else
-			printf("declare -x %s=\"%s\"\n", name, &sortedenv[i][value]);
+			print32_tf("declare -x %s=\"%s\"\n", name, &sortedenv[i][value]);
 		free(name);
 		name = NULL;
 		i++;

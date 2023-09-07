@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 13:31:37 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 16:44:20 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/07 12:48:08 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	ft_error_exit(t_list *lst, t_init *process, char *str)
 	exit(255);
 }
 
-void	ft_error_env(int errnr, char *str)
+void	ft_error_env(int32_t errnr, char *str)
 {
 	char	*newstr;
 
@@ -43,7 +43,7 @@ void	ft_error_env(int errnr, char *str)
 	free(newstr);
 }
 
-void	ft_throw_error(int errnr, char *str)
+void	ft_throw_error(int32_t errnr, char *str)
 {
 	errno = errnr;
 	perror(str);

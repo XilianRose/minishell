@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/05 17:27:21 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 12:48:08 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_close_fds(t_init *process)
 
 bool	ft_infile(t_init *process, t_rdr *rdr)
 {
-	int	temp;
+	int32_t	temp;
 
 	process->fdin = open(rdr->data, O_RDONLY);
 	if (process->fdin == -1 || dup2(process->fdin, STDIN_FILENO) == -1 || \
@@ -44,7 +44,7 @@ bool	ft_infile(t_init *process, t_rdr *rdr)
 
 bool	ft_outfile(t_init *process, t_rdr *rdr)
 {
-	int	temp;
+	int32_t	temp;
 
 	if (rdr->type == RDR_APPEND)
 		process->fdout = open(rdr->data, O_WRONLY | O_CREAT | O_APPEND, 0644);

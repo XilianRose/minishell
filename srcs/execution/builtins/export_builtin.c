@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 17:23:41 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/07 12:58:16 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_add_new_var(t_cmd *cmd, t_env *env, char *arg)
 {
 	t_export	exp;
-	int			i;
+	int32_t		i;
 
 	i = 0;
 	ft_check_for_plus(arg);
@@ -34,7 +34,7 @@ void	ft_add_new_var(t_cmd *cmd, t_env *env, char *arg)
 	ft_fill_env(cmd, env, &exp, i);
 }
 
-static void	ft_overwrite_var(t_cmd *cmd, char *arg, int c)
+static void	ft_overwrite_var(t_cmd *cmd, char *arg, int32_t c)
 {
 	size_t	len;
 
@@ -49,9 +49,9 @@ static void	ft_overwrite_var(t_cmd *cmd, char *arg, int c)
 	ft_memcpy(cmd->env->new_env[c], arg, (len + 1));
 }
 
-static bool	ft_check_export_input(t_cmd *cmd, t_env *env, char *arg, int j)
+static bool	ft_check_export_input(t_cmd *cmd, t_env *env, char *arg, int32_t j)
 {
-	int	c;
+	int32_t	c;
 
 	c = 0;
 	if (arg[j] == '_' && (arg[j + 1] == '=' || arg[j + 1] == '+'))
@@ -95,8 +95,8 @@ static void	ft_export_no_args(t_cmd *cmd)
 void	ft_export_builtin(t_cmd *cmd)
 {
 	char	**arg;
-	int		i;
-	int		j;
+	int32_t	i;
+	int32_t	j;
 
 	i = 1;
 	j = 0;

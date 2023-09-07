@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 15:48:14 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/07 13:02:51 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	ft_freelst(t_list *lst)
 
 void	ft_free_str_array(char **arr, char *str)
 {
-	int	i;
+	int32_t	i;
 
 	i = 0;
 	if (arr)
@@ -55,8 +55,8 @@ void	ft_free_str_array(char **arr, char *str)
 
 static void	ft_free_structs(t_scmd_list *temp)
 {
-	t_rdr		*rdr;
-	t_cmd		*cmd;
+	t_rdr	*rdr;
+	t_cmd	*cmd;
 
 	if (temp->type == RDR)
 	{

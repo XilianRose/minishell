@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/05 17:25:24 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 13:00:14 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void	ft_expand(void)
 	return ;
 }
 
-static bool	ft_read_input(char *data, int datalen, int *fd, bool expand)
+static bool	ft_read_input(char *data, int32_t datalen, int32_t *fd, bool expand)
 {
 	char	*temp;
 	size_t	templen;
@@ -44,8 +44,8 @@ static bool	ft_read_input(char *data, int datalen, int *fd, bool expand)
 
 static void	ft_remove_quotes(char *data)
 {
-	int	i;
-	int	j;
+	int32_t	i;
+	int32_t	j;
 
 	i = 0;
 	while (data[i])
@@ -65,7 +65,7 @@ static void	ft_remove_quotes(char *data)
 
 bool	ft_heredoc(char *data)
 {
-	int		fd[2];
+	int32_t	fd[2];
 	size_t	datalen;
 	bool	expand;
 
