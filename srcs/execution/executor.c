@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/05 17:08:27 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 17:52:58 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	ft_reset_process(t_list *lst, t_init *process)
 	}
 	process->cmd = NULL;
 	process->status = 0;
-	process->errorcode = 0;
 	process->i = 0;
 	process->nr_of_cmds = 0;
 	if (process->pipes)
@@ -53,7 +52,10 @@ void	ft_execve(t_cmd *cmd)
 	else
 	{
 		if (execve(cmd->path, cmd->arg, cmd->env->new_env) == -1)
-			ft_throw_error(errno, "BabyBash");
+		{
+			perror("BabyBash");
+			exit(127);
+		}
 	}
 }
 
@@ -91,6 +93,7 @@ void	ft_executor(t_list *lst, t_init *process)
 		!ft_store_old_fd(process))
 	{
 		ft_reset_process(lst, process);
+		process->errorcode = 1;
 		ft_putendl_fd("Something went wrong in preparations..", STDERR_FILENO);
 		return ;
 	}

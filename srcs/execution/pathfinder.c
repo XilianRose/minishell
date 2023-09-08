@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/01 16:57:17 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/04 15:56:23 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/07 13:00:36 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static bool	ft_find_path2(t_scmd_list *tempscmd)
 {
 	t_cmd	*tempcmd;
 	char	**path;
-	int		i;
+	int32_t	i;
 
 	i = 0;
 	tempcmd = tempscmd->data;

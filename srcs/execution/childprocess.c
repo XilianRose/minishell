@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/05 16:43:53 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/07 19:25:24 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,14 @@ void	ft_wait_for_last_child(t_init *process)
 	ft_close_fds(process);
 	waitpid(process->ids[process->nr_of_cmds - 1], &process->status, 0);
 	if (WIFEXITED(process->status))
-		process->errorcode = WEXITSTATUS(process->status); // this must be exit value
-	else
-		process->errorcode = -1; // is this needed?
+		process->errorcode = WEXITSTATUS(process->status);
+	else if (WIFSIGNALED(process->status))
+		process->errorcode = 128 + WTERMSIG(process->status); //  dont work, stays on 0..
+	while (1)
+	{
+		if (wait(NULL) == -1)
+			break ;
+	}
 	free(process->ids);
 	process->ids = NULL;
 }
@@ -30,12 +35,18 @@ static void	ft_child_process(t_list *lst, t_init *process)
 		(process->i != (process->nr_of_cmds - 1))))
 	{
 		if (dup2(process->pipes[process->i][1], STDOUT_FILENO) == -1)
-			ft_throw_error(errno, "BabyBash");
+		{
+			ft_throw_error(process, errno);
+			exit(process->errorcode);
+		}
 	}
 	if (process->i != 0 && process->heredoc == false && !process->fdin)
 	{
 		if (dup2(process->pipes[process->i - 1][0], STDIN_FILENO) == -1)
-			ft_throw_error(errno, "BabyBash");
+		{
+			ft_throw_error(process, errno);
+			exit(process->errorcode);
+		}
 	}
 	ft_close_fds(process);
 	if (process->cmd->builtin == false)
@@ -43,7 +54,7 @@ static void	ft_child_process(t_list *lst, t_init *process)
 	else
 	{
 		ft_run_builtin(lst, process, process->cmd);
-		exit(0); // exit with exitstatus if builtin failed..
+		exit(process->errorcode);
 	}
 }
 
@@ -70,7 +81,7 @@ void	ft_create_child(t_list *lst, t_init *process)
 		process->ids[process->i] = fork();
 		if (process->ids[process->i] == -1)
 		{
-			perror("BabyBash");
+			ft_throw_error(process, errno);
 			return ;
 		}
 		if (process->ids[process->i] == 0)

@@ -6,15 +6,15 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/12 18:11:54 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/29 15:53:26 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/07 12:48:08 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_append_to_var(t_cmd *cmd, t_export *exp, char *arg, int j)
+static void	ft_append_to_var(t_cmd *cmd, t_export *exp, char *arg, int32_t j)
 {
-	int	add_from_pos;
+	int32_t	add_from_pos;
 
 	add_from_pos = ft_find_value(arg);
 	exp->arg_len = ft_strlen(cmd->env->new_env[j]);
@@ -25,7 +25,7 @@ static void	ft_append_to_var(t_cmd *cmd, t_export *exp, char *arg, int j)
 	cmd->env->new_env[j] = exp->new_var;
 }
 
-void	ft_export_append(t_cmd *cmd, t_env *env, char *arg, int j)
+void	ft_export_append(t_cmd *cmd, t_env *env, char *arg, int32_t j)
 {
 	t_export	exp;
 

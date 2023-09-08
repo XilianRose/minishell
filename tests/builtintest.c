@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   builtintest.c                                      :+:    :+:            */
+/*   builtint32_test.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
@@ -19,7 +19,7 @@ void	ft_test_exit(t_env *env)
 {
 	t_cmd	*cmd;
 	char	**arg;
-	int		j;
+	int32_t		j;
 
 	j = 0;
 	arg = ft_split("exit 9223372036854775806", ' ');
@@ -36,7 +36,7 @@ void	ft_test_echo(t_env *env)
 {
 	t_cmd	*cmd;
 	char	**arg;
-	int		i;
+	int32_t		i;
 
 	i = 0;
 	arg = ft_split("echo -n -n blep -n -n -n", ' ');
@@ -53,7 +53,7 @@ void	ft_test_cd(t_env *env)
 {
 	t_cmd	*cmd;
 	char	**arg;
-	int		i;
+	int32_t		i;
 
 	i = 0;
 	arg = ft_split("cd ../Minishell/srcs", ' ');
@@ -75,7 +75,7 @@ void	ft_test_env(t_env *env)
 {
 	t_cmd	*cmd;
 	char	**arg;
-	int		i;
+	int32_t		i;
 
 	i = 0;
 	arg = ft_split("env", ' ');
@@ -94,7 +94,7 @@ void	ft_test_export(t_env *env)
 	char	**arg;
 	t_cmd	*cmd2;
 	char	**arg2;
-	int		i;
+	int32_t		i;
 
 	i = 0;
 	cmd = NULL;
@@ -129,7 +129,7 @@ void	ft_test_unset(t_env *env)
 	char	**arg;
 	t_cmd	*cmd2;
 	char	**arg2;
-	int		i;
+	int32_t		i;
 
 	i = 0;
 	cmd = NULL;
@@ -156,11 +156,11 @@ void	ft_test_unset(t_env *env)
 // 	system("leaks -q minishell_test");
 // }
 
-// int	main(int argc, char **argv, char **envp)
+// int32_t	main(int32_t argc, char **argv, char **envp)
 // {
 // 	// char	buffer[MAXPATHLEN];
 // 	t_env	env;
-// 	int		i;
+// 	int32_t		i;
 
 // 	atexit(ft_leaks);
 // 	argc = 0;

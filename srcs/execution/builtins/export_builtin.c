@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/31 17:23:41 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/07 17:26:39 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,30 @@
 void	ft_add_new_var(t_cmd *cmd, t_env *env, char *arg)
 {
 	t_export	exp;
-	int			i;
+	int32_t		i;
 
 	i = 0;
 	ft_check_for_plus(arg);
 	exp.arg_len = ft_strlen(arg);
 	exp.new_env = malloc((env->env_len + 2) * sizeof(char *));
 	if (!exp.new_env)
-		ft_throw_error(errno, "BabyBash");
+	{
+		perror("BabyBash");
+		return ; // set errorcode to 1
+	}
 	exp.arg_copy = malloc((exp.arg_len + 1) * sizeof(char));
 	if (!exp.arg_copy)
 	{
+		perror("BabyBash");
 		free(exp.new_env);
 		exp.new_env = NULL;
-		ft_throw_error(ENOMEM, "BabyBash");
+		return ; // set errorcode to 1
 	}
 	ft_memcpy(exp.arg_copy, arg, (exp.arg_len + 1));
 	ft_fill_env(cmd, env, &exp, i);
 }
 
-static void	ft_overwrite_var(t_cmd *cmd, char *arg, int c)
+static void	ft_overwrite_var(t_cmd *cmd, char *arg, int32_t c)
 {
 	size_t	len;
 
@@ -45,13 +49,16 @@ static void	ft_overwrite_var(t_cmd *cmd, char *arg, int c)
 	cmd->env->new_env[c] = NULL;
 	cmd->env->new_env[c] = malloc((len + 1) * sizeof(char));
 	if (!cmd->env->new_env[c])
-		ft_throw_error(errno, "BabyBash");
+	{
+		perror("BabyBash"); // set errorcode to 1
+		return ;	
+	}
 	ft_memcpy(cmd->env->new_env[c], arg, (len + 1));
 }
 
-static bool	ft_check_export_input(t_cmd *cmd, t_env *env, char *arg, int j)
+static bool	ft_check_export_input(t_cmd *cmd, t_env *env, char *arg, int32_t j)
 {
-	int	c;
+	int32_t	c;
 
 	c = 0;
 	if (arg[j] == '_' && (arg[j + 1] == '=' || arg[j + 1] == '+'))
@@ -84,7 +91,10 @@ static void	ft_export_no_args(t_cmd *cmd)
 		len++;
 	sortedenv = malloc((len + 1) * sizeof(char *));
 	if (!sortedenv)
-		ft_throw_error(errno, "BabyBash");
+	{
+		perror("BabyBash"); // set errorcode to 1
+		return ;
+	}
 	ft_memcpy(sortedenv, cmd->env->new_env, (len + 1) * sizeof(char *));
 	ft_bubble_sort(sortedenv, len);
 	ft_write_export(sortedenv);
@@ -95,8 +105,8 @@ static void	ft_export_no_args(t_cmd *cmd)
 void	ft_export_builtin(t_cmd *cmd)
 {
 	char	**arg;
-	int		i;
-	int		j;
+	int32_t	i;
+	int32_t	j;
 
 	i = 1;
 	j = 0;
