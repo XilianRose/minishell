@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 15:07:05 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/08 16:57:56 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,14 +112,14 @@ static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 	return (*cmds);
 }
 
-t_list	*parse(t_env *env, const char *user_input)
+t_list	*parse(t_env *env, t_init *process, const char *user_input)
 {
 	t_list	*tokens;
 	t_list	*cmds;
 
 	tokens = NULL;
 	tokens = tokenisation(user_input);
-	expand(tokens, env);
+	expand(tokens, env, process);
 	cmds = NULL;
 	cmds = make_cmdlist(tokens, &cmds, env);
 	return (cmds);

@@ -181,27 +181,27 @@ void		ft_free_pipes(int32_t **pipes, int32_t pipe_count);
 int32_t		ft_count_pipes(t_list *arglst);
 bool		ft_create_pipes(t_init *process, size_t pipe_count);
 
-// expander here
+// expander
 char		*find_end(char *str);
 char		*find_middle(char *str);
 char		*find_begin(char *str);
 void		multi_free(char *begin, char *mid, char *end, char *temp);
+
 char		*expand_data(char *str, t_env *env);
 bool		expand_check(char *str, size_t start);
-size_t		expand(t_list *tokens, t_env *env);
+size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
 // lexer
 t_token		*is_splitable(t_token *token);
 size_t		join_datastr(t_list *tokens, t_list *end);
 t_list		*quote_begin(t_list *tokens);
 t_list		*quote_end(t_list *tokens);
-size_t		join_datastr(t_list *tokens, t_list *end);
 t_token		*init_token(const char *str);
 t_token		*new_token(const char *data, t_token_type type);
 t_list		*tokenisation(const char *user_input);
 
-// parser here
-t_list		*parse(t_env *env, const char *user_input);
+// parser
+t_list		*parse(t_env *env, t_init *process, const char *user_input);
 size_t		count_cmdtokens(t_list **tokens);
 bool		is_builtin(t_list **tokens);
 char		*complete_input(char *input);

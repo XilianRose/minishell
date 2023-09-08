@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/08 16:23:16 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/08 16:27:15 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/08 17:11:23 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*find_middle(char *str)
 		}
 		i++;
 	}
-	middle = ft_substr(str, i, len);
+	middle = ft_substr(str, i + 1, len - 1);
 	return (middle);
 }
 

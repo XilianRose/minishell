@@ -24,15 +24,16 @@ static char	*expanded_part(char *str, t_env *env)
 	i = 0;
 	while (env_array[i] != NULL)
 	{
-		len = ft_strlen(env_array[i]);
-		if (ft_strnstr(env_array[i], &str[1], len) != NULL)
+		len = ft_strlen(str);
+		if (ft_strncmp(env_array[i], str, len) == 0 && env_array[i][len] == '=')
 		{
-			len = len - ft_strlen(str);
-			res = ft_substr(env_array[i], ft_strlen(str), len);
+			len = len + 1;
+			res = ft_substr(env_array[i], len, ft_strlen(env_array[i]) - len);
 			return (free(str), res);
 		}
 		i++;
 	}
+	res = ft_calloc(1, sizeof(char));
 	return (free(str), res);
 }
 
@@ -65,12 +66,15 @@ char	*expand_data(char *str, t_env *env)
 	return (new_data);
 }
 
-static size_t	replace_token(t_token *token, t_env *env)
+static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 {
 	char	*new_data;
 	char	*temp;
 
-	new_data = expand_data(token->data, env);
+	if (ft_strncmp(token->data, "$?", 3) == 0)
+		new_data = ft_itoa(process->errorcode);
+	else
+		new_data = expand_data(token->data, env);
 	temp = token->data;
 	token->data = new_data;
 	free(temp);
@@ -99,7 +103,7 @@ bool	expand_check(char *str, size_t start)
 	return (expand);
 }
 
-size_t	expand(t_list *tokens, t_env *env)
+size_t	expand(t_list *tokens, t_env *env, t_init *process)
 {
 	t_token	*token;
 	size_t	i;
@@ -113,7 +117,7 @@ size_t	expand(t_list *tokens, t_env *env)
 			if (token->data[i] == '$')
 			{
 				if (expand_check(token->data, i) == true)
-					replace_token(token, env);
+					replace_token(token, env, process);
 			}
 			i++;
 		}
