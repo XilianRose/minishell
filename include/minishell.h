@@ -182,7 +182,13 @@ int32_t		ft_count_pipes(t_list *arglst);
 bool		ft_create_pipes(t_init *process, size_t pipe_count);
 
 // expander here
-// -----------------------------------------------------------------------------
+char		*find_end(char *str);
+char		*find_middle(char *str);
+char		*find_begin(char *str);
+void		multi_free(char *begin, char *mid, char *end, char *temp);
+char		*expand_data(char *str, t_env *env);
+bool		expand_check(char *str, size_t start);
+size_t		expand(t_list *tokens, t_env *env);
 
 // lexer
 t_token		*is_splitable(t_token *token);
