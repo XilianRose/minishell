@@ -22,6 +22,7 @@
 // example string: "hello $USER"
 
 //not finished
+
 char	*find_end(char *str)
 {
 	char	*end;
@@ -35,14 +36,48 @@ char	*find_end(char *str)
 		{
 			while (str[i] != '\0')
 			{
-				if (str[i] == ' ')
+				if (ft_strchr(" \0\t\n\r\f\v", str[i]) != NULL)
 					break ;
 				i++;
 			}
 		}
 		i++;
 	}
-	len = ft_strlen(str);
+	len = ft_strlen(str[i]);
+	end = ft_substr(str, i, len);
+	return (end);
+}
+
+char	*expanded_part(char *str)
+{
+	char	*res;
+	char	*temp;
+
+	temp = str;
+
+}
+
+char	*find_middle(char *str)
+{
+	char	*end;
+	size_t	i;
+	size_t	len;
+
+	i = 0;
+	len = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '$')
+		{
+			while (str[i + len] != '\0')
+			{
+				if (ft_strchr(" \0\t\n\r\f\v", str[i + len]) != NULL)
+					break ;
+				len++;
+			}
+		}
+		i++;
+	}
 	end = ft_substr(str, i, len);
 	return (end);
 }
@@ -67,6 +102,9 @@ size_t	expand_data(char *str)
 	char	*end;
 
 	beginning = find_begin(str);
+	middle = find_middle(str);
+	middle = expanded_part(middle);
+	end = find_end(str);
 }
 
 size_t	replace_token(t_token *token)
