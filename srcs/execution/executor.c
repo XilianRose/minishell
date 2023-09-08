@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 17:52:58 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/08 17:41:38 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	ft_reset_process(t_list *lst, t_init *process)
 		process->ids = NULL;
 	}
 	process->cmd = NULL;
-	process->status = 0;
 	process->i = 0;
 	process->nr_of_cmds = 0;
 	if (process->pipes)
@@ -62,7 +61,6 @@ void	ft_execve(t_cmd *cmd)
 static void	ft_single_scmd(t_list *lst, t_init *process)
 {
 	t_scmd_list	*scmd;
-	t_cmd		*cmd;
 
 	scmd = lst->content;
 	if (!ft_check_for_files(scmd, process))
@@ -71,8 +69,8 @@ static void	ft_single_scmd(t_list *lst, t_init *process)
 	{
 		if (scmd->type == CMD)
 		{
-			cmd = scmd->data;
-			if (cmd->builtin == true)
+			process->cmd = scmd->data;
+			if (process->cmd->builtin == true)
 			{
 				ft_run_builtin(lst, process, scmd->data);
 				break ;
@@ -80,7 +78,7 @@ static void	ft_single_scmd(t_list *lst, t_init *process)
 			else
 			{
 				ft_create_child(lst, process);
-				ft_wait_for_last_child(process);		
+				ft_wait_for_last_child(process);
 			}
 		}
 		scmd = scmd->next;

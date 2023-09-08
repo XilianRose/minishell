@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 19:25:24 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/08 15:16:07 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_wait_for_last_child(t_init *process)
 	if (WIFEXITED(process->status))
 		process->errorcode = WEXITSTATUS(process->status);
 	else if (WIFSIGNALED(process->status))
-		process->errorcode = 128 + WTERMSIG(process->status); //  dont work, stays on 0..
+		process->errorcode = 128 + WTERMSIG(process->status);
 	while (1)
 	{
 		if (wait(NULL) == -1)
@@ -76,7 +76,7 @@ static void	ft_find_cmd(t_scmd_list *lst, t_init *process)
 void	ft_create_child(t_list *lst, t_init *process)
 {
 	ft_find_cmd(lst->content, process);
-	if (process->cmd && !process->errorcode)
+	if (process->cmd)
 	{
 		process->ids[process->i] = fork();
 		if (process->ids[process->i] == -1)

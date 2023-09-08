@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 17:06:02 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/08 16:26:28 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd)
 	if (!ft_strncmp("pwd", cmd->arg[0], 4))
 		ft_pwd_builtin(process);
 	if (!ft_strncmp("export", cmd->arg[0], 7))
-		ft_export_builtin(cmd);
+		ft_export_builtin(process, cmd);
 	if (!ft_strncmp("unset", cmd->arg[0], 6))
 		ft_unset_builtin(cmd);
 	if (!ft_strncmp("env", cmd->arg[0], 4))
@@ -70,7 +70,6 @@ bool	ft_prep(t_list *lst, t_init *process)
 	process->ids = NULL;
 	process->cmd = NULL;
 	process->status = 0;
-	process->errorcode = 0;
 	process->oldout = -1;
 	process->oldin = -1;
 	process->fdin = 0;

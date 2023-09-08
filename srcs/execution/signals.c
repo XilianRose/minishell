@@ -31,51 +31,40 @@ static void	ft_interactive_handler(int32_t signum)
 
 static void	ft_noninteractive_handler(int32_t signum)
 {
-	extern int32_t sigint_check;
-
 	if (signum == SIGINT)
-	{
-		sigint_check = SIGINT;
 		ft_putchar_fd('\n', STDERR_FILENO);
-	}
 	if (signum == SIGQUIT)
-		ft_putendl_fd("Quit", STDIN_FILENO);
+		ft_putendl_fd("Quit (core dumped)", STDIN_FILENO);
 }
 
 void	ft_setup_noninteractive(t_init *process)
 {
-	struct sigaction	sa;
 	struct termios		term;
 
-	sa.sa_handler = &ft_noninteractive_handler;
 	if (tcgetattr(0, &term) == -1)
 	{
 		ft_throw_error(process, errno);
 		return ;
 	}
 	term.c_lflag |= ECHOCTL;
-	if (tcsetattr(0, 0, &term) == -1 || sigaction(SIGINT, &sa, NULL) == -1 || sigaction(SIGQUIT, &sa, NULL) == -1)
-	{
+	if (tcsetattr(0, 0, &term) == -1 || \
+		signal(SIGINT, ft_noninteractive_handler) == SIG_ERR || \
+		signal(SIGQUIT, ft_noninteractive_handler) == SIG_ERR)
 		ft_throw_error(process, errno);
-		return ;
-	}
 }
 
 void	ft_setup_interactive(t_init *process)
 {
-	struct sigaction	sa;
 	struct termios		term;
 
-	sa.sa_handler = &ft_interactive_handler;
 	if (tcgetattr(0, &term) == -1)
 	{
 		ft_throw_error(process, errno);
 		return ;
 	}
 	term.c_lflag &= ~ECHOCTL;
-	if (tcsetattr(0, 0, &term) == -1 || sigaction(SIGINT, &sa, NULL) == -1 || sigaction(SIGQUIT, &sa, NULL) == -1)
-	{
+	if (tcsetattr(0, 0, &term) == -1 || \
+		signal(SIGINT, ft_interactive_handler) == SIG_ERR || \
+		signal(SIGQUIT, ft_interactive_handler) == SIG_ERR)
 		ft_throw_error(process, errno);
-		return ;
-	}
 }

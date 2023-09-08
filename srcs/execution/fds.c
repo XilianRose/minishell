@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 18:04:26 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/08 16:10:37 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ bool	ft_outfile(t_init *process, t_rdr *rdr)
 bool	ft_check_for_heredoc(t_scmd_list *scmd, t_init *process)
 {
 	t_rdr	*rdr;
-	
+
 	while (scmd)
 	{
 		if (scmd->type == RDR)
@@ -112,5 +112,3 @@ bool	ft_check_for_files(t_scmd_list *scmd, t_init *process)
 	}
 	return (true);
 }
-// bash checks all for existing, if not existing infile, error, dont check the rest.
-// if all infiles exist, only read out of last one. if all outfiles are created or existing, only send to last one.

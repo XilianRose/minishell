@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 13:02:51 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/08 16:07:34 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	ft_freescmdlst(t_scmd_list *lst)
 	lst = NULL;
 }
 
-void	ft_free_all(t_list *lst, t_env *env)
+void	ft_free_all(t_list *lst, t_env *env) // unused
 {
 	ft_freelst(lst);
 	ft_free_str_array(env->new_env, NULL);

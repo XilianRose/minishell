@@ -13,6 +13,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define _GNU_SOURCE
+
 # include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -137,15 +139,15 @@ void		ft_free_str_array(char **arr, char *str);
 void		ft_env_builtin(t_init *process, t_cmd *cmd);
 bool		ft_copy_env(t_init *process, t_env *env, char **old_env);
 
-void		ft_export_append(t_cmd *cmd, t_env *env, char *arg, int32_t j);
+void		ft_export_append(t_init *process, t_cmd *cmd, char *arg, int32_t j);
 
-void		ft_add_new_var(t_cmd *cmd, t_env *env, char *arg);
-void		ft_export_builtin(t_cmd *cmd);
+void		ft_add_new_var(t_init *process, t_cmd *cmd, t_env *env, char *arg);
+void		ft_export_builtin(t_init *process, t_cmd *cmd);
 
-void		ft_fill_env(t_cmd *cmd, t_env *env, t_export *exp, int32_t i);
+void		ft_fill_env(t_init *process, t_cmd *cmd, t_export *exp, int32_t i);
 void		ft_check_for_plus(char *arg);
 int32_t		ft_find_value(char *var);
-void		ft_write_export(char **sortedenv);
+bool		ft_write_export(char **sortedenv);
 
 void		ft_unset_builtin(t_cmd *cmd);
 

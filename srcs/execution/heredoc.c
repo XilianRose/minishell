@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 18:09:08 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/08 16:11:00 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static bool	ft_read_input(char *data, int32_t datalen, int32_t *fd, bool expand)
 		if (write(fd[1], temp, templen) == -1 || write(fd[1], "\n", 1) == -1)
 		{
 			perror("BabyBash");
-			return (free(temp), false);	
+			return (free(temp), false);
 		}
 		free(temp);
 	}

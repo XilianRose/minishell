@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 16:42:54 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/08 16:12:18 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,13 @@ void	ft_echo_builtin(t_init *process, t_cmd *cmd)
 	{
 		while (cmd->arg[i + 1])
 		{
-			if (write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i])) == -1 || \
-				write(STDOUT_FILENO, " ", 1) == -1)
+			if (write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i])) == \
+				-1 || write(STDOUT_FILENO, " ", 1) == -1)
 				ft_throw_error(process, errno);
 			i++;
 		}
 		if (write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i])) == -1)
 			ft_throw_error(process, errno);
-			
 	}
 	if (cmd->arg[1] && cmd->arg[1][0])
 	{
