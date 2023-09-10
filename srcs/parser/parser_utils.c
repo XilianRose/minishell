@@ -6,11 +6,69 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/29 15:00:43 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/10 15:04:15 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static bool	replace_data(t_token *token, char delim)
+{
+	char	*new_data;
+	char	*temp;
+	size_t	len;
+	size_t	i;
+
+	temp = token->data;
+	len = ft_strlen(temp);
+	new_data = ft_calloc(len - 1, sizeof(char));
+	if (!new_data)
+		return (false);
+	i = 0;
+	while (i < len - 1)
+	{
+		if (temp == ft_strchr(temp, delim) || temp == ft_strrchr(temp, delim))
+			temp++;
+		else
+		{
+			new_data[i] = *temp;
+			temp++;
+			i++;
+		}
+	}
+	temp = token->data;
+	token->data = new_data;
+	return (free(temp), true);
+}
+
+void	remove_quotes(t_list *tokens)
+{
+	t_token	*token;
+	size_t	i;
+	size_t	replaced;
+
+	while (tokens)
+	{
+		token = tokens->content;
+		i = 0;
+		replaced = false;
+		if (token->type != HERE_DOC)
+		{
+			while (token->data[i] != '\0')
+			{
+				if (token->data[i] == '\'')
+					replaced = replace_data(token, '\'');
+				else if (token->data[i] == '\"')
+					replaced = replace_data(token, '\"');
+				if (replaced == true)
+					break ;
+				else
+					i++;
+			}
+		}
+		tokens = tokens->next;
+	}
+}
 
 size_t	count_cmdtokens(t_list **tokens)
 {

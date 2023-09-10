@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 18:13:22 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/09/10 15:03:33 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,43 +110,6 @@ static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 		tokens = tokens->next;
 	}
 	return (*cmds);
-}
-
-void	replace_data(t_token *token)
-{
-	char	*new_data;
-	char	*temp;
-	size_t	len;
-	size_t	i;
-
-	temp = token->data;
-	len = ft_strlen(temp);
-	new_data = ft_calloc(len - 1, sizeof(char));
-	if (!new_data)
-		return ;
-	i = 1;
-	while (i < len)
-	{
-		new_data[i - 1] = temp[i];
-		i++;
-	}
-}
-
-//FIX THIS!! with ft_strchr && ft_strrchr!!
-void	remove_quotes(t_list *tokens)
-{
-	t_token	*token;
-
-	while (tokens)
-	{
-		token = tokens->content;
-		if (token->type != HERE_DOC)
-		{
-			if (token->data[0] == '\'' || token->data[0] == '\'')
-				replace_data(token);
-		}
-		tokens = tokens->next;
-	}
 }
 
 t_list	*parse(t_env *env, t_init *process, const char *user_input)
