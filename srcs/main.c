@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 16:09:11 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/11 12:00:55 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	ft_loop(t_list *lst, t_init *process, t_env *env)
 		ft_setup_noninteractive(process);
 		if (ft_strlen(str))
 			add_history(str);
-		lst = parse(env, str);
+		lst = parse(env, process, str);
 		free(str);
 		str = NULL;
 		if (!lst)

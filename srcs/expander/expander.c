@@ -12,96 +12,98 @@
 
 #include "minishell.h"
 
-//find environment variable
-//check lenght & malloc data pointer to it
-//temp = current token->data
-//token->data is pointer to new data
-//free temp
-//return
-
-// example string: "hello $USER"
-
-//not finished
-char	*find_end(char *str)
+static char	*expanded_part(char *str, t_env *env)
 {
-	char	*end;
+	char	**env_array;
+	char	*res;
 	size_t	i;
 	size_t	len;
 
+	env_array = env->new_env;
+	res = NULL;
 	i = 0;
-	while (str[i] != '\0')
+	while (env_array[i] != NULL)
 	{
-		if (str[i] == '$')
+		len = ft_strlen(str);
+		if (ft_strncmp(env_array[i], str, len) == 0 && env_array[i][len] == '=')
 		{
-			while (str[i] != '\0')
-			{
-				if (str[i] == ' ')
-					break ;
-				i++;
-			}
+			len = len + 1;
+			res = ft_substr(env_array[i], len, ft_strlen(env_array[i]) - len);
+			return (free(str), res);
 		}
 		i++;
 	}
-	len = ft_strlen(str);
-	end = ft_substr(str, i, len);
-	return (end);
+	res = ft_calloc(1, sizeof(char));
+	return (free(str), res);
 }
 
-char	*find_begin(char *str)
-{
-	char	*beginning;
-	size_t	i;
-
-	i = 0;
-	while (str[i] != '$')
-		i++;
-	beginning = ft_substr(str, 0, i);
-	return (beginning);
-}
-
-size_t	expand_data(char *str)
+char	*expand_data(char *str, t_env *env)
 {
 	char	*new_data;
+	char	*temp;
 	char	*beginning;
 	char	*middle;
 	char	*end;
 
 	beginning = find_begin(str);
+	if (!beginning)
+		return (NULL);
+	end = find_end(str);
+	if (!end)
+		return (free(beginning), NULL);
+	middle = find_middle(str);
+	if (!middle)
+		return (free(beginning), free(end), NULL);
+	middle = expanded_part(middle, env);
+	if (!middle)
+		return (free(beginning), free(end), NULL);
+	temp = ft_strjoin(beginning, middle);
+	if (!temp)
+		return (multi_free(beginning, middle, end, NULL), NULL);
+	new_data = ft_strjoin(temp, end);
+	if (!new_data)
+		return (multi_free(beginning, middle, end, temp), NULL);
+	return (new_data);
 }
 
-size_t	replace_token(t_token *token)
+static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 {
 	char	*new_data;
 	char	*temp;
 
-	new_data = expand_data(token->data);
+	if (ft_strncmp(token->data, "$?", 3) == 0)
+		new_data = ft_itoa(process->errorcode);
+	else
+		new_data = expand_data(token->data, env);
 	temp = token->data;
 	token->data = new_data;
 	free(temp);
 	return (0);
 }
 
-bool	expand_check(t_token *token, size_t start)
+bool	expand_check(char *str, size_t start)
 {
 	bool	expand;
 	size_t	i;
 	size_t	count;
 
-	expand = false;
+	expand = true;
 	i = 0;
 	count = 0;
-	while (token->data[i] != '\0' || i < start)
+	while (str[i] != '\0' || i < start)
 	{
-		if (token->data[i] == '\'')
+		if (str[i] == '\'')
 			count++;
+		if (str[i] == '$')
+			break ;
 		i++;
 	}
 	if (count % 2 != 0)
-		expand = true;
+		expand = false;
 	return (expand);
 }
 
-t_list	expand(t_list *tokens)
+size_t	expand(t_list *tokens, t_env *env, t_init *process)
 {
 	t_token	*token;
 	size_t	i;
@@ -114,11 +116,12 @@ t_list	expand(t_list *tokens)
 		{
 			if (token->data[i] == '$')
 			{
-				if (expand_check(token, i) == true)
-					replace_token(token);
+				if (expand_check(token->data, i) == true)
+					replace_token(token, env, process);
 			}
 			i++;
 		}
 		tokens = tokens->next;
 	}
+	return (0);
 }
