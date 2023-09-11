@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 15:52:19 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/11 12:51:15 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	ft_env_builtin(t_init *process, t_cmd *cmd)
 			i++;
 		}
 	}
+	process->errorcode = 0;
 }
 
 bool	ft_copy_env(t_init *process, t_env *env, char **old_env)

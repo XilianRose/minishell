@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 16:10:37 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/11 13:31:20 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ bool	ft_outfile(t_init *process, t_rdr *rdr)
 	return (true);
 }
 
-bool	ft_check_for_heredoc(t_scmd_list *scmd, t_init *process)
+static bool	ft_check_for_heredoc(t_scmd_list *scmd, t_init *process)
 {
 	t_rdr	*rdr;
 

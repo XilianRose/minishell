@@ -6,13 +6,13 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 16:12:18 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/11 13:12:17 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_echo_builtin(t_init *process, t_cmd *cmd)
+bool	ft_echo_builtin(t_init *process, t_cmd *cmd)
 {
 	int32_t	i;
 
@@ -25,25 +25,30 @@ void	ft_echo_builtin(t_init *process, t_cmd *cmd)
 		{
 			if (write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i])) == \
 				-1 || write(STDOUT_FILENO, " ", 1) == -1)
-				ft_throw_error(process, errno);
+				return (ft_throw_error(process, errno), false);
 			i++;
 		}
 		if (write(STDOUT_FILENO, cmd->arg[i], ft_strlen(cmd->arg[i])) == -1)
-			ft_throw_error(process, errno);
+			return (ft_throw_error(process, errno), false);
 	}
 	if (cmd->arg[1] && cmd->arg[1][0])
 	{
 		if (str_equals("-n", cmd->arg[1]))
-			return ;
+			return (true);
 	}
 	if (write(STDOUT_FILENO, "\n", 1) == -1)
-		ft_throw_error(process, errno);
+		return (ft_throw_error(process, errno), false);
+	return (true);
 }
 
 void	ft_cd_builtin(t_init *process, t_cmd *cmd)
 {
 	if (chdir(cmd->arg[1]) == -1)
+	{
 		ft_throw_error(process, errno);
+		return ;
+	}
+	process->errorcode = 0;
 }
 
 void	ft_pwd_builtin(t_init *process)
@@ -56,6 +61,7 @@ void	ft_pwd_builtin(t_init *process)
 		return ;
 	}
 	printf("%s\n", buffer);
+	process->errorcode = 0;
 }
 
 void	ft_exit_builtin(t_list *lst, t_init *process, t_cmd *cmd)

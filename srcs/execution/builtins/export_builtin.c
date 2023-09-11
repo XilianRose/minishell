@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 17:24:42 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/11 13:13:27 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ void	ft_export_builtin(t_init *process, t_cmd *cmd)
 	i = 1;
 	j = 0;
 	arg = cmd->arg;
+	process->errorcode = 0;
 	if (!arg[i])
 	{
 		if (!ft_export_no_args(cmd))

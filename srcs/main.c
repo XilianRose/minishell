@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/11 12:00:55 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/11 15:24:08 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,4 @@ int32_t	main(int32_t argc, char **argv, char **envp)
 }
 
 // free in parse: only free own allocated tokens etc that isn't send to executor
-// to do: continue builtins errorcode, freeing, expander, handling quotes, testing.
+// to do: fix export this+=, freeing, expander, handling quotes, testing.

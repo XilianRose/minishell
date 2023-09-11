@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 16:26:28 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/11 13:07:21 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ bool	ft_store_old_fd(t_init *process)
 void	ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd)
 {
 	if (!ft_strncmp("echo", cmd->arg[0], 5))
-		ft_echo_builtin(process, cmd);
+	{
+		if (ft_echo_builtin(process, cmd))
+			process->errorcode = 0;
+	}
 	if (!ft_strncmp("cd", cmd->arg[0], 3))
 		ft_cd_builtin(process, cmd);
 	if (!ft_strncmp("pwd", cmd->arg[0], 4))
@@ -58,7 +61,7 @@ void	ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd)
 	if (!ft_strncmp("export", cmd->arg[0], 7))
 		ft_export_builtin(process, cmd);
 	if (!ft_strncmp("unset", cmd->arg[0], 6))
-		ft_unset_builtin(cmd);
+		ft_unset_builtin(process, cmd);
 	if (!ft_strncmp("env", cmd->arg[0], 4))
 		ft_env_builtin(process, cmd);
 	if (!ft_strncmp("exit", cmd->arg[0], 5))
