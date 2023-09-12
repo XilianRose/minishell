@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/01 16:57:17 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/11 15:19:15 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/12 12:45:44 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static bool	ft_try_paths(char **path, t_cmd *cmd)
 			return (false);
 		cmdpath = ft_strjoin(temp, cmd->arg[0]);
 		free(temp);
+		temp = NULL;
 		if (!cmdpath)
 			return (false);
 		if (access(cmdpath, F_OK) == 0)
@@ -34,6 +35,7 @@ static bool	ft_try_paths(char **path, t_cmd *cmd)
 			break ;
 		}
 		free(cmdpath);
+		cmdpath = NULL;
 		i++;
 	}
 	return (true);

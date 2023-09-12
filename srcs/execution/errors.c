@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 13:31:37 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/07 16:33:21 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/12 12:08:39 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,15 @@ void	ft_error_env(int32_t errnr, char *str)
 	char	*newstr;
 
 	newstr = ft_strjoin(": ", str);
+	if (!newstr)
+	{
+		ft_putendl_fd("error message env strjoin failed..", STDERR_FILENO);
+		return ;	
+	}
 	errno = errnr;
 	perror(newstr);
 	free(newstr);
+	newstr = NULL;
 }
 
 void	ft_throw_error(t_init *process, int32_t errnr)
