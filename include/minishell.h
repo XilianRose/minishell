@@ -138,6 +138,7 @@ bool		ft_copy_env(t_init *process, t_env *env, char **old_env);
 void		ft_export_append(t_init *process, t_cmd *cmd, char *arg, int32_t j);
 
 void		ft_add_new_var(t_init *process, t_cmd *cmd, t_env *env, char *arg);
+void		ft_overwrite_var(t_init *process, t_cmd *cmd, char *arg, int32_t c);
 void		ft_export_builtin(t_init *process, t_cmd *cmd);
 
 void		ft_fill_env(t_init *process, t_cmd *cmd, t_export *exp, int32_t i);

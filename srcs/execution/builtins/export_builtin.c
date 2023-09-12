@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/11 13:13:27 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/12 11:44:01 by cheyennesch   ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_add_new_var(t_init *process, t_cmd *cmd, t_env *env, char *arg)
 	ft_fill_env(process, cmd, &exp, i);
 }
 
-static void	ft_overwrite_var(t_init *process, t_cmd *cmd, char *arg, int32_t c)
+void	ft_overwrite_var(t_init *process, t_cmd *cmd, char *arg, int32_t c)
 {
 	size_t	len;
 
