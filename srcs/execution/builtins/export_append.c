@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/12 18:11:54 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/12 12:07:59 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/14 13:26:27 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ static void	ft_append_to_var(t_init *process, t_export *exp, char *arg, \
 	add_from_pos = ft_find_value(arg);
 	exp->arg_len = ft_strlen(process->cmd->env->new_env[j]);
 	exp->var_len = exp->arg_len + ft_strlen(&arg[add_from_pos]);
-	exp->new_var = ft_strjoin(process->cmd->env->new_env[j], &arg[exp->name_len + 1]);
+	exp->new_var = ft_strjoin(process->cmd->env->new_env[j], \
+		&arg[exp->name_len + 1]);
 	if (!exp->new_var)
 	{
 		ft_throw_error(process, ENOMEM);

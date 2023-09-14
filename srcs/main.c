@@ -6,16 +6,11 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/11 20:09:20 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/14 15:30:41 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_leaks(void)
-{
-	system("leaks -q minishell");
-}
 
 static void	ft_loop(t_list *lst, t_init *process)
 {
@@ -51,7 +46,6 @@ int32_t	main(int32_t argc, char **argv, char **envp)
 	t_env	env;
 
 	(void)argv, (void)argc;
-	// atexit(ft_leaks);
 	process.errorcode = 0;
 	if (!ft_copy_env(&process, &env, envp))
 		return (process.errorcode);
@@ -61,5 +55,5 @@ int32_t	main(int32_t argc, char **argv, char **envp)
 	return (process.errorcode);
 }
 
-// free in parse: only free own allocated tokens etc that isn't send to executor
-// to do: heredoc expanding, freeing, fix arguments behind cmd if file found in between, testing.
+// michelle: freeing, fix args behind cmd if file found in between, testing.
+// chey: heredoc expanding, testing.

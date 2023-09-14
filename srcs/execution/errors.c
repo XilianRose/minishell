@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 13:31:37 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/12 12:08:39 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/14 14:27:08 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	ft_error_exit(t_list *lst, t_init *process, char *str)
 	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
 	rl_clear_history();
 	ft_reset_process(lst, process);
+	ft_free_str_array(process->env->new_env, NULL);
 	exit(255);
 }
 
@@ -41,7 +42,7 @@ void	ft_error_env(int32_t errnr, char *str)
 	if (!newstr)
 	{
 		ft_putendl_fd("error message env strjoin failed..", STDERR_FILENO);
-		return ;	
+		return ;
 	}
 	errno = errnr;
 	perror(newstr);

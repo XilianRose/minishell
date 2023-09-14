@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/12 11:44:01 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/14 14:06:10 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,12 @@ void	ft_export_builtin(t_init *process, t_cmd *cmd)
 	while (arg[i])
 	{
 		if (!ft_check_export_input(process, arg[i], j))
+		{
 			ft_error_export_unset("export", arg[i]);
+			process->errorcode = 1;
+		}
+		else
+			process->errorcode = 0;
 		i++;
 	}
 }

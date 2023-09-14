@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/11 13:12:17 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/14 14:28:05 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,6 @@ void	ft_exit_builtin(t_list *lst, t_init *process, t_cmd *cmd)
 	ft_putendl_fd("exit", STDERR_FILENO);
 	ft_reset_process(lst, process);
 	rl_clear_history();
+	ft_free_str_array(process->env->new_env, NULL);
 	exit(string_to_llong);
 }

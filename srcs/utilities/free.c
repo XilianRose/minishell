@@ -6,29 +6,11 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 16:07:34 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/09/14 14:32:31 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_freelst(t_list *lst)
-{
-	t_list	*temp;
-	t_list	*next;
-
-	if (!lst)
-		return ;
-	temp = lst;
-	while (temp)
-	{
-		next = temp->next;
-		ft_freescmdlst(temp->content);
-		free(temp);
-		temp = next;
-	}
-	lst = NULL;
-}
 
 void	ft_free_str_array(char **arr, char *str)
 {
@@ -74,7 +56,7 @@ static void	ft_free_structs(t_scmd_list *temp)
 	}
 }
 
-void	ft_freescmdlst(t_scmd_list *lst)
+static void	ft_freescmdlst(t_scmd_list *lst)
 {
 	t_scmd_list	*temp;
 	t_scmd_list	*next;
@@ -84,6 +66,24 @@ void	ft_freescmdlst(t_scmd_list *lst)
 	{
 		next = temp->next;
 		ft_free_structs(temp);
+		free(temp);
+		temp = next;
+	}
+	lst = NULL;
+}
+
+void	ft_freelst(t_list *lst)
+{
+	t_list	*temp;
+	t_list	*next;
+
+	if (!lst)
+		return ;
+	temp = lst;
+	while (temp)
+	{
+		next = temp->next;
+		ft_freescmdlst(temp->content);
 		free(temp);
 		temp = next;
 	}

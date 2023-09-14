@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 14:49:53 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/11 13:14:07 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/14 14:08:39 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ static void	ft_find_unset_arg(char **env, char *arg, int32_t len)
 	j = 0;
 	while (env[j])
 	{
-		if (!ft_cmpname(arg, env[j], len) && env[j][len] == '=')
+		if (!ft_cmpname(arg, env[j], len) && \
+			(env[j][len] == '=' || !env[j][len]))
 		{
 			temp = env[j];
 			while (env[j])
@@ -69,13 +70,13 @@ void	ft_unset_builtin(t_init *process, t_cmd *cmd)
 	while (arg[i])
 	{
 		if (!ft_check_unset_input(arg[i]))
-		{
 			process->errorcode = 1;
-			i++;
-			continue ;
+		else
+		{
+			process->errorcode = 0;
+			len = ft_strlen(arg[i]);
+			ft_find_unset_arg(env, arg[i], len);
 		}
-		len = ft_strlen(arg[i]);
-		ft_find_unset_arg(env, arg[i], len);
 		i++;
 	}
 }

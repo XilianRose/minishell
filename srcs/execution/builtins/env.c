@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:18:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/11 12:51:15 by cheyennesch   ########   odam.nl         */
+/*   Updated: 2023/09/14 14:23:51 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ bool	ft_copy_env(t_init *process, t_env *env, char **old_env)
 			ft_free_str_array(env->new_env, NULL);
 			return (ft_throw_error(process, ENOMEM), false);
 		}
-		ft_memcpy(env->new_env[i], old_env[i], (str_len + 1));
+		ft_memmove(env->new_env[i], old_env[i], (str_len + 1));
 		i++;
 	}
 	env->new_env[i] = NULL;

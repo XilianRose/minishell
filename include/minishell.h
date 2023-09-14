@@ -213,10 +213,9 @@ bool		ft_store_old_fd(t_init *process);
 void		ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd);
 bool		ft_prep(t_list *lst, t_init *process);
 
-void		ft_freelst(t_list *lst);
 void		ft_free_str_array(char **arr, char *str);
-void		ft_freescmdlst(t_scmd_list *lst);
-void		ft_free_all(t_list *lst, t_env *env);
+void		ft_freelst(t_list *lst);
+void		ft_free_all(t_list *lst, t_env *env); // unused
 
 t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type);
 void		scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);
