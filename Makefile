@@ -6,7 +6,7 @@
 #    By: mstegema <mstegema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/08/01 18:15:02 by cschabra      #+#    #+#                  #
-#    Updated: 2023/09/07 13:06:42 by cheyennesch   ########   odam.nl          #
+#    Updated: 2023/10/06 13:51:45 by mstegema      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,9 @@ CFLAGS = -Wall -Werror -Wextra ${HEADERS} #-Wunreachable-code -Ofast
 
 LIBFT = 42lib
 
-# READLINE_DIR = $(shell brew --prefix readline)
-# READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
-READLINE_LIB = -lreadline -lhistory
+READLINE_DIR = $(shell brew --prefix readline)
+READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
+# READLINE_LIB = -lreadline -lhistory
 
 HEADERS	= -I include -I ${LIBFT}/include -I $(READLINE_DIR)/include
 LIBS	= ${LIBFT}/libft.a
