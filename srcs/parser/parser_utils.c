@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/10 15:04:15 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/06 14:06:32 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	remove_quotes(t_list *tokens)
 		token = tokens->content;
 		i = 0;
 		replaced = false;
-		if (token->type != HERE_DOC)
+		if (ft_strnstr(token->data, "<<", 3))
 		{
 			while (token->data[i] != '\0')
 			{
