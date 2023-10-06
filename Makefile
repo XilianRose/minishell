@@ -18,9 +18,9 @@ CFLAGS = -Wall -Werror -Wextra ${HEADERS} #-Wunreachable-code -Ofast
 
 LIBFT = 42lib
 
-# READLINE_DIR = $(shell brew --prefix readline)
-# READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
-READLINE_LIB = -lreadline -lhistory
+READLINE_DIR = $(shell brew --prefix readline)
+READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
+# READLINE_LIB = -lreadline -lhistory
 
 HEADERS	= -I include -I ${LIBFT}/include -I $(READLINE_DIR)/include
 LIBS	= ${LIBFT}/libft.a
@@ -55,7 +55,7 @@ fclean: clean
 
 re: fclean all
 
-debug: CFLAGS += -g #-fsanitize=address
+debug: CFLAGS += -g -fsanitize=address
 debug: re
 
 .PHONY: all, tests, clean, fclean, re, debug

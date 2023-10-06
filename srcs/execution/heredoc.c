@@ -143,6 +143,7 @@ bool	ft_heredoc(t_init *process, char *data)
 	bool	expand;
 
 	expand = true;
+	printf("%s\n", data);
 	if (pipe(fd) == -1)
 		return (ft_throw_error(process, errno), false);
 	if (ft_strchr(data, '"') || ft_strchr(data, '\''))
