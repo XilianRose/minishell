@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/08 16:23:16 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/10/09 16:27:16 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/12 13:35:48 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*find_end(char *str, char *beginning)
 	while (str[i] == beginning[i])
 		i++;
 	if (str[i] == '$')
-			i++;
+		i++;
 	while (str[i] != '\0')
 	{
 		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
@@ -33,34 +33,6 @@ char	*find_end(char *str, char *beginning)
 	end = ft_substr(str, i, len);
 	return (end);
 }
-
-// char	*find_end(char *str)
-// {
-// 	char	*end;
-// 	size_t	i;
-// 	size_t	len;
-
-// 	i = 0;
-// 	while (str[i] != '\0')
-// 	{
-// 		if (str[i] == '$')
-// 		{
-// 			i++;
-// 			while (str[i] != '\0')
-// 			{
-// 				if (ft_isalnum(str[i]) == 0 && str[i] != '_')
-// 					break ;
-// 				i++;
-// 			}
-// 			if (ft_isalnum(str[i]) == 0 && str[i] != '_')
-// 				break ;
-// 		}
-// 		i++;
-// 	}
-// 	len = ft_strlen(&str[i]);
-// 	end = ft_substr(str, i, len);
-// 	return (end);
-// }
 
 char	*find_middle(char *str)
 {

@@ -81,24 +81,6 @@ static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 	return (0);
 }
 
-// static size_t	replace_token(t_token *token, t_env *env, t_init *process)
-// {
-// 	char	*new_data;
-// 	char	*temp;
-
-// 	while (ft_strchr(token->data, '$') && expand_check(token->data, 0) == true)
-// 	{
-// 		if (ft_strncmp(token->data, "$?", 3) == 0)
-// 			new_data = ft_itoa(process->errorcode);
-// 		else
-// 			new_data = expand_data(token->data, env);
-// 		temp = token->data;
-// 		token->data = new_data;
-// 		free(temp);
-// 	}
-// 	return (0);
-// }
-
 bool	expand_check(char *str, size_t start)
 {
 	bool	in_single;
@@ -118,28 +100,6 @@ bool	expand_check(char *str, size_t start)
 	}
 	return (!in_single);
 }
-
-// bool	expand_check(char *str, size_t start)
-// {
-// 	bool	expand;
-// 	size_t	i;
-// 	size_t	count;
-
-// 	expand = true;
-// 	i = 0;
-// 	count = 0;
-// 	while (str[i] != '\0' || i < start)
-// 	{
-// 		if (str[i] == '\'')
-// 			count++;
-// 		if (str[i] == '$')
-// 			break ;
-// 		i++;
-// 	}
-// 	if (count % 2 != 0)
-// 		expand = false;
-// 	return (expand);
-// }
 
 size_t	expand(t_list *tokens, t_env *env, t_init *process)
 {
