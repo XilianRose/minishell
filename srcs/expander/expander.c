@@ -48,7 +48,7 @@ char	*expand_data(char *str, t_env *env)
 	beginning = find_begin(str);
 	if (!beginning)
 		return (NULL);
-	end = find_end(str);
+	end = find_end(str, beginning);
 	if (!end)
 		return (free(beginning), NULL);
 	middle = find_middle(str);
@@ -81,27 +81,65 @@ static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 	return (0);
 }
 
+// static size_t	replace_token(t_token *token, t_env *env, t_init *process)
+// {
+// 	char	*new_data;
+// 	char	*temp;
+
+// 	while (ft_strchr(token->data, '$') && expand_check(token->data, 0) == true)
+// 	{
+// 		if (ft_strncmp(token->data, "$?", 3) == 0)
+// 			new_data = ft_itoa(process->errorcode);
+// 		else
+// 			new_data = expand_data(token->data, env);
+// 		temp = token->data;
+// 		token->data = new_data;
+// 		free(temp);
+// 	}
+// 	return (0);
+// }
+
 bool	expand_check(char *str, size_t start)
 {
-	bool	expand;
+	bool	in_single;
+	bool	in_double;
 	size_t	i;
-	size_t	count;
 
-	expand = true;
+	in_single = false;
+	in_double = false;
 	i = 0;
-	count = 0;
-	while (str[i] != '\0' || i < start)
+	while (str[i] != '\0' && i < start)
 	{
-		if (str[i] == '\'')
-			count++;
-		if (str[i] == '$')
-			break ;
+		if (str[i] == '\'' && in_double == false)
+			in_single = !in_single;
+		if (str[i] == '\"' && in_single == false)
+			in_double = !in_double;
 		i++;
 	}
-	if (count % 2 != 0)
-		expand = false;
-	return (expand);
+	return (!in_single);
 }
+
+// bool	expand_check(char *str, size_t start)
+// {
+// 	bool	expand;
+// 	size_t	i;
+// 	size_t	count;
+
+// 	expand = true;
+// 	i = 0;
+// 	count = 0;
+// 	while (str[i] != '\0' || i < start)
+// 	{
+// 		if (str[i] == '\'')
+// 			count++;
+// 		if (str[i] == '$')
+// 			break ;
+// 		i++;
+// 	}
+// 	if (count % 2 != 0)
+// 		expand = false;
+// 	return (expand);
+// }
 
 size_t	expand(t_list *tokens, t_env *env, t_init *process)
 {

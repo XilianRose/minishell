@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/10/06 14:06:32 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/06 16:50:31 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static bool	replace_data(t_token *token, char delim)
 	return (free(temp), true);
 }
 
+// if (ft_strnstr(token->data, "<<", 3) == NULL)
+
 void	remove_quotes(t_list *tokens)
 {
 	t_token	*token;
@@ -52,7 +54,7 @@ void	remove_quotes(t_list *tokens)
 		token = tokens->content;
 		i = 0;
 		replaced = false;
-		if (ft_strnstr(token->data, "<<", 3))
+		if (token->type != HERE_DOC)
 		{
 			while (token->data[i] != '\0')
 			{

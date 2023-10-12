@@ -179,7 +179,7 @@ void		ft_setup_interactive(t_init *process);
 void		ft_setup_noninteractive(t_init *process);
 
 // expander
-char		*find_end(char *str);
+char		*find_end(char *str, char *beginning);
 char		*find_middle(char *str);
 char		*find_begin(char *str);
 void		multi_free(char *begin, char *mid, char *end, char *temp);
