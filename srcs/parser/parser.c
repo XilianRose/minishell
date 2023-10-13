@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/10 15:03:33 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/13 13:22:17 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,12 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 // if first token == cmd && has rdr, all cmd tokens after belong to first struct.
 t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 {
-	t_scmd_list		*node;
-	t_token			*token;
-	size_t			count;
+	t_scmd_list	*node;
+	t_token		*token;
+	size_t		count;
+	bool		after_rdr;
 
+	after_rdr = false;
 	while (tokens != NULL)
 	{
 		token = tokens->content;
@@ -76,12 +78,18 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 			node = init_cmdstruct(tokens, count, env);
 			while (count-- > 0)
 				tokens = tokens->next;
+			if (after_rdr == true)
+			{
+				merge_cmdstructs(node, scmds);
+				return (tokens);
+			}
 		}
 		else if (token->type == RDR_TOKEN)
 		{
 			node = init_rdrstruct(tokens);
 			if (node)
 				tokens = tokens->next->next;
+			after_rdr = true;
 		}
 		if (!node || token->type == PIPE_TOKEN)
 			return (tokens);
@@ -89,6 +97,36 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
 	}
 	return (tokens);
 }
+
+// if first token == cmd && has rdr, all cmd tokens after belong to first struct.
+// t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env)
+// {
+// 	t_scmd_list		*node;
+// 	t_token			*token;
+// 	size_t			count;
+
+// 	while (tokens != NULL)
+// 	{
+// 		token = tokens->content;
+// 		if (token->type == CMD_OR_FILE_TOKEN)
+// 		{
+// 			count = count_cmdtokens(&tokens);
+// 			node = init_cmdstruct(tokens, count, env);
+// 			while (count-- > 0)
+// 				tokens = tokens->next;
+// 		}
+// 		else if (token->type == RDR_TOKEN)
+// 		{
+// 			node = init_rdrstruct(tokens);
+// 			if (node)
+// 				tokens = tokens->next->next;
+// 		}
+// 		if (!node || token->type == PIPE_TOKEN)
+// 			return (tokens);
+// 		scmdlst_add_back(scmds, node);
+// 	}
+// 	return (tokens);
+// }
 
 static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_env *env)
 {
