@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/10/12 13:35:01 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/23 11:09:43 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void	remove_quotes(t_list *tokens)
 		else if (strchr(token->data, '\'') != NULL \
 		|| strchr(token->data, '\"') != NULL)
 			replace_data(token);
-		tokens = tokens->next;
+		if (tokens)
+			tokens = tokens->next;
 	}
 }
 
