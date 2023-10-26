@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/10/23 11:09:43 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/23 16:55:21 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,15 @@ size_t	count_cmdtokens(t_list **tokens)
 	current = *tokens;
 	token = current->content;
 	count = 0;
-	while (token->type == CMD_OR_FILE_TOKEN && current != NULL)
+	while (token->type != PIPE_TOKEN && current != NULL)
 	{
 		token = current->content;
-		if (token->type == CMD_OR_FILE_TOKEN)
+		if (token->type == CMD_TOKEN)
 			count++;
-		current = current->next;
+		else if (token->type == RDR_TOKEN)
+			current = current->next;
+		if (current != NULL)
+			current = current->next;
 	}
 	return (count);
 }

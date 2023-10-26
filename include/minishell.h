@@ -40,7 +40,7 @@ typedef enum e_rdr_type
 
 typedef enum e_token_type
 {
-	CMD_OR_FILE_TOKEN	= 1,
+	CMD_TOKEN			= 1,
 	RDR_TOKEN			= 2,
 	PIPE_TOKEN			= 3
 }	t_token_type;

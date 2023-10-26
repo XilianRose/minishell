@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/06 15:05:40 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/23 16:55:21 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_token	*is_splitable(t_token *token)
 	&& ft_strchr("<>", data[1]) == NULL)
 		new_data = ft_substr(data, 1, len);
 	if (new_data)
-		new = new_token(new_data, CMD_OR_FILE_TOKEN);
+		new = new_token(new_data, CMD_TOKEN);
 	return (new);
 }
 
@@ -107,5 +107,5 @@ t_token	*init_token(const char *str)
 		|| (ft_strncmp(str, ">>", 2) == 0) || (ft_strncmp(str, "<<", 2) == 0))
 		return (new_token(str, RDR_TOKEN));
 	else
-		return (new_token(str, CMD_OR_FILE_TOKEN));
+		return (new_token(str, CMD_TOKEN));
 }
