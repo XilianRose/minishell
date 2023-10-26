@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/10/26 12:00:15 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/26 14:56:40 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,18 +49,20 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 	token = tokens->content;
 	if (tokens->next)
 		next_token = tokens->next->content;
-	if (tokens->next == NULL || next_token->type != CMD_TOKEN \
-		|| ft_strncmp(token->data, "><", 2) == 0)
+	if (tokens->next == NULL || next_token->type != CMD_TOKEN)
 		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
 		2), NULL);
-	if (ft_strncmp(token->data, ">>", 2) == 0)
+	if (ft_strncmp(token->data, ">>", 3) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_APPEND);
-	else if (ft_strncmp(token->data, "<<", 2) == 0)
+	else if (ft_strncmp(token->data, "<<", 3) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, HERE_DOC);
-	else if (ft_strncmp(token->data, ">", 1) == 0)
+	else if (ft_strncmp(token->data, ">", 2) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_OUTPUT);
-	else
+	else if (ft_strncmp(token->data, "<", 2) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_INPUT);
+	else
+		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
+		2), NULL);
 	return (ft_lstnewscmd(rdr, RDR));
 }
 
@@ -75,7 +77,8 @@ static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env, \
 		{
 			count = count_cmdtokens(&tokens);
 			node = init_cmdstruct(tokens, count, env);
-			scmdlst_add_back(scmds, node);
+			if (node)
+				scmdlst_add_back(scmds, node);
 			while (tokens && ((t_token *)(tokens->content))->type == CMD_TOKEN)
 				tokens = tokens->next;
 		}
@@ -84,12 +87,11 @@ static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env, \
 		else if (((t_token *)(tokens->content))->type == RDR_TOKEN)
 		{
 			node = init_rdrstruct(tokens);
+			if (!node)
+				return (NULL);
+			tokens = tokens->next->next;
 			scmdlst_add_back(scmds, node);
-			if (node)
-				tokens = tokens->next->next;
 		}
-		if (!node)
-			return (NULL);
 	}
 	return (tokens);
 }
