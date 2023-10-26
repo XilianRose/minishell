@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/10/23 16:55:21 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/26 13:54:39 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_list	*quote_end(t_list *tokens)
 	char	delim;
 
 	token = tokens->content;
+	delim = 0;
 	while (tokens != NULL)
 	{
 		i = 0;
