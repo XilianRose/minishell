@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/10/26 13:54:39 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/10/26 15:27:31 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,28 @@ t_token	*is_splitable(t_token *token)
 		new = new_token(new_data, CMD_TOKEN);
 	return (new);
 }
+
+// t_token	*is_splitable(t_token *token)
+// {
+// 	char	*data;
+// 	char	*new_data;
+// 	size_t	len;
+// 	t_token	*new;
+
+// 	data = token->data;
+// 	new_data = NULL;
+// 	len = ft_strlen(data);
+// 	new = NULL;
+// 	if (len > 2 && ft_strchr("<>", data[0]) && ft_strchr("<>", data[1]) \
+// 	&& ft_strchr("<>", data[2]) == NULL)
+// 		new_data = ft_substr(data, 2, len);
+// 	else if (len > 1 && ft_strchr("<>", data[0]) \
+// 	&& ft_strchr("<>", data[1]) == NULL)
+// 		new_data = ft_substr(data, 1, len);
+// 	if (new_data)
+// 		new = new_token(new_data, CMD_TOKEN);
+// 	return (new);
+// }
 
 size_t	join_datastr(t_list *tokens, t_list *end)
 {
@@ -104,9 +126,19 @@ t_token	*init_token(const char *str)
 {
 	if (ft_strncmp(str, "|", 2) == 0)
 		return (new_token(str, PIPE_TOKEN));
-	else if ((ft_strncmp(str, ">", 1) == 0) || (ft_strncmp(str, "<", 1) == 0)
-		|| (ft_strncmp(str, ">>", 2) == 0) || (ft_strncmp(str, "<<", 2) == 0))
+	else if ((ft_strchr(str, '>') != NULL) || (ft_strchr(str, '<') != NULL))
 		return (new_token(str, RDR_TOKEN));
 	else
 		return (new_token(str, CMD_TOKEN));
 }
+
+// t_token	*init_token(const char *str)
+// {
+// 	if (ft_strncmp(str, "|", 2) == 0)
+// 		return (new_token(str, PIPE_TOKEN));
+// 	else if ((ft_strncmp(str, ">", 1) == 0) || (ft_strncmp(str, "<", 1) == 0)
+// 		|| (ft_strncmp(str, ">>", 2) == 0) || (ft_strncmp(str, "<<", 2) == 0))
+// 		return (new_token(str, RDR_TOKEN));
+// 	else
+// 		return (new_token(str, CMD_TOKEN));
+// }

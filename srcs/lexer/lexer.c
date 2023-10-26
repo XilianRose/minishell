@@ -6,12 +6,14 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/06 19:54:40 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/10/26 15:24:38 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// currently working on fixing RDR splitting
+// testing "cat 'hi' lll>t>est1 outfile3 "this is it" 'balloon'"
 static size_t	split_rdrtokens(t_list *tokens)
 {
 	t_token	*token;
