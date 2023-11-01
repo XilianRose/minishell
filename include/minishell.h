@@ -189,7 +189,7 @@ bool		expand_check(char *str, size_t start);
 size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
 // lexer
-t_token		*is_splitable(t_token *token);
+t_token		*is_splitable(t_token *token, char *data, size_t i);
 size_t		join_datastr(t_list *tokens, t_list *end);
 t_list		*quote_begin(t_list *tokens);
 t_list		*quote_end(t_list *tokens);

@@ -6,55 +6,40 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/10/26 15:27:31 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/01 15:37:55 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*is_splitable(t_token *token)
+t_token	*is_splitable(t_token *token, char *data, size_t i)
 {
-	char	*data;
 	char	*new_data;
 	size_t	len;
 	t_token	*new;
 
-	data = token->data;
 	new_data = NULL;
 	len = ft_strlen(data);
 	new = NULL;
-	if (len > 2 && ft_strchr("<>", data[0]) && ft_strchr("<>", data[1]) \
-	&& ft_strchr("<>", data[2]) == NULL)
-		new_data = ft_substr(data, 2, len);
-	else if (len > 1 && ft_strchr("<>", data[0]) \
-	&& ft_strchr("<>", data[1]) == NULL)
-		new_data = ft_substr(data, 1, len);
-	if (new_data)
-		new = new_token(new_data, CMD_TOKEN);
+	while (i < len)
+	{
+		if ((ft_strchr("<>", data[i]) != NULL && ft_strchr("<>", data[i + 1]) \
+		== NULL) || (ft_strchr("<>", data[i]) == NULL \
+		&& ft_strchr("<>", data[i + 1]) != NULL))
+			break ;
+		i++;
+	}
+	new_data = ft_substr(data, i + 1, len - i);
+	if (new_data[0] != '\0')
+	{
+		new = new_token(new_data, RDR_TOKEN);
+		token->data = ft_substr(data, 0, i + 1);
+		free (data);
+	}
+	if (!(ft_strchr(token->data, '>')) && !(ft_strchr(token->data, '<')))
+		token->type = CMD_TOKEN;
 	return (new);
 }
-
-// t_token	*is_splitable(t_token *token)
-// {
-// 	char	*data;
-// 	char	*new_data;
-// 	size_t	len;
-// 	t_token	*new;
-
-// 	data = token->data;
-// 	new_data = NULL;
-// 	len = ft_strlen(data);
-// 	new = NULL;
-// 	if (len > 2 && ft_strchr("<>", data[0]) && ft_strchr("<>", data[1]) \
-// 	&& ft_strchr("<>", data[2]) == NULL)
-// 		new_data = ft_substr(data, 2, len);
-// 	else if (len > 1 && ft_strchr("<>", data[0]) \
-// 	&& ft_strchr("<>", data[1]) == NULL)
-// 		new_data = ft_substr(data, 1, len);
-// 	if (new_data)
-// 		new = new_token(new_data, CMD_TOKEN);
-// 	return (new);
-// }
 
 size_t	join_datastr(t_list *tokens, t_list *end)
 {
@@ -131,14 +116,3 @@ t_token	*init_token(const char *str)
 	else
 		return (new_token(str, CMD_TOKEN));
 }
-
-// t_token	*init_token(const char *str)
-// {
-// 	if (ft_strncmp(str, "|", 2) == 0)
-// 		return (new_token(str, PIPE_TOKEN));
-// 	else if ((ft_strncmp(str, ">", 1) == 0) || (ft_strncmp(str, "<", 1) == 0)
-// 		|| (ft_strncmp(str, ">>", 2) == 0) || (ft_strncmp(str, "<<", 2) == 0))
-// 		return (new_token(str, RDR_TOKEN));
-// 	else
-// 		return (new_token(str, CMD_TOKEN));
-// }
