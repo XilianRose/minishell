@@ -189,7 +189,7 @@ bool		expand_check(char *str, size_t start);
 size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
 // lexer
-t_token		*is_splitable(t_token *token, char *data, size_t i);
+t_token		*is_splitable(t_token *token, char *data, size_t len, size_t i);
 size_t		join_datastr(t_list *tokens, t_list *end);
 t_list		*quote_begin(t_list *tokens);
 t_list		*quote_end(t_list *tokens);
@@ -216,6 +216,8 @@ bool		ft_prep(t_list *lst, t_init *process);
 void		ft_free_str_array(char **arr, char *str);
 void		ft_freelst(t_list *lst);
 void		ft_free_all(t_list *lst, t_env *env); // unused
+
+void		free_tokenlst(t_list *tokens);
 
 t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type);
 void		scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);

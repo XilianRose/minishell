@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/10/12 13:37:03 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/01 15:55:43 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,5 @@ int32_t	main(int32_t argc, char **argv, char **envp)
 	return (process.errorcode);
 }
 
-// michelle: freeing, fix args behind cmd if file found in between, testing
+// michelle: freeing, testing
 // chey: heredoc expanding, testing.

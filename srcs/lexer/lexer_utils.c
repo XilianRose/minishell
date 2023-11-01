@@ -6,31 +6,30 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/01 15:37:55 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/01 17:47:22 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*is_splitable(t_token *token, char *data, size_t i)
+t_token	*is_splitable(t_token *token, char *data, size_t len, size_t i)
 {
 	char	*new_data;
-	size_t	len;
 	t_token	*new;
 
 	new_data = NULL;
-	len = ft_strlen(data);
 	new = NULL;
 	while (i < len)
 	{
-		if ((ft_strchr("<>", data[i]) != NULL && ft_strchr("<>", data[i + 1]) \
-		== NULL) || (ft_strchr("<>", data[i]) == NULL \
-		&& ft_strchr("<>", data[i + 1]) != NULL))
+		if (((ft_strchr("<", data[i]) != NULL && ft_strchr("<", data[i + 1]) == \
+		NULL) || (ft_strchr("<>", data[i]) == NULL && \
+		ft_strchr("<>", data[i + 1]) != NULL)) && data[i + 1] != '\0')
 			break ;
 		i++;
 	}
-	new_data = ft_substr(data, i + 1, len - i);
-	if (new_data[0] != '\0')
+	if (i < len)
+		new_data = ft_substr(data, i + 1, len - i);
+	if (new_data)
 	{
 		new = new_token(new_data, RDR_TOKEN);
 		token->data = ft_substr(data, 0, i + 1);

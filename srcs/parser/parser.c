@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/10/26 14:56:40 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/01 18:01:25 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@ static t_scmd_list	*init_cmdstruct(t_list *tokens, size_t count, t_env *env)
 	if (!data)
 		return (NULL);
 	i = 0;
-	while (i < count)
+	while (i < count && tokens != NULL)
 	{
 		token = tokens->content;
 		if (token->type == CMD_TOKEN)
 			data[i++] = token->data;
-		else if (token->type == RDR_TOKEN)
+		else if (token->type == RDR_TOKEN && \
+		((t_token *)(tokens->next->content))->type != RDR_TOKEN)
 			tokens = tokens->next;
 		if (tokens != NULL)
 			tokens = tokens->next;
@@ -49,9 +50,11 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 	token = tokens->content;
 	if (tokens->next)
 		next_token = tokens->next->content;
-	if (tokens->next == NULL || next_token->type != CMD_TOKEN)
+	if (tokens->next == NULL)
 		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
 		2), NULL);
+	if (next_token->type != CMD_TOKEN)
+		return (NULL);
 	if (ft_strncmp(token->data, ">>", 3) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_APPEND);
 	else if (ft_strncmp(token->data, "<<", 3) == 0)
@@ -87,9 +90,9 @@ static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env, \
 		else if (((t_token *)(tokens->content))->type == RDR_TOKEN)
 		{
 			node = init_rdrstruct(tokens);
-			if (!node)
-				return (NULL);
-			tokens = tokens->next->next;
+			if (node)
+				tokens = tokens->next;
+			tokens = tokens->next;
 			scmdlst_add_back(scmds, node);
 		}
 	}
@@ -129,5 +132,6 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 	remove_quotes(tokens);
 	cmds = NULL;
 	cmds = make_cmdlist(tokens, &cmds, env);
+	free_tokenlst(tokens);
 	return (cmds);
 }
