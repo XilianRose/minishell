@@ -201,7 +201,7 @@ t_list		*parse(t_env *env, t_init *process, const char *user_input);
 void		remove_quotes(t_list *tokens);
 size_t		count_cmdtokens(t_list **tokens);
 bool		is_builtin(t_list **tokens);
-char		*complete_input(char *input);
+char		*complete_input(t_init *process, char *input);
 
 // utilities
 int64_t		ft_atollong(t_list *lst, t_init *process, const char *str);

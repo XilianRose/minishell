@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/01 15:55:43 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/07 16:01:43 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ static void	ft_loop(t_list *lst, t_init *process)
 			ft_putendl_fd("Exit", STDERR_FILENO);
 			break ;
 		}
-		str = complete_input(str);
+		str = complete_input(process, str);
+		if (!str)
+			break ;
 		ft_setup_noninteractive(process);
 		if (ft_strlen(str))
 			add_history(str);
@@ -54,6 +56,3 @@ int32_t	main(int32_t argc, char **argv, char **envp)
 	ft_free_str_array(env.new_env, NULL);
 	return (process.errorcode);
 }
-
-// michelle: freeing, testing
-// chey: heredoc expanding, testing.

@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/09/04 17:20:05 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/07 16:11:00 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,12 @@ static char	*new_userinput(char *input, char c)
 			temp = ft_strjoin(user_input, " ");
 		else
 			temp = ft_strjoin(user_input, "\n");
+		if (!temp)
+			return (NULL);
 		user_input = ft_strjoin(temp, readline("> "));
 		free(temp);
+		if (!user_input)
+			return (NULL);
 		if (c == '\'' && ft_strchr(user_input, '\'') != NULL)
 			break ;
 		else if (c == '\"' && ft_strchr(user_input, '\"') != NULL)
@@ -38,6 +42,8 @@ static char	*new_userinput(char *input, char c)
 	input = ft_strjoin(temp, user_input);
 	free(temp);
 	free(user_input);
+	if (!input)
+		return (NULL);
 	return (input);
 }
 
@@ -89,13 +95,19 @@ static char	*close_quotes(char *input)
 	return (input);
 }
 
-char	*complete_input(char *input)
+char	*complete_input(t_init *process, char *input)
 {
 	size_t	len;
 
 	input = close_quotes(input);
+	if (!input)
+		return (ft_throw_error(process, ENOMEM), NULL);
 	len = ft_strlen(input);
+	if (!len)
+		return (input);
 	if (input[len - 1] == '|' || input[len - 2] == '|')
 		input = new_userinput(input, '|');
+	if (!input)
+		return (ft_throw_error(process, ENOMEM), NULL);
 	return (input);
 }

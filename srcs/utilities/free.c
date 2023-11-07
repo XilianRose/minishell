@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/07 14:26:35 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/07 15:15:09 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static void	ft_free_structs(t_scmd_list *temp)
 			free(rdr->data);
 			rdr->data = NULL;
 		}
+		free(rdr);
 	}
 	else if (temp->type == CMD)
 	{

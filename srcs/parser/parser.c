@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/01 18:01:25 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/07 15:49:45 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_INPUT);
 	else
 		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
-		2), NULL);
-	return (ft_lstnewscmd(rdr, RDR));
+		2), free(token->data), NULL);
+	return (free(token->data), ft_lstnewscmd(rdr, RDR));
 }
 
 static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env, \
@@ -92,6 +92,7 @@ static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env, \
 			node = init_rdrstruct(tokens);
 			if (node)
 				tokens = tokens->next;
+			// what if init_rdr fails and has syntax error?
 			tokens = tokens->next;
 			scmdlst_add_back(scmds, node);
 		}
