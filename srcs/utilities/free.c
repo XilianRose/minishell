@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/07 13:42:05 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/07 14:26:35 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	free_tokenlst(t_list *tokens)
 	while (temp)
 	{
 		next = temp->next;
-		token = tokens->content;
+		token = temp->content;
 		if (token)
 			free(token);
 		free(temp);
