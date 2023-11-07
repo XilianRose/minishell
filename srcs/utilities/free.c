@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/14 14:32:31 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/07 13:42:05 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static void	ft_free_structs(t_scmd_list *temp)
 	{
 		cmd = temp->data;
 		ft_free_str_array(cmd->arg, cmd->path);
+		free(cmd);
 	}
 }
 
@@ -90,9 +91,23 @@ void	ft_freelst(t_list *lst)
 	lst = NULL;
 }
 
-void	ft_free_all(t_list *lst, t_env *env) // unused
+void	free_tokenlst(t_list *tokens)
 {
-	ft_freelst(lst);
-	ft_free_str_array(env->new_env, NULL);
-	rl_clear_history();
+	t_list	*temp;
+	t_list	*next;
+	t_token	*token;
+
+	if (!tokens)
+		return ;
+	temp = tokens;
+	while (temp)
+	{
+		next = temp->next;
+		token = tokens->content;
+		if (token)
+			free(token);
+		free(temp);
+		temp = next;
+	}
+	tokens = NULL;
 }

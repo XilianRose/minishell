@@ -215,8 +215,6 @@ bool		ft_prep(t_list *lst, t_init *process);
 
 void		ft_free_str_array(char **arr, char *str);
 void		ft_freelst(t_list *lst);
-void		ft_free_all(t_list *lst, t_env *env); // unused
-
 void		free_tokenlst(t_list *tokens);
 
 t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type);
