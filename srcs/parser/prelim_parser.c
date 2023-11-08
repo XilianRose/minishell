@@ -6,11 +6,25 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/07 16:11:00 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 14:09:10 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static bool	userinput_check(char c, char *user_input)
+{
+	bool	res;
+
+	res = false;
+	if (c == '\'' && ft_strchr(user_input, '\'') != NULL)
+		res = true;
+	else if (c == '\"' && ft_strchr(user_input, '\"') != NULL)
+		res = true;
+	else if (c == '|' && ft_strlen(user_input) > 0)
+		res = true;
+	return (res);
+}
 
 static char	*new_userinput(char *input, char c)
 {
@@ -31,21 +45,48 @@ static char	*new_userinput(char *input, char c)
 		free(temp);
 		if (!user_input)
 			return (NULL);
-		if (c == '\'' && ft_strchr(user_input, '\'') != NULL)
-			break ;
-		else if (c == '\"' && ft_strchr(user_input, '\"') != NULL)
-			break ;
-		else if (c == '|' && ft_strlen(user_input) > 0)
+		if (userinput_check(c, user_input) == true)
 			break ;
 	}
 	temp = input;
 	input = ft_strjoin(temp, user_input);
-	free(temp);
-	free(user_input);
 	if (!input)
-		return (NULL);
-	return (input);
+		return (free(temp), free(user_input), NULL);
+	return (free(temp), free(user_input), input);
 }
+
+// static char	*new_userinput(char *input, char c)
+// {
+// 	char	*user_input;
+// 	char	*temp;
+
+// 	user_input = "";
+// 	temp = "";
+// 	while (1)
+// 	{
+// 		if (c == '|')
+// 			temp = ft_strjoin(user_input, " ");
+// 		else
+// 			temp = ft_strjoin(user_input, "\n");
+// 		if (!temp)
+// 			return (NULL);
+// 		user_input = ft_strjoin(temp, readline("> "));
+// 		free(temp);
+// 		if (!user_input)
+// 			return (NULL);
+// 		if (c == '\'' && ft_strchr(user_input, '\'') != NULL)
+// 			break ;
+// 		else if (c == '\"' && ft_strchr(user_input, '\"') != NULL)
+// 			break ;
+// 		else if (c == '|' && ft_strlen(user_input) > 0)
+// 			break ;
+// 	}
+// 	temp = input;
+// 	input = ft_strjoin(temp, user_input);
+// 	if (!input)
+// 		return (free(temp), free(user_input), NULL);
+// 	return (free(temp), free(user_input), input);
+// }
 
 static size_t	needs_closing(char *input, char c)
 {
