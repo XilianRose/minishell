@@ -193,7 +193,7 @@ t_token		*is_splitable(t_token *token, char *data, size_t len, size_t i);
 size_t		join_datastr(t_list *tokens, t_list *end);
 t_list		*quote_begin(t_list *tokens);
 t_list		*quote_end(t_list *tokens);
-t_token		*init_token(const char *str);
+t_token		*init_token(char *str);
 t_list		*tokenisation(const char *user_input);
 
 // parser

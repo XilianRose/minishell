@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/10/26 15:12:40 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/08 15:29:46 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,14 @@ void	remove_quotes(t_list *tokens)
 	{
 		token = tokens->content;
 		i = 0;
-		if (ft_strnstr(token->data, "<<", 3) != NULL)
-			tokens = tokens->next;
-		else if (ft_strchr(token->data, '\'') != NULL \
-		|| ft_strchr(token->data, '\"') != NULL)
-			replace_data(token);
+		if (token->data != NULL)
+		{
+			if (ft_strnstr(token->data, "<<", 3) != NULL)
+				tokens = tokens->next;
+			else if (ft_strchr(token->data, '\'') != NULL \
+			|| ft_strchr(token->data, '\"') != NULL)
+				replace_data(token);
+		}
 		if (tokens)
 			tokens = tokens->next;
 	}

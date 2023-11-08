@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/01 17:47:22 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/08 15:25:46 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ t_list	*quote_begin(t_list *tokens)
 	{
 		i = 0;
 		token = tokens->content;
-		while (token->data[i] != '\0')
+		while (token->data != NULL && token->data[i] != '\0')
 		{
 			if (token->data[i] == '\'' || token->data[i] == '\"')
 				return (tokens);
@@ -106,10 +106,13 @@ t_list	*quote_begin(t_list *tokens)
 	return (NULL);
 }
 
-t_token	*init_token(const char *str)
+t_token	*init_token(char *str)
 {
 	if (ft_strncmp(str, "|", 2) == 0)
-		return (new_token(str, PIPE_TOKEN));
+	{
+		free(str);
+		return (new_token(NULL, PIPE_TOKEN));
+	}
 	else if ((ft_strchr(str, '>') != NULL) || (ft_strchr(str, '<') != NULL))
 		return (new_token(str, RDR_TOKEN));
 	else

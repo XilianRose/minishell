@@ -110,7 +110,7 @@ size_t	expand(t_list *tokens, t_env *env, t_init *process)
 	{
 		i = 0;
 		token = tokens->content;
-		while (token->data[i] != '\0')
+		while (token->data != NULL && token->data[i] != '\0')
 		{
 			if (token->data[i] == '$')
 			{
