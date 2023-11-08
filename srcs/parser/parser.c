@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 13:32:15 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/08 16:01:07 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,8 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 
 	tokens = NULL;
 	tokens = tokenisation(user_input);
+	if (!tokens)
+		return (ft_throw_error(process, ENOMEM), NULL);
 	expand(tokens, env, process);
 	remove_quotes(tokens);
 	cmds = NULL;
