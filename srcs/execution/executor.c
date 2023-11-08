@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 14:34:21 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 15:12:38 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	ft_executor(t_list *lst, t_init *process)
 	{
 		ft_reset_process(lst, process);
 		process->errorcode = 1;
+		// set variable to true to exit, malloc or dup fails we dont want to continue
 		ft_putendl_fd("Something went wrong in preparations..", STDERR_FILENO);
 		return ;
 	}
