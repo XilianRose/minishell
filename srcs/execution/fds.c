@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 15:18:05 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 17:44:08 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,10 @@ static bool	ft_check_for_heredoc(t_scmd_list *scmd, t_init *process)
 				if (dup2(process->oldin, STDIN_FILENO) == -1)
 				{
 					ft_throw_error(process, errno);
-					// set var to exit as dup2 failed
 					return (false);
 				}
 				if (!ft_heredoc(process, rdr->data))
-					return (false); // set var to exit as dup2 failed
+					return (false);
 				process->heredoc = true;
 			}
 		}

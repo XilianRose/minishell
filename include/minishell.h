@@ -99,6 +99,7 @@ typedef struct s_init
 	int32_t	oldout;
 	int32_t	oldin;
 	bool	heredoc;
+	bool	must_exit;
 }	t_init;
 
 typedef struct s_token
@@ -159,7 +160,7 @@ void		ft_throw_error(t_init *process, int32_t errnr);
 
 void		ft_reset_process(t_list *lst, t_init *process);
 void		ft_execve(t_list *lst, t_init *process);
-void		ft_executor(t_list *lst, t_init *process);
+bool		ft_executor(t_list *lst, t_init *process);
 
 void		ft_close_fds(t_init *process);
 bool		ft_infile(t_init *process, t_rdr *rdr);
@@ -170,13 +171,13 @@ bool		ft_heredoc(t_init *process, char *data);
 
 bool		ft_find_path(t_list *lst, t_init *process);
 
-void		ft_free_pipes(int32_t **pipes, int32_t pipe_count);
+void		ft_free_pipes(t_init *process, int32_t pipe_count);
 int32_t		ft_count_pipes(t_list *arglst);
 bool		ft_create_pipes(t_init *process, size_t pipe_count);
 
 // execution signals
-void		ft_setup_interactive(t_init *process);
-void		ft_setup_noninteractive(t_init *process);
+bool		ft_setup_interactive(t_init *process);
+bool		ft_setup_noninteractive(t_init *process);
 
 // expander
 char		*find_end(char *str, char *beginning);

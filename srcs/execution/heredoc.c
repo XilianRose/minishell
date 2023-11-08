@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 14:53:08 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 18:12:25 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,11 @@ static bool	ft_read_input(t_init *process, char *data, int32_t *fd, \
 	{
 		str = readline("> ");
 		if (!str)
-			return (false);
+		{
+			printf("%s\n", \
+				"BabyBash: warning: here-doc delimited by end-of-file");
+			return (free(str), true);
+		}
 		if (!ft_strncmp(str, data, (datalen + 1)))
 		{
 			free(str);

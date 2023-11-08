@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/08 14:09:10 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/08 16:20:58 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ char	*complete_input(t_init *process, char *input)
 	if (!len)
 		return (input);
 	if (input[len - 1] == '|' || input[len - 2] == '|')
-		input = new_userinput(input, '|');
+		input = new_userinput(input, '|'); // if input here is malloced from close_quotes new_userinput, we have a leak
 	if (!input)
 		return (ft_throw_error(process, ENOMEM), NULL);
 	return (input);

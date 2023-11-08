@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 15:12:38 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 18:38:37 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_reset_process(t_list *lst, t_init *process)
 	process->i = 0;
 	process->nr_of_cmds = 0;
 	if (process->pipes)
-		ft_free_pipes(process->pipes, process->pipe_count);
+		ft_free_pipes(process, process->pipe_count);
 	process->pipe_count = 0;
 	process->fdin = 0;
 	process->fdout = 0;
@@ -58,13 +58,13 @@ void	ft_execve(t_list *lst, t_init *process)
 	}
 }
 
-static void	ft_single_scmd(t_list *lst, t_init *process)
+static bool	ft_single_scmd(t_list *lst, t_init *process)
 {
 	t_scmd_list	*scmd;
 
 	scmd = lst->content;
 	if (!ft_check_for_files(scmd, process))
-		return ;
+		return (false); // check here if returning false is always a malloc failure
 	while (scmd)
 	{
 		if (scmd->type == CMD)
@@ -72,32 +72,27 @@ static void	ft_single_scmd(t_list *lst, t_init *process)
 			process->cmd = scmd->data;
 			if (process->cmd->builtin == true)
 			{
-				ft_run_builtin(lst, process, scmd->data);
+				ft_run_builtin(lst, process, scmd->data); // set exit var in builtins
 				break ;
 			}
 			else
 			{
-				ft_create_child(lst, process);
-				ft_wait_for_last_child(process);
+				ft_create_child(lst, process); // set exit var in builtins
+				ft_wait_for_last_child(process); // set exit var in builtins
 			}
 		}
 		scmd = scmd->next;
 	}
+	return (true);
 }
 
-void	ft_executor(t_list *lst, t_init *process)
+static bool	ft_executor2(t_list *lst, t_init *process)
 {
-	if (!ft_find_path(lst, process) || !ft_prep(lst, process) || \
-		!ft_store_old_fd(process))
-	{
-		ft_reset_process(lst, process);
-		process->errorcode = 1;
-		// set variable to true to exit, malloc or dup fails we dont want to continue
-		ft_putendl_fd("Something went wrong in preparations..", STDERR_FILENO);
-		return ;
-	}
 	if (!lst->next)
-		ft_single_scmd(lst, process);
+	{
+		if (!ft_single_scmd(lst, process))
+			return (false); // left off here with returning and setting must exit var.
+	}
 	else
 	{
 		while (lst)
@@ -111,5 +106,24 @@ void	ft_executor(t_list *lst, t_init *process)
 		}
 		ft_wait_for_last_child(process);
 	}
+	return (true);
+}
+
+bool	ft_executor(t_list *lst, t_init *process)
+{
+	if (!ft_prep(lst, process) || !ft_find_path(lst, process) || \
+		!ft_store_old_fd(process))
+	{
+		ft_reset_process(lst, process);
+		process->errorcode = 1;
+		ft_putendl_fd("Something went wrong in preparations..", STDERR_FILENO);
+		return (false);
+	}
+	if (process->must_exit || !ft_executor2(lst, process))
+	{
+		ft_reset_process(lst, process);
+		return (false);
+	}
 	ft_reset_process(lst, process);
+	return (true);
 }
