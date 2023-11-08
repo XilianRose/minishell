@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/14 13:36:15 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 15:12:38 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,26 @@ void	ft_reset_process(t_list *lst, t_init *process)
 	process->heredoc = false;
 }
 
-/**
- * @brief execve returns -1 if it fails and sets errno, 
- * on success it ends the process
- * 
- * @param cmd 
- */
-void	ft_execve(t_cmd *cmd)
+void	ft_execve(t_list *lst, t_init *process)
 {
-	if (access(cmd->path, F_OK) == -1)
+	rl_clear_history();
+	if (!process->cmd->path || access(process->cmd->path, F_OK) == -1)
 	{
 		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->arg[0], STDERR_FILENO);
+		ft_putstr_fd(process->cmd->arg[0], STDERR_FILENO);
 		ft_putendl_fd(": command not found", STDERR_FILENO);
+		ft_free_str_array(process->env->new_env, NULL);
+		ft_reset_process(lst, process);
 		exit(127);
 	}
 	else
 	{
-		if (execve(cmd->path, cmd->arg, cmd->env->new_env) == -1)
+		if (execve(process->cmd->path, process->cmd->arg, \
+			process->cmd->env->new_env) == -1)
 		{
 			perror("BabyBash");
+			ft_free_str_array(process->env->new_env, NULL);
+			ft_reset_process(lst, process);
 			exit(127);
 		}
 	}
@@ -92,6 +92,7 @@ void	ft_executor(t_list *lst, t_init *process)
 	{
 		ft_reset_process(lst, process);
 		process->errorcode = 1;
+		// set variable to true to exit, malloc or dup fails we dont want to continue
 		ft_putendl_fd("Something went wrong in preparations..", STDERR_FILENO);
 		return ;
 	}

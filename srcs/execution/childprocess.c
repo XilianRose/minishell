@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 15:16:07 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 14:39:52 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,17 @@ void	ft_wait_for_last_child(t_init *process)
 	process->ids = NULL;
 }
 
+static void	ft_child_free(t_list *lst, t_init *process)
+{
+	int32_t	exit_nr;
+
+	exit_nr = process->errorcode;
+	rl_clear_history();
+	ft_free_str_array(process->env->new_env, NULL);
+	ft_reset_process(lst, process);
+	exit(exit_nr);
+}
+
 static void	ft_child_process(t_list *lst, t_init *process)
 {
 	if (!process->fdout && ((!process->i && process->nr_of_cmds > 1) || \
@@ -37,7 +48,7 @@ static void	ft_child_process(t_list *lst, t_init *process)
 		if (dup2(process->pipes[process->i][1], STDOUT_FILENO) == -1)
 		{
 			ft_throw_error(process, errno);
-			exit(process->errorcode);
+			ft_child_free(lst, process);
 		}
 	}
 	if (process->i != 0 && process->heredoc == false && !process->fdin)
@@ -45,16 +56,16 @@ static void	ft_child_process(t_list *lst, t_init *process)
 		if (dup2(process->pipes[process->i - 1][0], STDIN_FILENO) == -1)
 		{
 			ft_throw_error(process, errno);
-			exit(process->errorcode);
+			ft_child_free(lst, process);
 		}
 	}
 	ft_close_fds(process);
 	if (process->cmd->builtin == false)
-		ft_execve(process->cmd);
+		ft_execve(lst, process);
 	else
 	{
 		ft_run_builtin(lst, process, process->cmd);
-		exit(process->errorcode);
+		ft_child_free(lst, process);
 	}
 }
 

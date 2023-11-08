@@ -158,7 +158,7 @@ void		ft_error_env(int32_t errnr, char *str);
 void		ft_throw_error(t_init *process, int32_t errnr);
 
 void		ft_reset_process(t_list *lst, t_init *process);
-void		ft_execve(t_cmd *info);
+void		ft_execve(t_list *lst, t_init *process);
 void		ft_executor(t_list *lst, t_init *process);
 
 void		ft_close_fds(t_init *process);

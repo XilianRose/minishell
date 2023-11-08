@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/14 13:32:59 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 14:53:08 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ static char	*ft_expand_loop(t_init *process, char *str)
 	return (final);
 }
 
-static bool	ft_expand_check(t_init *process, int32_t *fd, bool expand, char *str)
+static bool	ft_expand_check(t_init *process, int32_t *fd, \
+	bool expand, char *str)
 {
 	char	*final;
 
@@ -41,7 +42,8 @@ static bool	ft_expand_check(t_init *process, int32_t *fd, bool expand, char *str
 		final = ft_expand_loop(process, str);
 		if (!final)
 			return (false);
-		if (write(fd[1], final, ft_strlen(final)) == -1 || write(fd[1], "\n", 1) == -1)
+		if (write(fd[1], final, ft_strlen(final)) == -1 || \
+			write(fd[1], "\n", 1) == -1)
 		{
 			perror("BabyBash");
 			return (free(final), false);
@@ -50,7 +52,8 @@ static bool	ft_expand_check(t_init *process, int32_t *fd, bool expand, char *str
 	}
 	else
 	{
-		if (write(fd[1], str, ft_strlen(str)) == -1 || write(fd[1], "\n", 1) == -1)
+		if (write(fd[1], str, ft_strlen(str)) == -1 || \
+			write(fd[1], "\n", 1) == -1)
 		{
 			perror("BabyBash");
 			return (false);
