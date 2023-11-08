@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/14 14:28:05 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 14:36:49 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ void	ft_exit_builtin(t_list *lst, t_init *process, t_cmd *cmd)
 			string_to_llong += 256;
 	}
 	ft_putendl_fd("exit", STDERR_FILENO);
-	ft_reset_process(lst, process);
 	rl_clear_history();
 	ft_free_str_array(process->env->new_env, NULL);
+	ft_reset_process(lst, process);
 	exit(string_to_llong);
 }

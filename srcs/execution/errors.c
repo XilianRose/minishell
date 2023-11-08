@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/17 13:31:37 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/14 14:27:08 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 14:35:45 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ void	ft_error_exit(t_list *lst, t_init *process, char *str)
 	ft_putstr_fd(str, STDERR_FILENO);
 	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
 	rl_clear_history();
-	ft_reset_process(lst, process);
 	ft_free_str_array(process->env->new_env, NULL);
+	ft_reset_process(lst, process);
 	exit(255);
 }
 

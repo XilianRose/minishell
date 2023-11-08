@@ -6,7 +6,7 @@
 #    By: mstegema <mstegema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/08/01 18:15:02 by cschabra      #+#    #+#                  #
-#    Updated: 2023/11/07 16:12:12 by cschabra      ########   odam.nl          #
+#    Updated: 2023/11/08 14:50:40 by cschabra      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,7 +55,7 @@ fclean: clean
 
 re: fclean all
 
-debug: CFLAGS += -g #-fsanitize=address
+debug: CFLAGS += -g -fsanitize=address
 debug: re
 
 .PHONY: all, tests, clean, fclean, re, debug
