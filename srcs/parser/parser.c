@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/07 15:49:45 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 13:32:15 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens)
 		next_token = tokens->next->content;
 	if (tokens->next == NULL)
 		return (ft_putstr_fd("BabyBash: syntax error near unexpected token\n", \
-		2), NULL);
+		2), free(token->data), NULL);
 	if (next_token->type != CMD_TOKEN)
-		return (NULL);
+		return (free(token->data), NULL);
 	if (ft_strncmp(token->data, ">>", 3) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_APPEND);
 	else if (ft_strncmp(token->data, "<<", 3) == 0)
