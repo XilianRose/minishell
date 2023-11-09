@@ -63,7 +63,7 @@ char	*expand_data(char *str, t_env *env)
 	new_data = ft_strjoin(temp, end);
 	if (!new_data)
 		return (multi_free(beginning, middle, end, temp), NULL);
-	return (free(temp), free(end), new_data);
+	return (multi_free(beginning, middle, end, temp), new_data);
 }
 
 static size_t	replace_token(t_token *token, t_env *env, t_init *process)
@@ -78,7 +78,7 @@ static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 	temp = token->data;
 	token->data = new_data;
 	free(temp);
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 bool	expand_check(char *str, size_t start)
@@ -121,5 +121,5 @@ size_t	expand(t_list *tokens, t_env *env, t_init *process)
 		}
 		tokens = tokens->next;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
