@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 12:21:06 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:40:22 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ void	ft_execve(t_list *lst, t_init *process)
 	}
 }
 
-static bool	ft_single_scmd(t_list *lst, t_init *process)
+static void	ft_single_scmd(t_list *lst, t_init *process)
 {
 	t_scmd_list	*scmd;
 
 	scmd = lst->content;
 	if (!ft_check_for_files(scmd, process))
-		return (false);
+		return ;
 	while (scmd)
 	{
 		if (scmd->type == CMD)
@@ -83,15 +83,16 @@ static bool	ft_single_scmd(t_list *lst, t_init *process)
 		}
 		scmd = scmd->next;
 	}
-	return (true);
+	return ;
 }
 
 static bool	ft_executor2(t_list *lst, t_init *process)
 {
 	if (!lst->next)
 	{
-		if (!ft_single_scmd(lst, process))
-			return (false); // left off here with returning and setting must exit var.
+		ft_single_scmd(lst, process);
+		if (process->must_exit == true)
+			return (false);
 	}
 	else
 	{

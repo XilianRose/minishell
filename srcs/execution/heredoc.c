@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 12:31:03 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:52:32 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static char	*ft_expand_loop(t_init *process, char *str)
 	char	*temp;
 	char	*final;
 
-	final = expand_data(str, process->env);
+	final = expand_data(str, process->env); // test continue here for leaks/right error/msg
 	if (!final)
 		return (NULL);
 	while (ft_strchr(final, '$'))

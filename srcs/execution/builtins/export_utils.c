@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/31 11:14:27 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/08 18:05:59 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:12:20 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	ft_fill_env(t_init *process, t_cmd *cmd, t_export *exp, int32_t i)
 		{
 			ft_throw_error(process, errno);
 			ft_free_str_array(exp->new_env, exp->arg_copy);
+			process->must_exit = true;
 			return ;
 		}
 		ft_memcpy(exp->new_env[i], cmd->env->new_env[i], (exp->var_len + 1));
