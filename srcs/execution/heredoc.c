@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 18:12:25 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 12:31:03 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,14 @@ static char	*ft_expand_loop(t_init *process, char *str)
 	char	*final;
 
 	final = expand_data(str, process->env);
+	if (!final)
+		return (NULL);
 	while (ft_strchr(final, '$'))
 	{
 		temp = expand_data(final, process->env);
 		free(final);
+		if (!temp)
+			return (NULL);
 		final = malloc(sizeof(char) * (ft_strlen(temp) + 1));
 		if (!final)
 			return (perror("BabyBash"), free(temp), NULL);

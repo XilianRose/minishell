@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 18:38:37 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 12:21:06 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static bool	ft_single_scmd(t_list *lst, t_init *process)
 
 	scmd = lst->content;
 	if (!ft_check_for_files(scmd, process))
-		return (false); // check here if returning false is always a malloc failure
+		return (false);
 	while (scmd)
 	{
 		if (scmd->type == CMD)

@@ -63,7 +63,7 @@ char	*expand_data(char *str, t_env *env)
 	new_data = ft_strjoin(temp, end);
 	if (!new_data)
 		return (multi_free(beginning, middle, end, temp), NULL);
-	return (new_data);
+	return (free(temp), free(end), new_data);
 }
 
 static size_t	replace_token(t_token *token, t_env *env, t_init *process)
