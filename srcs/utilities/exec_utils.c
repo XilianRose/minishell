@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 15:45:46 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 18:04:05 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd)
 	if (!ft_strncmp("pwd", cmd->arg[0], 4))
 		ft_pwd_builtin(process);
 	if (!ft_strncmp("export", cmd->arg[0], 7))
-		ft_export_builtin(process, cmd);
+		ft_export_builtin(process, cmd); // test if no leaks when malloc fails etc from here
 	if (!ft_strncmp("unset", cmd->arg[0], 6))
 		ft_unset_builtin(process, cmd);
 	if (!ft_strncmp("env", cmd->arg[0], 4))

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 15:40:22 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 18:07:50 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,13 +100,15 @@ static bool	ft_executor2(t_list *lst, t_init *process)
 		{
 			if (!ft_check_for_files(lst->content, process))
 				break ;
-			ft_create_child(lst, process);
-			ft_restore_old_fd(process);
-			ft_store_old_fd(process);
+			ft_create_child(lst, process); // set exit var in builtins
+			ft_restore_old_fd(process); // set exit var in builtins
+			ft_store_old_fd(process); // set exit var in builtins
 			lst = lst->next;
 		}
-		ft_wait_for_last_child(process);
+		ft_wait_for_last_child(process); // set exit var in builtins
 	}
+	if (process->must_exit == true)
+		return (false);
 	return (true);
 }
 
