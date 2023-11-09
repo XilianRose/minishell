@@ -199,7 +199,7 @@ t_list		*tokenisation(const char *user_input);
 
 // parser
 t_list		*parse(t_env *env, t_init *process, const char *user_input);
-void		remove_quotes(t_list *tokens);
+size_t		remove_quotes(t_list *tokens);
 size_t		count_cmdtokens(t_list **tokens);
 bool		is_builtin(t_list **tokens);
 char		*complete_input(t_init *process, char *input);

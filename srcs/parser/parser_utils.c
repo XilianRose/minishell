@@ -6,13 +6,13 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/08 15:29:46 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/09 13:58:29 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	replace_data(t_token *token)
+static size_t	replace_data(t_token *token)
 {
 	char	*new_data;
 	char	*temp;
@@ -23,7 +23,7 @@ static bool	replace_data(t_token *token)
 	temp = token->data;
 	new_data = ft_calloc(ft_strlen(temp) - 1, sizeof(char));
 	if (!new_data)
-		return (false);
+		return (EXIT_FAILURE);
 	i = 0;
 	while (*temp != '\0')
 	{
@@ -37,10 +37,10 @@ static bool	replace_data(t_token *token)
 	}
 	temp = token->data;
 	token->data = new_data;
-	return (free(temp), true);
+	return (free(temp), EXIT_SUCCESS);
 }
 
-void	remove_quotes(t_list *tokens)
+size_t	remove_quotes(t_list *tokens)
 {
 	t_token	*token;
 	size_t	i;
@@ -55,11 +55,15 @@ void	remove_quotes(t_list *tokens)
 				tokens = tokens->next;
 			else if (ft_strchr(token->data, '\'') != NULL \
 			|| ft_strchr(token->data, '\"') != NULL)
-				replace_data(token);
+			{
+				if (replace_data(token) == EXIT_FAILURE)
+					return (EXIT_FAILURE);
+			}
 		}
 		if (tokens)
 			tokens = tokens->next;
 	}
+	return (EXIT_SUCCESS);
 }
 
 size_t	count_cmdtokens(t_list **tokens)

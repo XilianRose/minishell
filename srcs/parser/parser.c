@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 12:49:36 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/09 14:06:42 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,10 +132,10 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 	if (!tokens)
 		return (ft_throw_error(process, ENOMEM), NULL);
 	if (expand(tokens, env, process) == EXIT_FAILURE)
-		return (ft_throw_error(process, ENOMEM), NULL);
-	remove_quotes(tokens); //here
+		return (ft_throw_error(process, ENOMEM), free_tokenlst(tokens), NULL);
+	if (remove_quotes(tokens) == EXIT_FAILURE)
+		return (ft_throw_error(process, ENOMEM), free_tokenlst(tokens), NULL);
 	cmds = NULL;
 	cmds = make_cmdlist(tokens, &cmds, env);
-	free_tokenlst(tokens);
-	return (cmds);
+	return (free_tokenlst(tokens), cmds);
 }
