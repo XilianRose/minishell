@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 18:07:50 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 17:44:13 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ static bool	ft_executor2(t_list *lst, t_init *process)
 
 bool	ft_executor(t_list *lst, t_init *process)
 {
+	if (!lst)
+		return (true);
 	if (!ft_prep(lst, process) || !ft_find_path(lst, process) || \
 		!ft_store_old_fd(process))
 	{
