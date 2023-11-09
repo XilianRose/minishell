@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/01 16:57:17 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/14 15:18:04 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 18:20:07 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static bool	ft_is_path(t_init *process, t_cmd *cmd)
 		arg_copy = malloc(sizeof(char) * len);
 		if (!arg_copy)
 		{
-			ft_throw_error(process, errno);
+			process->must_exit = true;
 			return (false);
 		}
 		ft_memmove(arg_copy, cmd->arg[0], len);
@@ -104,8 +104,8 @@ bool	ft_find_path(t_list *lst, t_init *process)
 		{
 			if (tempscmd->type == CMD)
 			{
-				if (!ft_find_path2(process, tempscmd))
-					return (false);
+				if (!ft_find_path2(process, tempscmd) || process->must_exit)
+					return (ft_throw_error(process, ENOMEM), false);
 			}
 			tempscmd = tempscmd->next;
 		}

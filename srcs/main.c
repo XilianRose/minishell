@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/07 16:01:43 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/08 18:17:45 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static void	ft_loop(t_list *lst, t_init *process)
 
 	while (1)
 	{
-		ft_setup_interactive(process);
+		if (!ft_setup_interactive(process))
+			break ;
 		str = readline("BabyBash$ ");
 		if (!str)
 		{
@@ -26,17 +27,15 @@ static void	ft_loop(t_list *lst, t_init *process)
 			break ;
 		}
 		str = complete_input(process, str);
-		if (!str)
+		if (!str || !ft_setup_noninteractive(process))
 			break ;
-		ft_setup_noninteractive(process);
 		if (ft_strlen(str))
 			add_history(str);
 		lst = parse(process->env, process, str);
 		free(str);
 		str = NULL;
-		if (!lst)
-			continue ;
-		ft_executor(lst, process);
+		if (!lst || !ft_executor(lst, process))
+			break ;
 	}
 	rl_clear_history();
 }
@@ -49,6 +48,7 @@ int32_t	main(int32_t argc, char **argv, char **envp)
 
 	(void)argv, (void)argc;
 	process.errorcode = 0;
+	process.must_exit = false;
 	if (!ft_copy_env(&process, &env, envp))
 		return (process.errorcode);
 	process.env = &env;
