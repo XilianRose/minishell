@@ -6,25 +6,25 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/09 13:58:29 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/09 16:26:14 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	replace_data(t_token *token)
+static size_t	replace_data(t_token *token, size_t i)
 {
 	char	*new_data;
 	char	*temp;
-	size_t	i;
 	bool	in_single;
 	bool	in_double;
 
 	temp = token->data;
 	new_data = ft_calloc(ft_strlen(temp) - 1, sizeof(char));
+	in_single = false;
+	in_double = false;
 	if (!new_data)
 		return (EXIT_FAILURE);
-	i = 0;
 	while (*temp != '\0')
 	{
 		if (*temp == '\'' && in_double == false)
@@ -56,7 +56,7 @@ size_t	remove_quotes(t_list *tokens)
 			else if (ft_strchr(token->data, '\'') != NULL \
 			|| ft_strchr(token->data, '\"') != NULL)
 			{
-				if (replace_data(token) == EXIT_FAILURE)
+				if (replace_data(token, 0) == EXIT_FAILURE)
 					return (EXIT_FAILURE);
 			}
 		}

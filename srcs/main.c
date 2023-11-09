@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 18:17:45 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:41:05 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	ft_loop(t_list *lst, t_init *process)
 		lst = parse(process->env, process, str);
 		free(str);
 		str = NULL;
-		if (!lst || !ft_executor(lst, process))
+		if (process->must_exit == true || !ft_executor(lst, process))
 			break ;
 	}
 	rl_clear_history();

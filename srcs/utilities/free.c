@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/07 15:15:09 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 14:57:59 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	ft_free_structs(t_scmd_list *temp)
 	}
 }
 
-static void	ft_freescmdlst(t_scmd_list *lst)
+void	freescmdlst(t_scmd_list *lst)
 {
 	t_scmd_list	*temp;
 	t_scmd_list	*next;
@@ -85,7 +85,7 @@ void	ft_freelst(t_list *lst)
 	while (temp)
 	{
 		next = temp->next;
-		ft_freescmdlst(temp->content);
+		freescmdlst(temp->content);
 		free(temp);
 		temp = next;
 	}
