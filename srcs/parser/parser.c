@@ -70,7 +70,7 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens, t_init *process)
 	return (free(token->data), ft_lstnewscmd(rdr, RDR, process));
 }
 
-static t_list	*scmdlist2(t_list *tokens, t_scmd_list *scmds, \
+static t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
 				t_init *process, size_t count)
 {
 	t_scmd_list	*node;
@@ -80,8 +80,8 @@ static t_list	*scmdlist2(t_list *tokens, t_scmd_list *scmds, \
 		count = count_cmdtokens(&tokens);
 		node = init_cmdstruct(tokens, count, process, 0);
 		if (!node)
-			return (freescmdlst(scmds), process->must_exit = true, NULL);
-		scmdlst_add_back(&scmds, node);
+			return (freescmdlst(*scmds), process->must_exit = true, NULL);
+		scmdlst_add_back(scmds, node);
 		while (tokens && ((t_token *)(tokens->content))->type == CMD_TOKEN)
 			tokens = tokens->next;
 	}
@@ -91,14 +91,14 @@ static t_list	*scmdlist2(t_list *tokens, t_scmd_list *scmds, \
 	{
 		node = init_rdrstruct(tokens, process);
 		if (!node)
-			return (freescmdlst(scmds), NULL);
+			return (freescmdlst(*scmds), NULL);
 		tokens = tokens->next->next;
-		scmdlst_add_back(&scmds, node);
+		scmdlst_add_back(scmds, node);
 	}
 	return (tokens);
 }
 
-static t_list	*make_scmdlist(t_list *tokens, t_scmd_list *scmds, \
+static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
 				t_init *process, size_t count)
 {
 	while (tokens != NULL && ((t_token *)(tokens->content))->type != PIPE_TOKEN)
@@ -180,7 +180,7 @@ static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_init *process)
 	scmds = NULL;
 	while (tokens)
 	{
-		tokens = make_scmdlist(tokens, scmds, process, 0);
+		tokens = make_scmdlist(tokens, &scmds, process, 0);
 		if (process->must_exit == true)
 			return (ft_freelst(*cmds), NULL);
 		if (!scmds)
