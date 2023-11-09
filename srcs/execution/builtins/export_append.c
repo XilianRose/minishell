@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/12 18:11:54 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/09/14 13:26:27 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:11:05 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void	ft_append_to_var(t_init *process, t_export *exp, char *arg, \
 	if (!exp->new_var)
 	{
 		ft_throw_error(process, ENOMEM);
+		process->must_exit = true;
 		return ;
 	}
 	free(process->cmd->env->new_env[j]);

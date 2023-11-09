@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 17:44:08 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:20:18 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_close_fds(t_init *process)
 	}
 }
 
-bool	ft_infile(t_init *process, t_rdr *rdr)
+static bool	ft_infile(t_init *process, t_rdr *rdr)
 {
 	int32_t	temp;
 
@@ -38,12 +38,14 @@ bool	ft_infile(t_init *process, t_rdr *rdr)
 		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
 		process->errorcode = 1;
 		errno = temp;
+		if (process->fdin != -1)
+			process->must_exit = true;
 		return (perror(rdr->data), false);
 	}
 	return (true);
 }
 
-bool	ft_outfile(t_init *process, t_rdr *rdr)
+static void	ft_outfile(t_init *process, t_rdr *rdr)
 {
 	int32_t	temp;
 
@@ -58,9 +60,10 @@ bool	ft_outfile(t_init *process, t_rdr *rdr)
 		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
 		process->errorcode = 1;
 		errno = temp;
-		return (perror(rdr->data), false);
+		perror(rdr->data);
+		if (process->fdout != -1)
+			process->must_exit = true;
 	}
-	return (true);
 }
 
 static bool	ft_check_for_heredoc(t_scmd_list *scmd, t_init *process)
@@ -94,8 +97,8 @@ bool	ft_check_for_files(t_scmd_list *scmd, t_init *process)
 	t_rdr	*rdr;
 
 	if (!ft_check_for_heredoc(scmd, process))
-		return (false);
-	while (scmd)
+		process->must_exit = true;
+	while (process->must_exit == false && scmd)
 	{
 		if (scmd->type == RDR)
 		{
@@ -110,5 +113,7 @@ bool	ft_check_for_files(t_scmd_list *scmd, t_init *process)
 		}
 		scmd = scmd->next;
 	}
+	if (process->must_exit == true)
+		return (false);
 	return (true);
 }

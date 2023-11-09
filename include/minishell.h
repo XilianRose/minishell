@@ -163,8 +163,6 @@ void		ft_execve(t_list *lst, t_init *process);
 bool		ft_executor(t_list *lst, t_init *process);
 
 void		ft_close_fds(t_init *process);
-bool		ft_infile(t_init *process, t_rdr *rdr);
-bool		ft_outfile(t_init *process, t_rdr *rdr);
 bool		ft_check_for_files(t_scmd_list *lst, t_init *process);
 
 bool		ft_heredoc(t_init *process, char *data);

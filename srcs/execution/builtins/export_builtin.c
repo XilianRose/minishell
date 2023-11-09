@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 18:31:54 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/09 15:14:58 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	ft_add_new_var(t_init *process, t_cmd *cmd, t_env *env, char *arg)
 	if (!exp.new_env)
 	{
 		ft_throw_error(process, errno);
+		process->must_exit = true;
 		return ;
 	}
 	exp.arg_copy = malloc((exp.arg_len + 1) * sizeof(char));
@@ -32,6 +33,7 @@ void	ft_add_new_var(t_init *process, t_cmd *cmd, t_env *env, char *arg)
 		ft_throw_error(process, errno);
 		free(exp.new_env);
 		exp.new_env = NULL;
+		process->must_exit = true;
 		return ;
 	}
 	ft_memcpy(exp.arg_copy, arg, (exp.arg_len + 1));
@@ -51,6 +53,7 @@ void	ft_overwrite_var(t_init *process, t_cmd *cmd, char *arg, int32_t c)
 	if (!cmd->env->new_env[c])
 	{
 		ft_throw_error(process, errno);
+		process->must_exit = true;
 		return ;
 	}
 	ft_memcpy(cmd->env->new_env[c], arg, (len + 1));
@@ -109,27 +112,27 @@ static bool	ft_export_no_args(t_cmd *cmd)
 
 void	ft_export_builtin(t_init *process, t_cmd *cmd)
 {
-	char	**arg;
 	int32_t	i;
-	int32_t	j;
 
 	i = 1;
-	j = 0;
-	arg = cmd->arg;
 	process->errorcode = 0;
-	if (!arg[i])
+	if (!cmd->arg[i])
 	{
 		if (!ft_export_no_args(cmd))
-			process->errorcode = 1;
-		return ;
-	}
-	while (arg[i])
-	{
-		if (!ft_check_export_input(process, arg[i], j))
 		{
-			ft_error_export_unset("export", arg[i]);
+			process->errorcode = 1;
+			process->must_exit = true;
+		}
+	}
+	while (process->must_exit == false && cmd->arg[i])
+	{
+		if (!ft_check_export_input(process, cmd->arg[i], 0))
+		{
+			ft_error_export_unset("export", cmd->arg[i]);
 			process->errorcode = 1;
 		}
+		else if (process->must_exit == true)
+			process->errorcode = 1;
 		else
 			process->errorcode = 0;
 		i++;
