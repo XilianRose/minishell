@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 18:06:32 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/09 23:09:40 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
 		count = count_cmdtokens(&tokens);
 		node = init_cmdstruct(tokens, count, process, 0);
 		if (!node)
-			return (freescmdlst(*scmds), process->must_exit = true, NULL);
+			return (freescmdlst(scmds), process->must_exit = true, NULL);
 		scmdlst_add_back(scmds, node);
 		while (tokens && ((t_token *)(tokens->content))->type == CMD_TOKEN)
 			tokens = tokens->next;
@@ -91,7 +91,7 @@ static t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
 	{
 		node = init_rdrstruct(tokens, process);
 		if (!node)
-			return (freescmdlst(*scmds), NULL);
+			return (freescmdlst(scmds), NULL);
 		tokens = tokens->next->next;
 		scmdlst_add_back(scmds, node);
 	}

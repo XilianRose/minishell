@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   free.c                                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 14:57:59 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/09 23:03:34 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,12 @@ static void	ft_free_structs(t_scmd_list *temp)
 	}
 }
 
-void	freescmdlst(t_scmd_list *lst)
+void	freescmdlst(t_scmd_list **lst)
 {
 	t_scmd_list	*temp;
 	t_scmd_list	*next;
 
-	temp = lst;
+	temp = *lst;
 	while (temp)
 	{
 		next = temp->next;
@@ -71,7 +71,7 @@ void	freescmdlst(t_scmd_list *lst)
 		free(temp);
 		temp = next;
 	}
-	lst = NULL;
+	*lst = NULL;
 }
 
 void	ft_freelst(t_list *lst)
@@ -85,7 +85,7 @@ void	ft_freelst(t_list *lst)
 	while (temp)
 	{
 		next = temp->next;
-		freescmdlst(temp->content);
+		freescmdlst((void *)&temp->content);
 		free(temp);
 		temp = next;
 	}
