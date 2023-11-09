@@ -75,6 +75,8 @@ static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 		new_data = ft_itoa(process->errorcode);
 	else
 		new_data = expand_data(token->data, env);
+	if (!new_data)
+		return (EXIT_FAILURE);
 	temp = token->data;
 	token->data = new_data;
 	free(temp);
@@ -115,7 +117,10 @@ size_t	expand(t_list *tokens, t_env *env, t_init *process)
 			if (token->data[i] == '$')
 			{
 				if (expand_check(token->data, i) == true)
-					replace_token(token, env, process);
+				{
+					if (replace_token(token, env, process) == EXIT_FAILURE)
+						return (EXIT_FAILURE);
+				}
 			}
 			i++;
 		}
