@@ -189,11 +189,11 @@ bool		expand_check(char *str, size_t start);
 size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
 // lexer
-t_token		*is_splitable(t_token *token, char *data, size_t len, size_t i);
+t_token		*split_rdrtoken(t_token *token, size_t i);
+size_t		is_splitable(t_token *token);
 size_t		join_datastr(t_list *tokens, t_list *end);
 t_list		*quote_begin(t_list *tokens);
 t_list		*quote_end(t_list *tokens);
-t_token		*init_token(char *str);
 t_list		*tokenisation(const char *user_input);
 
 // parser
