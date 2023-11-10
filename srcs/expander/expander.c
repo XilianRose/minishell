@@ -78,6 +78,8 @@ static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 	else if (ft_strncmp(token->data, "~/", 2) == 0)
 	{
 		temp = expand_data("$HOME", env);
+		if (!temp)
+			return (EXIT_FAILURE);
 		new_data = ft_strjoin(temp, token->data + 1);
 		free(temp);
 	}
