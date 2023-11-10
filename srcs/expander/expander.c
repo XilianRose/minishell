@@ -33,7 +33,7 @@ static char	*expanded_part(char *str, t_env *env)
 		}
 		i++;
 	}
-	res = ft_calloc(1, sizeof(char));
+	res = ft_strjoin("", "");
 	return (free(str), res);
 }
 
@@ -73,6 +73,14 @@ static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 
 	if (ft_strncmp(token->data, "$?", 3) == 0)
 		new_data = ft_itoa(process->errorcode);
+	else if (ft_strncmp(token->data, "~", 2) == 0)
+		new_data = expand_data("$HOME", env);
+	else if (ft_strncmp(token->data, "~/", 2) == 0)
+	{
+		temp = expand_data("$HOME", env);
+		new_data = ft_strjoin(temp, token->data + 1);
+		free(temp);
+	}
 	else
 		new_data = expand_data(token->data, env);
 	if (!new_data)
@@ -114,7 +122,8 @@ size_t	expand(t_list *tokens, t_env *env, t_init *process)
 		token = tokens->content;
 		while (token->data != NULL && token->data[i] != '\0')
 		{
-			if (token->data[i] == '$')
+			if (token->data[i] == '$' || ft_strncmp(token->data, "~", 2) \
+			== 0 || ft_strncmp(token->data, "~/", 2) == 0)
 			{
 				if (expand_check(token->data, i) == true && \
 					ft_strncmp(token->data, "$", 2) != 0)
