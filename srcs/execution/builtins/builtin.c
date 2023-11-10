@@ -43,7 +43,25 @@ bool	ft_echo_builtin(t_init *process, t_cmd *cmd)
 
 void	ft_cd_builtin(t_init *process, t_cmd *cmd)
 {
-	if (chdir(cmd->arg[1]) == -1)
+	int32_t	i;
+
+	i = 0;
+	if (!cmd->arg[1] || str_equals("~", cmd->arg[1]))
+	{
+		while (cmd->env->new_env[i])
+		{
+			if (ft_strncmp(cmd->env->new_env[i], "HOME=", 5) == 0)
+			{
+				if (chdir(cmd->env->new_env[i] + 5) == -1)
+				{
+					ft_throw_error(process, errno);
+					return ;
+				}
+			}
+			i++;
+		}
+	}
+	else if (chdir(cmd->arg[1]) == -1)
 	{
 		ft_throw_error(process, errno);
 		return ;
