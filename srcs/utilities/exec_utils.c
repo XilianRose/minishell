@@ -18,14 +18,14 @@ void	ft_restore_old_fd(t_init *process)
 	{
 		if (dup2(process->oldout, STDOUT_FILENO) == -1 || \
 			close (process->oldout) == -1)
-			perror("BabyBash");
+			ft_throw_error(process, errno);
 		process->oldout = -1;
 	}
 	if (process->oldin != -1)
 	{
 		if (dup2(process->oldin, STDIN_FILENO) == -1 || \
 			close (process->oldin) == -1)
-			perror("BabyBash");
+			ft_throw_error(process, errno);
 		process->oldin = -1;
 	}
 }
@@ -35,13 +35,13 @@ bool	ft_store_old_fd(t_init *process)
 	process->oldout = dup(STDOUT_FILENO);
 	if (process->oldout == -1)
 	{
-		perror("BabyBash");
+		ft_throw_error(process, errno);
 		return (false);
 	}
 	process->oldin = dup(STDIN_FILENO);
 	if (process->oldin == -1)
 	{
-		perror("BabyBash");
+		ft_throw_error(process, errno);
 		return (false);
 	}
 	return (true);
@@ -65,7 +65,7 @@ void	ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd)
 	if (!ft_strncmp("env", cmd->arg[0], 4))
 		ft_env_builtin(process, cmd);
 	if (!ft_strncmp("exit", cmd->arg[0], 5))
-		ft_exit_builtin(lst, process, cmd);
+		ft_exit_builtin(lst, process, cmd); // check if no leaks here just in case, i do free but might forget something?
 }
 
 bool	ft_prep(t_list *lst, t_init *process)

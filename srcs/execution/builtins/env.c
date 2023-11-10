@@ -21,9 +21,8 @@ void	ft_env_builtin(t_init *process, t_cmd *cmd)
 	{
 		if (cmd->arg[1])
 		{
-			ft_putstr_fd(cmd->arg[0], STDERR_FILENO);
 			process->errorcode = 127;
-			ft_error_env(ENOENT, cmd->arg[1]);
+			ft_error_env(ENOENT, cmd);
 			return ;
 		}
 		while (cmd->env->new_env[i])

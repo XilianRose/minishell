@@ -155,7 +155,7 @@ void		ft_create_child(t_list *lst, t_init *process);
 
 void		ft_error_export_unset(char *name, char *option);
 void		ft_error_exit(t_list *lst, t_init *process, char *str);
-void		ft_error_env(int32_t errnr, char *str);
+void		ft_error_env(int32_t errnr, t_cmd *cmd);
 void		ft_throw_error(t_init *process, int32_t errnr);
 
 void		ft_reset_process(t_list *lst, t_init *process);

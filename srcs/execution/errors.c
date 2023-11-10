@@ -34,20 +34,12 @@ void	ft_error_exit(t_list *lst, t_init *process, char *str)
 	exit(255);
 }
 
-void	ft_error_env(int32_t errnr, char *str)
+void	ft_error_env(int32_t errnr, t_cmd *cmd)
 {
-	char	*newstr;
-
-	newstr = ft_strjoin(": ", str);
-	if (!newstr)
-	{
-		ft_putendl_fd("error message env strjoin failed..", STDERR_FILENO);
-		return ;
-	}
+	ft_putstr_fd(cmd->arg[0], STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
 	errno = errnr;
-	perror(newstr);
-	free(newstr);
-	newstr = NULL;
+	perror(cmd->arg[1]);
 }
 
 void	ft_throw_error(t_init *process, int32_t errnr)

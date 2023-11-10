@@ -19,8 +19,9 @@ void	ft_close_fds(t_init *process)
 	i = 0;
 	while (i < (process->nr_of_cmds - 1))
 	{
-		if (close(process->pipes[i][0]) == -1 || \
-			close(process->pipes[i][1]) == -1)
+		if (close(process->pipes[i][0]) == -1)
+			ft_throw_error(process, errno);
+		if (close(process->pipes[i][1]) == -1)
 			ft_throw_error(process, errno);
 		i++;
 	}

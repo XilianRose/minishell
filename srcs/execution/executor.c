@@ -72,13 +72,13 @@ static void	ft_single_scmd(t_list *lst, t_init *process)
 			process->cmd = scmd->data;
 			if (process->cmd->builtin == true)
 			{
-				ft_run_builtin(lst, process, scmd->data); // set exit var in builtins
+				ft_run_builtin(lst, process, scmd->data);
 				break ;
 			}
 			else
 			{
-				ft_create_child(lst, process); // set exit var in builtins
-				ft_wait_for_last_child(process); // set exit var in builtins
+				ft_create_child(lst, process);
+				ft_wait_for_last_child(process);
 			}
 		}
 		scmd = scmd->next;
@@ -96,16 +96,17 @@ static bool	ft_executor2(t_list *lst, t_init *process)
 	}
 	else
 	{
-		while (lst)
+		while (process->must_exit == false && lst)
 		{
 			if (!ft_check_for_files(lst->content, process))
 				break ;
-			ft_create_child(lst, process); // set exit var in builtins
-			ft_restore_old_fd(process); // set exit var in builtins
-			ft_store_old_fd(process); // set exit var in builtins
+			ft_create_child(lst, process);
+			ft_restore_old_fd(process);
+			if (!ft_store_old_fd(process))
+				process->must_exit = true;
 			lst = lst->next;
 		}
-		ft_wait_for_last_child(process); // set exit var in builtins
+		ft_wait_for_last_child(process);
 	}
 	if (process->must_exit == true)
 		return (false);
