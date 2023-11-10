@@ -33,7 +33,7 @@ static char	*expanded_part(char *str, t_env *env)
 		}
 		i++;
 	}
-	res = ft_calloc(1, sizeof(char));
+	res = ft_strjoin("", "");
 	return (free(str), res);
 }
 
