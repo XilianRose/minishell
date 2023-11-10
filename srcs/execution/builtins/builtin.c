@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 17:54:58 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/10 15:08:11 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	ft_cd_builtin(t_init *process, t_cmd *cmd)
 	int32_t	i;
 
 	i = 0;
-	if (!cmd->arg[1] || str_equals("~", cmd->arg[1]))
+	// if (!cmd->arg[1] || str_equals("~", cmd->arg[1]))
+	if (!cmd->arg[1])
 	{
 		while (cmd->env->new_env[i])
 		{
