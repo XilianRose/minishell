@@ -116,7 +116,8 @@ size_t	expand(t_list *tokens, t_env *env, t_init *process)
 		{
 			if (token->data[i] == '$')
 			{
-				if (expand_check(token->data, i) == true)
+				if (expand_check(token->data, i) == true && \
+					ft_strncmp(token->data, "$", 2) != 0)
 				{
 					if (replace_token(token, env, process) == EXIT_FAILURE)
 						return (EXIT_FAILURE);
