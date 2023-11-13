@@ -132,6 +132,7 @@ size_t	expand(t_list *tokens, t_env *env, t_init *process)
 				{
 					if (replace_token(token, env, process) == EXIT_FAILURE)
 						return (EXIT_FAILURE);
+					i = 0;
 				}
 			}
 			i++;
