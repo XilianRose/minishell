@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/15 16:23:27 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/15 18:11:54 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ static char	*close_quotes(char *input)
 			check = needs_closing(input, c, i);
 			if (check == 0)
 				return (new_userinput(input, c));
-			i = i + check;
+			i = check; // was i = i + check;
 		}
 		i++;
 	}
