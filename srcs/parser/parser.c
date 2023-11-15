@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 23:09:40 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/15 15:41:57 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens, t_init *process)
 	if (tokens->next)
 		next_token = tokens->next->content;
 	if (tokens->next == NULL || next_token->type != CMD_TOKEN)
-		return (ft_putstr_fd(str, STDERR_FILENO), free(token->data), NULL);
+		return (ft_putendl_fd(str, STDERR_FILENO), free(token->data), NULL);
 	if (ft_strncmp(token->data, ">>", 3) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_APPEND);
 	else if (ft_strncmp(token->data, "<<", 3) == 0)
@@ -64,13 +64,13 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens, t_init *process)
 	else if (ft_strncmp(token->data, "<", 2) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_INPUT);
 	else
-		return (ft_putstr_fd(str, STDERR_FILENO), free(token->data), NULL);
+		return (ft_putendl_fd(str, STDERR_FILENO), free(token->data), NULL);
 	if (!rdr)
 		return (free(token->data), process->must_exit = true, NULL);
 	return (free(token->data), ft_lstnewscmd(rdr, RDR, process));
 }
 
-static t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
+t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
 				t_init *process, size_t count)
 {
 	t_scmd_list	*node;
@@ -94,18 +94,6 @@ static t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
 			return (freescmdlst(scmds), NULL);
 		tokens = tokens->next->next;
 		scmdlst_add_back(scmds, node);
-	}
-	return (tokens);
-}
-
-static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
-				t_init *process, size_t count)
-{
-	while (tokens != NULL && ((t_token *)(tokens->content))->type != PIPE_TOKEN)
-	{
-		tokens = scmdlist2(tokens, scmds, process, count);
-		if (!tokens)
-			return (NULL);
 	}
 	return (tokens);
 }
