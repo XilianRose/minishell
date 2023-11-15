@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/15 15:56:43 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/15 16:23:27 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,10 @@ static bool	userinput_check(char c, char *user_input)
 	return (res);
 }
 
-static char	*new_userinput(char *input, char c)
+static char	*new_userinput2(char *temp, char *user_input, char c)
 {
-	char	*user_input;
-	char	*temp;
 	char	*rl;
 
-	user_input = ft_calloc(1, sizeof(char));
 	while (1)
 	{
 		if (c == '|')
@@ -44,10 +41,8 @@ static char	*new_userinput(char *input, char c)
 			return (NULL);
 		rl = readline("> ");
 		if (!rl)
-		{
-			ft_putendl_fd("BabyBash: unexpected end of file", STDERR_FILENO);
-			return (free(temp), NULL);
-		}
+			return (ft_putendl_fd("BabyBash: unexpected end of file", \
+				STDERR_FILENO), free(temp), NULL);
 		user_input = ft_strjoin(temp, rl);
 		free(temp);
 		free(rl);
@@ -56,6 +51,21 @@ static char	*new_userinput(char *input, char c)
 		if (userinput_check(c, user_input) == true)
 			break ;
 	}
+	return (user_input);
+}
+
+static char	*new_userinput(char *input, char c)
+{
+	char	*user_input;
+	char	*temp;
+
+	temp = NULL;
+	user_input = ft_calloc(1, sizeof(char));
+	if (!user_input)
+		return (NULL);
+	user_input = new_userinput2(temp, user_input, c);
+	if (!user_input)
+		return (NULL);
 	temp = ft_strjoin(input, user_input);
 	if (!temp)
 		return (free(input), free(user_input), NULL);
@@ -126,69 +136,3 @@ char	*complete_input(t_init *process, char *input)
 		return (ft_throw_error(process, ENOMEM), NULL);
 	return (input);
 }
-
-// static size_t	needs_closing(char *input, char c)
-// {
-// 	size_t	i;
-// 	size_t	count;
-
-// 	i = 0;
-// 	count = 0;
-// 	while (input[i] != '\0')
-// 	{
-// 		if ((input[i] == c && i == 0) || \
-// 			(input[i] == c && input[i - 1] != '\\'))
-// 			count++;
-// 		if (count == 2)
-// 			return (i);
-// 		i++;
-// 	}
-// 	if (count == 1)
-// 		return (0);
-// 	return (i);
-// }
-
-// static char	*close_quotes(char *input)
-// {
-// 	size_t	i;
-// 	size_t	check;
-
-// 	i = 0;
-// 	check = 0;
-// 	while (input[i] != '\0')
-// 	{
-// 		if (input[i] == '\'')
-// 		{
-// 			check = needs_closing(&input[i], '\'');
-// 			if (check == 0)
-// 				return (new_userinput(input, '\''));
-// 			i = i + check;
-// 		}
-// 		else if (input[i] == '\"')
-// 		{
-// 			check = needs_closing(&input[i], '\"');
-// 			if (check == 0)
-// 				return (new_userinput(input, '\"'));
-// 			i = i + check;
-// 		}
-// 		i++;
-// 	}
-// 	return (input);
-// }
-
-// char	*complete_input(t_init *process, char *input)
-// {
-// 	size_t	len;
-
-// 	input = close_quotes(input);
-// 	if (!input)
-// 		return (ft_throw_error(process, ENOMEM), NULL);
-// 	len = ft_strlen(input);
-// 	if (!len)
-// 		return (input);
-// 	if (input[len - 1] == '|' || input[len - 2] == '|')
-// 		input = new_userinput(input, '|'); 
-// 	if (!input)
-// 		return (ft_throw_error(process, ENOMEM), NULL);
-// 	return (input);
-// }
