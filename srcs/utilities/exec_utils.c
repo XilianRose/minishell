@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 16:49:24 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 18:04:05 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/15 15:57:03 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,14 @@ void	ft_restore_old_fd(t_init *process)
 	}
 }
 
-bool	ft_store_old_fd(t_init *process)
+void	ft_store_old_fd(t_init *process)
 {
 	process->oldout = dup(STDOUT_FILENO);
 	if (process->oldout == -1)
-	{
 		ft_throw_error(process, errno);
-		return (false);
-	}
 	process->oldin = dup(STDIN_FILENO);
 	if (process->oldin == -1)
-	{
 		ft_throw_error(process, errno);
-		return (false);
-	}
-	return (true);
 }
 
 void	ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd)

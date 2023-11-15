@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/08 14:39:52 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/15 16:41:11 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,12 @@ static void	ft_child_process(t_list *lst, t_init *process)
 		(process->i != (process->nr_of_cmds - 1))))
 	{
 		if (dup2(process->pipes[process->i][1], STDOUT_FILENO) == -1)
-		{
 			ft_throw_error(process, errno);
-			ft_child_free(lst, process);
-		}
 	}
 	if (process->i != 0 && process->heredoc == false && !process->fdin)
 	{
 		if (dup2(process->pipes[process->i - 1][0], STDIN_FILENO) == -1)
-		{
 			ft_throw_error(process, errno);
-			ft_child_free(lst, process);
-		}
 	}
 	ft_close_fds(process);
 	if (process->cmd->builtin == false)

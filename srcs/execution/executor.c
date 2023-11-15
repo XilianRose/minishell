@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 17:44:13 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/15 16:44:04 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,21 +93,18 @@ static bool	ft_executor2(t_list *lst, t_init *process)
 		ft_single_scmd(lst, process);
 		if (process->must_exit == true)
 			return (false);
+		return (true);
 	}
-	else
+	while (process->must_exit == false && lst)
 	{
-		while (process->must_exit == false && lst)
-		{
-			if (!ft_check_for_files(lst->content, process))
-				break ;
-			ft_create_child(lst, process);
-			ft_restore_old_fd(process);
-			if (!ft_store_old_fd(process))
-				process->must_exit = true;
-			lst = lst->next;
-		}
-		ft_wait_for_last_child(process);
+		if (!ft_check_for_files(lst->content, process))
+			break ;
+		ft_create_child(lst, process);
+		ft_restore_old_fd(process);
+		ft_store_old_fd(process);
+		lst = lst->next;
 	}
+	ft_wait_for_last_child(process);
 	if (process->must_exit == true)
 		return (false);
 	return (true);
@@ -117,14 +114,14 @@ bool	ft_executor(t_list *lst, t_init *process)
 {
 	if (!lst)
 		return (true);
-	if (!ft_prep(lst, process) || !ft_find_path(lst, process) || \
-		!ft_store_old_fd(process))
+	if (!ft_prep(lst, process) || !ft_find_path(lst, process))
 	{
 		ft_reset_process(lst, process);
 		process->errorcode = 1;
 		ft_putendl_fd("Something went wrong in preparations..", STDERR_FILENO);
 		return (false);
 	}
+	ft_store_old_fd(process);
 	if (process->must_exit || !ft_executor2(lst, process))
 	{
 		ft_reset_process(lst, process);

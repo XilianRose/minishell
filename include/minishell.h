@@ -208,7 +208,7 @@ int64_t		ft_atollong(t_list *lst, t_init *process, const char *str);
 void		ft_bubble_sort(char **sortedenv, int32_t len);
 
 void		ft_restore_old_fd(t_init *process);
-bool		ft_store_old_fd(t_init *process);
+void		ft_store_old_fd(t_init *process);
 void		ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd);
 bool		ft_prep(t_list *lst, t_init *process);
 

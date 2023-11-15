@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 17:40:35 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/15 16:01:47 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,21 +101,21 @@ static bool	ft_read_input(t_init *process, char *data, int32_t *fd, \
 static void	ft_remove_quotes(char *data)
 {
 	int32_t	i;
-	int32_t	j;
 
 	i = 0;
 	while (data[i])
 	{
 		if (data[i] == '\'' || data[i] == '"')
 		{
-			j = i;
-			while (data[j])
+			while (data[i])
 			{
-				data[j] = data[j + 1];
-				j++;
+				data[i] = data[i + 1];
+				i++;
 			}
+			i = 0;
 		}
-		i++;
+		else
+			i++;
 	}
 }
 
@@ -141,6 +141,6 @@ bool	ft_heredoc(t_init *process, char *data)
 	}
 	if (dup2(fd[0], STDIN_FILENO) == -1 || close(fd[0]) == -1 || \
 		close(fd[1]) == -1)
-		return (ft_throw_error(process, errno), false);
+		ft_throw_error(process, errno);
 	return (true);
 }
