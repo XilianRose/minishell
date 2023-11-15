@@ -6,34 +6,34 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/09 16:26:14 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/15 15:42:16 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	replace_data(t_token *token, size_t i)
+static size_t	replace_data(t_token *token, size_t i, size_t j, bool in_single)
 {
 	char	*new_data;
 	char	*temp;
-	bool	in_single;
 	bool	in_double;
 
 	temp = token->data;
-	new_data = ft_calloc(ft_strlen(temp) - 1, sizeof(char));
-	in_single = false;
+	new_data = ft_calloc(ft_strlen(temp) + 1, sizeof(char));
 	in_double = false;
 	if (!new_data)
 		return (EXIT_FAILURE);
-	while (*temp != '\0')
+	while (temp[j] != '\0')
 	{
-		if (*temp == '\'' && in_double == false)
+		if (temp[j] == '\\' && ft_strchr("\'\"\\", temp[j + 1]) != NULL)
+			new_data[i++] = temp[j + 1];
+		else if (temp[j] == '\'' && in_double == false)
 			in_single = !in_single;
-		else if (*temp == '\"' && in_single == false)
+		else if (temp[j] == '\"' && in_single == false)
 			in_double = !in_double;
-		else
-			new_data[i++] = *temp;
-		temp++;
+		else if (ft_strchr("\'\"\\", temp[j]) == NULL)
+			new_data[i++] = temp[j];
+		j++;
 	}
 	temp = token->data;
 	token->data = new_data;
@@ -54,9 +54,10 @@ size_t	remove_quotes(t_list *tokens)
 			if (ft_strnstr(token->data, "<<", 3) != NULL)
 				tokens = tokens->next;
 			else if (ft_strchr(token->data, '\'') != NULL \
-			|| ft_strchr(token->data, '\"') != NULL)
+			|| ft_strchr(token->data, '\"') != NULL \
+			|| ft_strchr(token->data, '\\') != NULL)
 			{
-				if (replace_data(token, 0) == EXIT_FAILURE)
+				if (replace_data(token, 0, 0, false) == EXIT_FAILURE)
 					return (EXIT_FAILURE);
 			}
 		}
@@ -103,4 +104,16 @@ bool	is_builtin(t_list **tokens)
 	|| (ft_strncmp(str, "exit", 5) == 0))
 		return (true);
 	return (false);
+}
+
+t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
+				t_init *process, size_t count)
+{
+	while (tokens != NULL && ((t_token *)(tokens->content))->type != PIPE_TOKEN)
+	{
+		tokens = scmdlist2(tokens, scmds, process, count);
+		if (!tokens)
+			return (NULL);
+	}
+	return (tokens);
 }

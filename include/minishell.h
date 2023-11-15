@@ -197,6 +197,10 @@ t_list		*tokenisation(const char *user_input);
 
 // parser
 t_list		*parse(t_env *env, t_init *process, const char *user_input);
+t_list		*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
+			t_init *process, size_t count);
+t_list		*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
+			t_init *process, size_t count);
 size_t		remove_quotes(t_list *tokens);
 size_t		count_cmdtokens(t_list **tokens);
 bool		is_builtin(t_list **tokens);
