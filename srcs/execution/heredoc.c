@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/15 16:01:47 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/16 12:34:30 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,21 +51,13 @@ static bool	ft_expand_check(t_init *process, int32_t *fd, \
 			return (false);
 		if (write(fd[1], final, ft_strlen(final)) == -1 || \
 			write(fd[1], "\n", 1) == -1)
-		{
 			perror("BabyBash");
-			return (free(final), false);
-		}
 		free(final);
+		return (true);
 	}
-	else
-	{
-		if (write(fd[1], str, ft_strlen(str)) == -1 || \
-			write(fd[1], "\n", 1) == -1)
-		{
-			perror("BabyBash");
-			return (false);
-		}
-	}
+	if (write(fd[1], str, ft_strlen(str)) == -1 || \
+		write(fd[1], "\n", 1) == -1)
+		perror("BabyBash");
 	return (true);
 }
 
