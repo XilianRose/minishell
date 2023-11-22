@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/15 15:41:57 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/22 18:11:00 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,8 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 
 	tokens = NULL;
 	tokens = tokenisation(user_input);
+	if (!user_input[0]) // added this to check if empty string when pressing only enter
+		return (NULL);
 	if (!tokens)
 	{
 		process->must_exit = true;

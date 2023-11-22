@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/16 12:34:30 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/22 18:09:32 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static char	*ft_expand_loop(t_init *process, char *str)
 			process->must_exit = true, NULL);
 	while (ft_strchr(final, '$'))
 	{
+		printf("yo %s\n", str);
 		temp = expand_data(final, process->env);
 		free(final);
 		if (!temp)
@@ -67,6 +68,7 @@ static bool	ft_read_input(t_init *process, char *data, int32_t *fd, \
 	char	*str;
 	size_t	datalen;
 
+	// signal(SIGINT, SIG_DFL);
 	datalen = ft_strlen(data);
 	while (1)
 	{
@@ -97,7 +99,7 @@ static void	ft_remove_quotes(char *data)
 	i = 0;
 	while (data[i])
 	{
-		if (data[i] == '\'' || data[i] == '"')
+		if (data[i] == '\'' || data[i] == '"' || data[i] == '\n')
 		{
 			while (data[i])
 			{

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/15 16:34:53 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/22 17:48:12 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,17 @@ static bool	ft_check_for_heredoc(t_scmd_list *scmd, t_init *process)
 			rdr = scmd->data;
 			if (rdr->type == HERE_DOC)
 			{
-				if (dup2(process->oldin, STDIN_FILENO) == -1)
+				if (dup2(process->oldin, STDIN_FILENO) == -1 || \
+					signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 					ft_throw_error(process, errno);
 				if (!ft_heredoc(process, rdr->data))
+				{
+					if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+						ft_throw_error(process, errno);
 					return (false);
+				}
+				if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
+					ft_throw_error(process, errno);
 				process->heredoc = true;
 			}
 		}
