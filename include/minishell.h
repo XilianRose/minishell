@@ -24,6 +24,8 @@
 # include <sys/wait.h>
 # include <termios.h>
 
+extern int32_t	g_signal;
+
 typedef enum e_struct_type
 {
 	CMD = 0,

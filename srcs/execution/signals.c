@@ -16,6 +16,7 @@ static void	ft_interactive_handler(int32_t signum)
 {
 	if (signum == SIGINT)
 	{
+		g_signal = SIGINT;
 		ft_putchar_fd('\n', STDOUT_FILENO);
 		rl_replace_line("", 0);
 		rl_on_new_line();
@@ -53,6 +54,11 @@ bool	ft_setup_noninteractive(t_init *process)
 	{
 		ft_throw_error(process, errno);
 		return (false);
+	}
+	if (g_signal == SIGINT)
+	{
+		process->errorcode = 130;
+		g_signal = 0;
 	}
 	return (true);
 }
