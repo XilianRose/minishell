@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/22 15:39:32 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/22 15:50:25 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ int32_t	main(int32_t argc, char **argv, char **envp)
 		return (process.errorcode);
 	process.env = &env;
 	ft_loop(&lst, &process);
+	if (g_signal == SIGINT)
+		process.errorcode = 130;
 	ft_free_str_array(env.new_env, NULL);
 	return (process.errorcode);
 }
