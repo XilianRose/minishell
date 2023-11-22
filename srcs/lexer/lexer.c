@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/09 11:41:55 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/22 12:54:16 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,17 +90,40 @@ static size_t	merge_tokens(t_list *tokens)
 	return (EXIT_SUCCESS);
 }
 
-static t_token	*init_token(char *str)
+// is quoted function OR merge befor token initialization and THEN init
+
+// static t_token	*init_token(char *str)
+// {
+// 	if (ft_strncmp(str, "|", 2) == 0)
+// 	{
+// 		free(str);
+// 		return (new_token(NULL, PIPE_TOKEN));
+// 	}
+// 	else if ((ft_strchr(str, '>') != NULL) || (ft_strchr(str, '<') != NULL))
+// 		return (new_token(str, RDR_TOKEN));
+// 	else
+// 		return (new_token(str, CMD_TOKEN));
+// }
+
+static void	init_token(t_list *tokens)
 {
-	if (ft_strncmp(str, "|", 2) == 0)
+	t_token	*token;
+
+	token = NULL;
+	while (tokens != NULL)
 	{
-		free(str);
-		return (new_token(NULL, PIPE_TOKEN));
+		token = tokens->content;
+		if (ft_strncmp(token->data, "|", 2) == 0)
+			token->type = PIPE_TOKEN;
+		else if (ft_strchr(token->data, '\"') == NULL && \
+				ft_strchr(token->data, '\'') == NULL && \
+				((ft_strchr(token->data, '>') != NULL) || \
+				(ft_strchr(token->data, '<') != NULL)))
+			token->type = RDR_TOKEN;
+		else
+			token->type = CMD_TOKEN;
+		tokens = tokens->next;
 	}
-	else if ((ft_strchr(str, '>') != NULL) || (ft_strchr(str, '<') != NULL))
-		return (new_token(str, RDR_TOKEN));
-	else
-		return (new_token(str, CMD_TOKEN));
 }
 
 static size_t	make_tlist(const char **ui_array, t_list **tokens)
@@ -112,7 +135,7 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 	while (ui_array[0] != NULL)
 	{
 		str = (char *)*ui_array;
-		token = init_token(str);
+		token = new_token(str);
 		if (token == NULL)
 			return (free_tokenlst(*tokens), 1);
 		node = ft_lstnew(token);
@@ -138,6 +161,7 @@ t_list	*tokenisation(const char *user_input)
 	free(ui_array);
 	if (merge_tokens(tokens) == EXIT_FAILURE)
 		return (free_tokenlst(tokens), NULL);
+	init_token(tokens);
 	if (split_rdrtokens(tokens, 0) == EXIT_FAILURE)
 		return (free_tokenlst(tokens), NULL);
 	return (tokens);

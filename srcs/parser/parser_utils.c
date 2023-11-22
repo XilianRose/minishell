@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/15 15:42:16 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/22 13:16:15 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,14 @@ static size_t	replace_data(t_token *token, size_t i, size_t j, bool in_single)
 		return (EXIT_FAILURE);
 	while (temp[j] != '\0')
 	{
-		if (temp[j] == '\\' && ft_strchr("\'\"\\", temp[j + 1]) != NULL)
+		if (temp[j] == '\\' && ft_strchr("<>|\'\"\\", temp[j + 1]) != NULL)
 			new_data[i++] = temp[j + 1];
 		else if (temp[j] == '\'' && in_double == false)
 			in_single = !in_single;
 		else if (temp[j] == '\"' && in_single == false)
 			in_double = !in_double;
-		else if (ft_strchr("\'\"\\", temp[j]) == NULL)
+		else if ((ft_strchr("<>|\\", temp[j]) != NULL && (in_double == true || \
+			in_single == true)) || ft_strchr("<>|\'\"\\", temp[j]) == NULL)
 			new_data[i++] = temp[j];
 		j++;
 	}

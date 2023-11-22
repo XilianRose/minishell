@@ -226,7 +226,7 @@ void		scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);
 
 t_rdr		*ft_allocate_mem_rdr(char *data, t_rdr_type type);
 t_cmd		*ft_allocate_mem_cmd(char **arg, t_env *env, bool builtin);
-t_token		*new_token(const char *data, t_token_type type);
+t_token		*new_token(const char *data);
 
 bool		str_equals(char *lhs, char *rhs);
 bool		ft_cmpname(const char *s1, const char *s2, int32_t n);
