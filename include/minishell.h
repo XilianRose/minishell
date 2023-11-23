@@ -182,10 +182,10 @@ bool		ft_setup_noninteractive(t_init *process);
 // expander
 char		*find_end(char *str, char *beginning);
 char		*find_middle(char *str);
-char		*find_begin(char *str);
+char		*find_begin(char *str, bool in_heredoc);
 void		multi_free(char *begin, char *mid, char *end, char *temp);
 
-char		*expand_data(char *str, t_env *env);
+char		*expand_data(char *str, t_env *env, bool in_heredoc);
 bool		expand_check(char *str, size_t start);
 size_t		expand(t_list *tokens, t_env *env, t_init *process);
 

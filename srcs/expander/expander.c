@@ -37,7 +37,7 @@ static char	*expanded_part(char *str, t_env *env)
 	return (free(str), res);
 }
 
-char	*expand_data(char *str, t_env *env)
+char	*expand_data(char *str, t_env *env, bool in_heredoc)
 {
 	char	*new_data;
 	char	*temp;
@@ -74,17 +74,17 @@ static size_t	replace_token(t_token *token, t_env *env, t_init *process)
 	if (ft_strncmp(token->data, "$?", 3) == 0)
 		new_data = ft_itoa(process->errorcode);
 	else if (ft_strncmp(token->data, "~", 2) == 0)
-		new_data = expand_data("$HOME", env);
+		new_data = expand_data("$HOME", env, false);
 	else if (ft_strncmp(token->data, "~/", 2) == 0)
 	{
-		temp = expand_data("$HOME", env);
+		temp = expand_data("$HOME", env, false);
 		if (!temp)
 			return (EXIT_FAILURE);
 		new_data = ft_strjoin(temp, token->data + 1);
 		free(temp);
 	}
 	else
-		new_data = expand_data(token->data, env);
+		new_data = expand_data(token->data, env, false);
 	if (!new_data)
 		return (EXIT_FAILURE);
 	temp = token->data;
