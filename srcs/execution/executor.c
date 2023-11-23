@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/15 16:44:04 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/23 16:55:57 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	ft_execve(t_list *lst, t_init *process)
 			perror("BabyBash");
 			ft_free_str_array(process->env->new_env, NULL);
 			ft_reset_process(lst, process);
-			exit(127);
+			exit(126);
 		}
 	}
 }

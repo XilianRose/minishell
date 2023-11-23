@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/22 18:09:32 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/23 17:33:49 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,15 @@ static bool	ft_read_input(t_init *process, char *data, int32_t *fd, \
 	char	*str;
 	size_t	datalen;
 
-	// signal(SIGINT, SIG_DFL);
 	datalen = ft_strlen(data);
 	while (1)
 	{
 		str = readline("> ");
-		if (!str)
+		if (!str || g_signal == SIGINT || !ft_strncmp(str, data, (datalen + 1)))
 		{
-			printf("%s\n", \
-				"BabyBash: warning: here-doc delimited by end-of-file");
-			return (free(str), true);
-		}
-		if (!ft_strncmp(str, data, (datalen + 1)))
-		{
+			if (!str)
+				printf("%s\n", \
+					"BabyBash: warning: here-doc delimited by end-of-file");
 			free(str);
 			break ;
 		}

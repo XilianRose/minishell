@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/06/26 12:39:09 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/22 17:48:12 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/23 15:10:18 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,16 @@ void	ft_close_fds(t_init *process)
 
 static bool	ft_infile(t_init *process, t_rdr *rdr)
 {
+	int32_t	temp;
+
 	process->fdin = open(rdr->data, O_RDONLY);
 	if (process->fdin == -1 || dup2(process->fdin, STDIN_FILENO) == -1 || \
 		close(process->fdin) == -1)
 	{
-		ft_throw_error(process, errno);
+		temp = errno;
+		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
+		process->errorcode = 1;
+		errno = temp;
 		return (perror(rdr->data), false);
 	}
 	return (true);
@@ -41,6 +46,8 @@ static bool	ft_infile(t_init *process, t_rdr *rdr)
 
 static void	ft_outfile(t_init *process, t_rdr *rdr)
 {
+	int32_t	temp;
+
 	if (rdr->type == RDR_APPEND)
 		process->fdout = open(rdr->data, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
@@ -48,7 +55,10 @@ static void	ft_outfile(t_init *process, t_rdr *rdr)
 	if (process->fdout == -1 || dup2(process->fdout, STDOUT_FILENO) == -1 || \
 		close(process->fdout) == -1)
 	{
-		ft_throw_error(process, errno);
+		temp = errno;
+		ft_putstr_fd("BabyBash: ", STDERR_FILENO);
+		process->errorcode = 1;
+		errno = temp;
 		perror(rdr->data);
 	}
 }

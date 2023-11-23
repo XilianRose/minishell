@@ -33,7 +33,10 @@ static void	ft_interactive_handler(int32_t signum)
 static void	ft_noninteractive_handler(int32_t signum)
 {
 	if (signum == SIGINT)
+	{
+		g_signal = SIGINT;
 		ft_putchar_fd('\n', STDERR_FILENO);
+	}
 	if (signum == SIGQUIT)
 		ft_putendl_fd("Quit (core dumped)", STDIN_FILENO);
 }

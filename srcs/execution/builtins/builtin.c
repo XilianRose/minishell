@@ -6,18 +6,38 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/15 16:35:56 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/23 17:26:36 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static bool	ft_echo_check(t_cmd *cmd, int32_t i)
+{
+	int32_t	j;
+
+	j = 0;
+	while (cmd->arg[i][j])
+	{
+		if (cmd->arg[i][j] == '-' && j == 0)
+			j++;
+		else if (j == 0 && cmd->arg[i][j] != '-')
+			break ;
+		if (cmd->arg[i][j] == 'n' && !cmd->arg[i][j + 1])
+			return (true);
+		if (cmd->arg[i][j] != 'n')
+			break ;
+		j++;
+	}
+	return (false);
+}
 
 bool	ft_echo_builtin(t_init *process, t_cmd *cmd)
 {
 	int32_t	i;
 
 	i = 1;
-	while (cmd->arg[i] && str_equals("-n", cmd->arg[i]))
+	while (cmd->arg[i] && ft_echo_check(cmd, i))
 		i++;
 	if (cmd->arg[i])
 	{
@@ -33,7 +53,7 @@ bool	ft_echo_builtin(t_init *process, t_cmd *cmd)
 	}
 	if (cmd->arg[1] && cmd->arg[1][0])
 	{
-		if (str_equals("-n", cmd->arg[1]))
+		if (ft_echo_check(cmd, 1))
 			return (true);
 	}
 	if (write(STDOUT_FILENO, "\n", 1) == -1)
