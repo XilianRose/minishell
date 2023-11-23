@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/23 12:18:06 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/23 17:38:21 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,8 +129,8 @@ char	*complete_input(t_init *process, char *input)
 	input = close_quotes(input);
 	if (!input)
 		return (ft_throw_error(process, ENOMEM), NULL);
-	if (input[0] == '\0')
-		return (NULL);
+	// if (input[0] == '\0') // commented this because it stops enter from working, it quits our program
+	// 	return (NULL);
 	len = ft_strlen(input);
 	if (!len)
 		return (input);
