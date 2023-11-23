@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/22 13:03:10 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/23 12:18:06 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static char	*new_userinput2(char *temp, char *user_input, char c)
 		rl = readline("> ");
 		if (!rl)
 			return (ft_putendl_fd("BabyBash: unexpected end of file", \
-				STDERR_FILENO), free(temp), NULL);
+				STDERR_FILENO), free(temp), "");
 		user_input = ft_strjoin(temp, rl);
 		free(temp);
 		free(rl);
@@ -66,6 +66,8 @@ static char	*new_userinput(char *input, char c)
 	user_input = new_userinput2(temp, user_input, c);
 	if (!user_input)
 		return (NULL);
+	if (user_input[0] == '\0')
+		return (free(input), user_input);
 	temp = ft_strjoin(input, user_input);
 	if (!temp)
 		return (free(input), free(user_input), NULL);
@@ -113,7 +115,7 @@ static char	*close_quotes(char *input)
 			check = needs_closing(input, c, i);
 			if (check == 0)
 				return (new_userinput(input, c));
-			i = check; // was i = i + check;
+			i = check;
 		}
 		i++;
 	}
@@ -127,6 +129,8 @@ char	*complete_input(t_init *process, char *input)
 	input = close_quotes(input);
 	if (!input)
 		return (ft_throw_error(process, ENOMEM), NULL);
+	if (input[0] == '\0')
+		return (NULL);
 	len = ft_strlen(input);
 	if (!len)
 		return (input);
