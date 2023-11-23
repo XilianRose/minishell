@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/22 18:09:32 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/23 14:41:40 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ static char	*ft_expand_loop(t_init *process, char *str)
 	char	*temp;
 	char	*final;
 
-	final = expand_data(str, process->env);
+	final = expand_data(str, process->env, true);
 	if (!final)
 		return (ft_throw_error(process, ENOMEM), \
 			process->must_exit = true, NULL);
 	while (ft_strchr(final, '$'))
 	{
 		printf("yo %s\n", str);
-		temp = expand_data(final, process->env);
+		temp = expand_data(final, process->env, true);
 		free(final);
 		if (!temp)
 			return (ft_throw_error(process, ENOMEM), \
