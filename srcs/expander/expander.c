@@ -45,7 +45,7 @@ char	*expand_data(char *str, t_env *env, bool in_heredoc)
 	char	*middle;
 	char	*end;
 
-	beginning = find_begin(str);
+	beginning = find_begin(str, in_heredoc); //if beginning == str return beginning
 	if (!beginning)
 		return (NULL);
 	end = find_end(str, beginning);
