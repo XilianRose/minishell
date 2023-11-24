@@ -26,6 +26,13 @@
 
 extern int32_t	g_signal;
 
+typedef enum e_string_status
+{
+	NO_STRING = 0,
+	EMPTY_STRING = 1,
+	VALID_STRING = 2
+}	t_string_status;
+
 typedef enum e_struct_type
 {
 	CMD = 0,
@@ -185,7 +192,8 @@ char		*find_middle(char *str);
 char		*find_begin(char *str, bool in_heredoc);
 void		multi_free(char *begin, char *mid, char *end, char *temp);
 
-char		*expand_data(char *str, t_env *env, bool in_heredoc, t_init *process);
+char		*expand_data(char *str, t_env *env, bool in_heredoc, \
+			t_init *process);
 bool		expand_check(char *str, size_t start);
 size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
