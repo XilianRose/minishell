@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/23 17:38:21 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/24 12:28:13 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static char	*new_userinput2(char *temp, char *user_input, char c)
 		rl = readline("> ");
 		if (!rl)
 			return (ft_putendl_fd("BabyBash: unexpected end of file", \
-				STDERR_FILENO), free(temp), "");
+				STDERR_FILENO), free(temp), ft_calloc(1, sizeof(char)));
 		user_input = ft_strjoin(temp, rl);
 		free(temp);
 		free(rl);
