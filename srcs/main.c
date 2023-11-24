@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/24 15:14:39 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/24 17:44:59 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 int32_t	g_signal = 0;
 
-static t_string_status	read_from_line(char *str)
+static t_string_status	read_from_line(char **str)
 {
-	str = readline("BabyBash$ ");
-	if (!str)
+	*str = readline("BabyBash$ ");
+	if (!*str)
 	{
 		ft_putendl_fd("Exit", STDERR_FILENO);
 		return (NO_STRING);
 	}
-	else if (!str[0])
+	else if (!*str[0])
 	{
-		ft_free_str_array(NULL, str);
+		ft_free_str_array(NULL, *str);
 		return (EMPTY_STRING);
 	}
 	else
@@ -41,7 +41,7 @@ static void	ft_loop(t_list *lst, t_init *process)
 	{
 		if (!ft_setup_interactive(process))
 			break ;
-		readline_return = read_from_line(str);
+		readline_return = read_from_line(&str);
 		if (readline_return == NO_STRING)
 			break ;
 		else if (readline_return == EMPTY_STRING)
