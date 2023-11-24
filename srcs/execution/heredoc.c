@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/07/04 14:59:07 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/24 14:01:07 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/24 15:19:43 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ static bool	ft_read_input(t_init *process, char *data, int32_t *fd, \
 
 static void	ft_remove_quotes(char *data)
 {
-	int32_t	i;
+	size_t	i;
 
 	i = 0;
 	while (data[i])
