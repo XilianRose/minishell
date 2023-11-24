@@ -185,7 +185,7 @@ char		*find_middle(char *str);
 char		*find_begin(char *str, bool in_heredoc);
 void		multi_free(char *begin, char *mid, char *end, char *temp);
 
-char		*expand_data(char *str, t_env *env, bool in_heredoc);
+char		*expand_data(char *str, t_env *env, bool in_heredoc, t_init *process);
 bool		expand_check(char *str, size_t start);
 size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
