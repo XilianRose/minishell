@@ -26,13 +26,6 @@
 
 extern int32_t	g_signal;
 
-typedef enum e_string_status
-{
-	NO_STRING = 0,
-	EMPTY_STRING = 1,
-	VALID_STRING = 2
-}	t_string_status;
-
 typedef enum e_struct_type
 {
 	CMD = 0,
@@ -138,7 +131,7 @@ typedef struct s_token
 
 // execution builtins
 bool		ft_echo_builtin(t_init *process, t_cmd *cmd);
-void		ft_cd_builtin(t_init *process, t_cmd *cmd);
+void		ft_cd_builtin(t_init *process, t_cmd *cmd, size_t i);
 void		ft_pwd_builtin(t_init *process);
 void		ft_exit_builtin(t_list *lst, t_init *process, t_cmd *cmd);
 
@@ -192,8 +185,7 @@ char		*find_middle(char *str);
 char		*find_begin(char *str, bool in_heredoc);
 void		multi_free(char *begin, char *mid, char *end, char *temp);
 
-char		*expand_data(char *str, t_env *env, bool in_heredoc, \
-			t_init *process);
+char		*expand_data(char *str, t_env *env, bool in_heredoc);
 bool		expand_check(char *str, size_t start);
 size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
