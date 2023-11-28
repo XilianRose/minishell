@@ -125,8 +125,8 @@ size_t	expand(t_list *tokens, t_env *env, t_init *process)
 		token = tokens->content;
 		while (token->data != NULL && token->data[i] != '\0')
 		{
-			if ((token->data[i] == '$' && token->data[i + 1] != ' ' ) || \
-			ft_strncmp(token->data, "~", 2) == 0 || \
+			if ((token->data[i] == '$' && ft_strchr(" \0", token->data[i + 1]) \
+			== NULL) || ft_strncmp(token->data, "~", 2) == 0 || \
 			ft_strncmp(token->data, "~/", 2) == 0)
 			{
 				if (expand_check(token->data, i) == true)
