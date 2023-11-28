@@ -12,6 +12,97 @@
 
 #include "minishell.h"
 
+// static char	*ft_join_arr(char **arr, size_t i)
+// {
+// 	char	*final;
+// 	char	*temp;
+
+// 	final = NULL;
+// 	if (!arr[i + 1])
+// 	{
+// 		final = ft_substr(arr[i], 0, ft_strlen(arr[i]));
+// 		return (final);
+// 	}
+// 	while (arr[i + 1])
+// 	{
+// 		temp = ft_strjoin(arr[i], " ");
+// 		if (!temp)
+// 			return (NULL);
+// 		free(arr[i]);
+// 		arr[i] = temp;
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (arr[i])
+// 	{
+// 		temp = ft_strjoin(arr[i], arr[i + 1]);
+// 		if (!temp)
+// 			return (NULL);
+// 		if (arr[i + 2])
+// 		{
+// 			free(arr[i + 1]);
+// 			arr[i + 1] = temp;
+// 		}
+// 		else
+// 		{
+// 			final = temp;
+// 			break ;
+// 		}
+// 		i++;
+// 	}
+// 	return (final);
+// }
+
+// static char	*ft_expand_loop(t_init *process, char *str, size_t i)
+// {
+// 	char	**arr;
+// 	char	*expanded;
+
+// 	arr = ft_split(str, ' ');
+// 	if (!arr)
+// 		return (ft_throw_error(process, ENOMEM), process->must_exit = true, NULL);
+// 	while (arr[i])
+// 	{
+// 		expanded = expand_data(arr[i], process->env, true, process);
+// 		if (!expanded)
+// 			return (ft_free_str_array(arr, NULL), ft_throw_error(process, ENOMEM), process->must_exit = true, NULL);
+// 		free(arr[i]);
+// 		arr[i] = expanded;
+// 		i++;
+// 	}
+// 	expanded = ft_join_arr(arr, 0);
+// 	if (!expanded)
+// 	{
+// 		ft_throw_error(process, ENOMEM);
+// 		process->must_exit = true;
+// 	}
+// 	ft_free_str_array(arr, NULL);
+// 	return (expanded);
+// }
+
+// static bool	ft_expand_check(t_init *process, int32_t *fd, \
+// 	bool expand, char *str)
+// {
+// 	char	*final;
+
+// 	if (expand == true && ft_strchr(str, '$'))
+// 	{
+// 		final = ft_expand_loop(process, str, 0);
+// 		if (!final)
+// 			return (false);
+// 		if (write(fd[1], final, ft_strlen(final)) == -1 || \
+// 			write(fd[1], "\n", 1) == -1)
+// 			perror("BabyBash");
+// 		free(final);
+// 		return (true);
+// 	}
+// 	if (write(fd[1], str, ft_strlen(str)) == -1 || \
+// 		write(fd[1], "\n", 1) == -1)
+// 		perror("BabyBash");
+// 	return (true);
+// }
+
+
 static char	*ft_expand_loop(t_init *process, char *str)
 {
 	char	*temp;
