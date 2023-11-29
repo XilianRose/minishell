@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/08 16:23:16 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/28 14:42:30 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/29 13:17:08 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ char	*find_middle(char *str)
 		{
 			while (str[i + len] != '\0')
 			{
-				if (ft_isalnum(str[i + len]) == 0 && str[i + len] != '_' \
-				&& str[i + len] != '?')
+				if (ft_isalnum(str[i + len]) == 0 && \
+					ft_strchr("_?\'\"", str[i + len]) == NULL)
 					break ;
 				len++;
 			}
