@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/24 15:15:29 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/30 15:06:46 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,67 +97,6 @@ t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
 	}
 	return (tokens);
 }
-
-// static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
-// 				t_init *process, size_t count)
-// {
-// 	t_scmd_list	*node;
-
-// 	while (tokens != NULL && ((t_token *)(tokens->content))->type != PIPE_TOKEN)
-// 	{
-// 		if (((t_token *)(tokens->content))->type == CMD_TOKEN && count == 0)
-// 		{
-// 			count = count_cmdtokens(&tokens);
-// 			node = init_cmdstruct(tokens, count, process->env, 0);
-// 			if (!node)
-// 				return (freescmdlst(*scmds), process->must_exit = true, NULL);
-// 			scmdlst_add_back(scmds, node);
-// 			while (tokens && ((t_token *)(tokens->content))->type == CMD_TOKEN)
-// 				tokens = tokens->next;
-// 		}
-// 		else if (((t_token *)(tokens->content))->type == CMD_TOKEN && count > 0)
-// 			tokens = tokens->next;
-// 		else if (((t_token *)(tokens->content))->type == RDR_TOKEN)
-// 		{
-// 			node = init_rdrstruct(tokens, process);
-// 			if (!node)
-// 				return (freescmdlst(*scmds), NULL);
-// 			tokens = tokens->next->next;
-// 			scmdlst_add_back(scmds, node);
-// 		}
-// 	}
-// 	return (tokens);
-// }
-
-// static t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_env *env, \
-// 				size_t count)
-// {
-// 	t_scmd_list	*node;
-
-// 	while (tokens != NULL && ((t_token *)(tokens->content))->type != PIPE_TOKEN)
-// 	{
-// 		if (((t_token *)(tokens->content))->type == CMD_TOKEN && count == 0)
-// 		{
-// 			count = count_cmdtokens(&tokens);
-// 			node = init_cmdstruct(tokens, count, env);
-// 			if (node)
-// 				scmdlst_add_back(scmds, node);
-// 			while (tokens && ((t_token *)(tokens->content))->type == CMD_TOKEN)
-// 				tokens = tokens->next;
-// 		}
-// 		else if (((t_token *)(tokens->content))->type == CMD_TOKEN && count > 0)
-// 			tokens = tokens->next;
-// 		else if (((t_token *)(tokens->content))->type == RDR_TOKEN)
-// 		{
-// 			node = init_rdrstruct(tokens);
-// 			if (node)
-// 				tokens = tokens->next;
-// 			tokens = tokens->next;
-// 			scmdlst_add_back(scmds, node);
-// 		}
-// 	}
-// 	return (tokens);
-// }
 
 static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_init *process)
 {

@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/23 12:53:01 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/30 15:21:48 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,69 +41,45 @@ static size_t	split_rdrtokens(t_list *tokens, size_t i)
 	return (EXIT_SUCCESS);
 }
 
-// static size_t	split_rdrtokens(t_list *tokens)
-// {
-// 	t_list	*next;
-// 	t_token	*token;
-// 	t_token	*new;
-// 	t_list	*new_node;
+static void	delete_merged_nodes(t_list **tokens, t_list *begin, t_list *end)
+{
+	t_list	*current;
 
-// 	while (tokens != NULL)
-// 	{
-// 		token = tokens->content;
-// 		next = tokens->next;
-// 		new = NULL;
-// 		if (token->type == RDR_TOKEN)
-// 		{
-// 			new = is_splitable(token, token->data, ft_strlen(token->data), 0);
-// 			if (new)
-// 			{
-// 				new_node = ft_lstnew(new);
-// 				tokens->next = new_node;
-// 				new_node->next = next;
-// 			}
-// 		}
-// 		tokens = tokens->next;
-// 	}
-// 	return (0);
-// }
+	current = *tokens;
+	while (current != begin)
+		current = current->next;
+	while (current != end && begin->next != NULL)
+	{
+		begin->next = current->next;
+		ft_lstdelone(current, &free);
+		current = begin->next;
+	}
+}
 
-static size_t	merge_tokens(t_list *tokens)
+static size_t	merge_tokens(t_list **tokens)
 {
 	t_list	*begin;
 	t_list	*end;
+	t_list	*current;
 
-	while (tokens != NULL)
+	current = *tokens;
+
+	while (current != NULL)
 	{
-		begin = quote_begin(tokens);
+		begin = quote_begin(current);
 		if (begin == NULL)
 			return (EXIT_SUCCESS);
 		end = quote_end(begin);
 		if (end == NULL)
 			return (EXIT_SUCCESS);
-		tokens = begin;
-		if (join_datastr(tokens, end) == EXIT_FAILURE)
+		current = begin;
+		if (join_datastr(current, end) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
-		begin->next = end->next;
-		tokens = tokens->next;
+		delete_merged_nodes(tokens, current, end);
+		current = end->next;
 	}
 	return (EXIT_SUCCESS);
 }
-
-// is quoted function OR merge befor token initialization and THEN init
-
-// static t_token	*init_token(char *str)
-// {
-// 	if (ft_strncmp(str, "|", 2) == 0)
-// 	{
-// 		free(str);
-// 		return (new_token(NULL, PIPE_TOKEN));
-// 	}
-// 	else if ((ft_strchr(str, '>') != NULL) || (ft_strchr(str, '<') != NULL))
-// 		return (new_token(str, RDR_TOKEN));
-// 	else
-// 		return (new_token(str, CMD_TOKEN));
-// }
 
 static void	init_token(t_list *tokens)
 {
@@ -160,7 +136,7 @@ t_list	*tokenisation(const char *user_input)
 	if (make_tlist((const char **) ui_array, &tokens) == 1)
 		return (free(ui_array), NULL);
 	free(ui_array);
-	if (merge_tokens(tokens) == EXIT_FAILURE)
+	if (merge_tokens(&tokens) == EXIT_FAILURE)
 		return (free_tokenlst(tokens), NULL);
 	init_token(tokens);
 	if (split_rdrtokens(tokens, 0) == EXIT_FAILURE)
