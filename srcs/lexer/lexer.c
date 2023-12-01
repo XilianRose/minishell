@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/30 15:21:48 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/01 15:17:26 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,45 +41,83 @@ static size_t	split_rdrtokens(t_list *tokens, size_t i)
 	return (EXIT_SUCCESS);
 }
 
-static void	delete_merged_nodes(t_list **tokens, t_list *begin, t_list *end)
+static void	print_tlist(t_list *list)
 {
-	t_list	*current;
+	t_token	*current;
 
-	current = *tokens;
-	while (current != begin)
-		current = current->next;
-	while (current != end && begin->next != NULL)
+	current = list->content;
+	while (list != NULL && list->next != NULL)
 	{
-		begin->next = current->next;
-		ft_lstdelone(current, &free);
-		current = begin->next;
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+		list = list->next;
+		current = list->content;
 	}
+	if (list != NULL)
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
 }
 
-static size_t	merge_tokens(t_list **tokens)
+// static void	delete_merged_nodes(t_list **tokens, t_list *begin, t_list *end)
+// {
+// 	t_list	*current;
+
+// 	current = *tokens;
+// 	while (current != begin)
+// 		current = current->next;
+// 	while (current != end && begin->next != NULL)
+// 	{
+// 		begin->next = current->next;
+// 		ft_lstdelone(current, &free);
+// 		current = begin->next;
+// 	}
+// }
+
+static size_t	merge_tokens(t_list *tokens)
 {
 	t_list	*begin;
 	t_list	*end;
-	t_list	*current;
 
-	current = *tokens;
-
-	while (current != NULL)
+	while (tokens != NULL)
 	{
-		begin = quote_begin(current);
+		begin = quote_begin(tokens);
 		if (begin == NULL)
 			return (EXIT_SUCCESS);
 		end = quote_end(begin);
 		if (end == NULL)
 			return (EXIT_SUCCESS);
-		current = begin;
-		if (join_datastr(current, end) == EXIT_FAILURE)
+		tokens = begin;
+		if (join_datastr(tokens, end) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
-		delete_merged_nodes(tokens, current, end);
-		current = end->next;
+		print_tlist(tokens);
+		begin->next = end->next;
+		tokens = tokens->next;
 	}
 	return (EXIT_SUCCESS);
 }
+
+// static size_t	merge_tokens(t_list **tokens)
+// {
+// 	t_list	*begin;
+// 	t_list	*end;
+// 	t_list	*current;
+
+// 	current = *tokens;
+
+// 	while (current != NULL)
+// 	{
+// 		begin = quote_begin(current);
+// 		if (begin == NULL)
+// 			return (EXIT_SUCCESS);
+// 		end = quote_end(begin);
+// 		if (end == NULL)
+// 			return (EXIT_SUCCESS);
+// 		current = begin;
+// 		if (join_datastr(current, end) == EXIT_FAILURE)
+// 			return (EXIT_FAILURE);
+// 		delete_merged_nodes(tokens, current, end);
+// 		current = end->next;
+// 	}
+// 	return (EXIT_SUCCESS);
+// }
 
 static void	init_token(t_list *tokens)
 {
@@ -135,9 +173,11 @@ t_list	*tokenisation(const char *user_input)
 		return (NULL);
 	if (make_tlist((const char **) ui_array, &tokens) == 1)
 		return (free(ui_array), NULL);
+	print_tlist(tokens);
 	free(ui_array);
-	if (merge_tokens(&tokens) == EXIT_FAILURE)
+	if (merge_tokens(tokens) == EXIT_FAILURE)
 		return (free_tokenlst(tokens), NULL);
+	print_tlist(tokens);
 	init_token(tokens);
 	if (split_rdrtokens(tokens, 0) == EXIT_FAILURE)
 		return (free_tokenlst(tokens), NULL);
