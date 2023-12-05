@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/23 12:53:01 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/01 15:17:26 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,34 @@ static size_t	split_rdrtokens(t_list *tokens, size_t i)
 	return (EXIT_SUCCESS);
 }
 
-// static size_t	split_rdrtokens(t_list *tokens)
-// {
-// 	t_list	*next;
-// 	t_token	*token;
-// 	t_token	*new;
-// 	t_list	*new_node;
+static void	print_tlist(t_list *list)
+{
+	t_token	*current;
 
-// 	while (tokens != NULL)
+	current = list->content;
+	while (list != NULL && list->next != NULL)
+	{
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+		list = list->next;
+		current = list->content;
+	}
+	if (list != NULL)
+		printf("data: [%s]	type: [%d]\n", current->data, current->type);
+}
+
+// static void	delete_merged_nodes(t_list **tokens, t_list *begin, t_list *end)
+// {
+// 	t_list	*current;
+
+// 	current = *tokens;
+// 	while (current != begin)
+// 		current = current->next;
+// 	while (current != end && begin->next != NULL)
 // 	{
-// 		token = tokens->content;
-// 		next = tokens->next;
-// 		new = NULL;
-// 		if (token->type == RDR_TOKEN)
-// 		{
-// 			new = is_splitable(token, token->data, ft_strlen(token->data), 0);
-// 			if (new)
-// 			{
-// 				new_node = ft_lstnew(new);
-// 				tokens->next = new_node;
-// 				new_node->next = next;
-// 			}
-// 		}
-// 		tokens = tokens->next;
+// 		begin->next = current->next;
+// 		ft_lstdelone(current, &free);
+// 		current = begin->next;
 // 	}
-// 	return (0);
 // }
 
 static size_t	merge_tokens(t_list *tokens)
@@ -84,25 +87,36 @@ static size_t	merge_tokens(t_list *tokens)
 		tokens = begin;
 		if (join_datastr(tokens, end) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
+		print_tlist(tokens);
 		begin->next = end->next;
 		tokens = tokens->next;
 	}
 	return (EXIT_SUCCESS);
 }
 
-// is quoted function OR merge befor token initialization and THEN init
-
-// static t_token	*init_token(char *str)
+// static size_t	merge_tokens(t_list **tokens)
 // {
-// 	if (ft_strncmp(str, "|", 2) == 0)
+// 	t_list	*begin;
+// 	t_list	*end;
+// 	t_list	*current;
+
+// 	current = *tokens;
+
+// 	while (current != NULL)
 // 	{
-// 		free(str);
-// 		return (new_token(NULL, PIPE_TOKEN));
+// 		begin = quote_begin(current);
+// 		if (begin == NULL)
+// 			return (EXIT_SUCCESS);
+// 		end = quote_end(begin);
+// 		if (end == NULL)
+// 			return (EXIT_SUCCESS);
+// 		current = begin;
+// 		if (join_datastr(current, end) == EXIT_FAILURE)
+// 			return (EXIT_FAILURE);
+// 		delete_merged_nodes(tokens, current, end);
+// 		current = end->next;
 // 	}
-// 	else if ((ft_strchr(str, '>') != NULL) || (ft_strchr(str, '<') != NULL))
-// 		return (new_token(str, RDR_TOKEN));
-// 	else
-// 		return (new_token(str, CMD_TOKEN));
+// 	return (EXIT_SUCCESS);
 // }
 
 static void	init_token(t_list *tokens)
@@ -159,9 +173,11 @@ t_list	*tokenisation(const char *user_input)
 		return (NULL);
 	if (make_tlist((const char **) ui_array, &tokens) == 1)
 		return (free(ui_array), NULL);
+	print_tlist(tokens);
 	free(ui_array);
 	if (merge_tokens(tokens) == EXIT_FAILURE)
 		return (free_tokenlst(tokens), NULL);
+	print_tlist(tokens);
 	init_token(tokens);
 	if (split_rdrtokens(tokens, 0) == EXIT_FAILURE)
 		return (free_tokenlst(tokens), NULL);

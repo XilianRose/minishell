@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/22 12:48:33 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/30 15:08:44 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,34 +59,6 @@ size_t	is_splitable(t_token *token)
 	return (i);
 }
 
-// t_token	*is_splitable(t_token *token, char *data, size_t len, size_t i)
-// {
-// 	char	*new_data;
-// 	t_token	*new;
-
-// 	new_data = NULL;
-// 	new = NULL;
-// 	while (i < len)
-// 	{
-// 		if (((ft_strchr("<", data[i]) != NULL && ft_strchr("<", data[i + 1]) == \
-// 		NULL) || (ft_strchr("<>", data[i]) == NULL && \
-// 		ft_strchr("<>", data[i + 1]) != NULL)) && data[i + 1] != '\0')
-// 			break ;
-// 		i++;
-// 	}
-// 	if (i < len)
-// 		new_data = ft_substr(data, i + 1, len - i);
-// 	if (new_data)
-// 	{
-// 		new = new_token(new_data, RDR_TOKEN);
-// 		token->data = ft_substr(data, 0, i + 1);
-// 		free (data);
-// 	}
-// 	if (!(ft_strchr(token->data, '>')) && !(ft_strchr(token->data, '<')))
-// 		token->type = CMD_TOKEN;
-// 	return (new);
-// }
-
 size_t	join_datastr(t_list *tokens, t_list *end)
 {
 	t_token	*token;
@@ -100,12 +72,12 @@ size_t	join_datastr(t_list *tokens, t_list *end)
 		temp = ft_strjoin(token->data, " ");
 		if (!temp)
 			return (EXIT_FAILURE);
-		free(token->data);
+		ft_free_str_array(NULL, token->data);
 		token->data = ft_strjoin(temp, next_token->data);
 		if (!token->data)
 			return (EXIT_FAILURE);
-		free(temp);
-		free(next_token->data);
+		ft_free_str_array(NULL, temp);
+		ft_free_str_array(NULL, next_token->data);
 		tokens = tokens->next;
 	}
 	return (EXIT_SUCCESS);

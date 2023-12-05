@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 15:55:15 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/24 13:28:51 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/11/28 13:15:57 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,8 @@ char	*complete_input(t_init *process, char *input)
 	len = ft_strlen(input);
 	if (!len)
 		return (input);
-	if ((input[len - 1] == '|' && input[len - 2] != '\\') || \
-		(input[len - 2] == '|' && input[len - 3] != '\\'))
+	if ((len > 1 && (input[len - 1] == '|' && input[len - 2] != '\\')) || \
+		(len > 2 && (input[len - 2] == '|' && input[len - 3] != '\\')))
 		input = new_userinput(input, '|');
 	if (!input)
 		return (ft_throw_error(process, ENOMEM), NULL);
