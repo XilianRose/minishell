@@ -238,7 +238,7 @@ bool		ft_prep(t_list *lst, t_init *process);
 void		ft_free_str_array(char **arr, char *str);
 void		freescmdlst(t_scmd_list **lst);
 void		ft_freelst(t_list *lst);
-void		free_tokenlst(t_list *tokens);
+void		free_tokenlst(t_list **tokens);
 
 t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type, t_init *process);
 void		scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);

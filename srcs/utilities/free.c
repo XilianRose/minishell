@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/24 15:49:27 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/12/06 13:57:11 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	ft_freelst(t_list *lst)
 	lst = NULL;
 }
 
-void	free_tokenlst(t_list *tokens)
+void	free_tokenlst(t_list **tokens)
 {
 	t_list	*temp;
 	t_list	*next;
@@ -100,7 +100,7 @@ void	free_tokenlst(t_list *tokens)
 
 	if (!tokens)
 		return ;
-	temp = tokens;
+	temp = *tokens;
 	while (temp)
 	{
 		next = temp->next;
