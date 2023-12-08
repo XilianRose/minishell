@@ -203,16 +203,18 @@ void		multi_free(char *begin, char *mid, char *end, char *temp);
 
 char		*expand_data(char *str, t_env *env, bool in_heredoc, \
 			t_init *process);
-t_quotes	quote_check(char *str, size_t start);
+t_quotes	quote_check(const char *str, size_t start);
 size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
 // lexer
 t_token		*split_rdrtoken(t_token *token, size_t i);
 size_t		is_splitable(t_token *token);
-size_t		join_datastr(t_list *tokens, t_list *end);
-t_list		*quote_begin(t_list *tokens);
-t_list		*quote_end(t_list *tokens);
 t_list		*tokenisation(const char *user_input);
+char		**lexer_split(char const *s);
+// size_t		join_datastr(t_list *tokens, t_list *end);
+// t_list		*quote_begin(t_list *tokens);
+// t_list		*quote_end(t_list *tokens);
+
 
 // parser
 t_list		*parse(t_env *env, t_init *process, const char *user_input);

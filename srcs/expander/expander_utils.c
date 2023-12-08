@@ -6,13 +6,13 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/08 16:23:16 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/29 15:30:26 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/08 15:23:15 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_quotes	quote_check(char *str, size_t start)
+t_quotes	quote_check(const char *str, size_t start)
 {
 	bool	in_single;
 	bool	in_double;
