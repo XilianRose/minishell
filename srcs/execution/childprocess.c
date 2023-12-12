@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/12 15:37:30 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/12/12 17:34:54 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	ft_wait_for_last_child(t_init *process)
 	}
 	free(process->ids);
 	process->ids = NULL;
+	g_signal = 0;
 }
 
 static void	ft_child_free(t_list *lst, t_init *process)
@@ -42,7 +43,7 @@ static void	ft_child_free(t_list *lst, t_init *process)
 
 static void	ft_child_process(t_list *lst, t_init *process)
 {
-	if (!process->cmd)
+	if (!process->cmd || process->fdin == -1 || process->fdout == -1)
 	{
 		ft_close_pipe_fds(process);
 		exit(process->errorcode);
