@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/08 15:21:11 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/12 15:22:39 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,73 +58,3 @@ size_t	is_splitable(t_token *token)
 	}
 	return (i);
 }
-
-// size_t	join_datastr(t_list *tokens, t_list *end)
-// {
-// 	t_token	*token;
-// 	t_token	*next_token;
-// 	char	*temp;
-
-// 	token = tokens->content;
-// 	while (tokens != end)
-// 	{
-// 		next_token = tokens->next->content;
-// 		temp = ft_strjoin(token->data, " ");
-// 		if (!temp)
-// 			return (EXIT_FAILURE);
-// 		ft_free_str_array(NULL, token->data);
-// 		token->data = ft_strjoin(temp, next_token->data);
-// 		if (!token->data)
-// 			return (EXIT_FAILURE);
-// 		ft_free_str_array(NULL, temp);
-// 		ft_free_str_array(NULL, next_token->data);
-// 		tokens = tokens->next;
-// 	}
-// 	return (EXIT_SUCCESS);
-// }
-
-// t_list	*quote_end(t_list *tokens)
-// {
-// 	t_token	*token;
-// 	size_t	i;
-// 	char	delim;
-
-// 	token = tokens->content;
-// 	delim = 0;
-// 	while (tokens != NULL)
-// 	{
-// 		i = 0;
-// 		token = tokens->content;
-// 		while (token->data[i] != '\0')
-// 		{
-// 			if ((token->data[i] == '\'' || token->data[i] == '\"') \
-// 			&& delim == 0)
-// 				delim = token->data[i];
-// 			else if (token->data[i] == delim)
-// 				return (tokens);
-// 			i++;
-// 		}
-// 		tokens = tokens->next;
-// 	}
-// 	return (NULL);
-// }
-
-// t_list	*quote_begin(t_list *tokens)
-// {
-// 	t_token	*token;
-// 	size_t	i;
-
-// 	while (tokens != NULL)
-// 	{
-// 		i = 0;
-// 		token = tokens->content;
-// 		while (token->data != NULL && token->data[i] != '\0')
-// 		{
-// 			if (token->data[i] == '\'' || token->data[i] == '\"')
-// 				return (tokens);
-// 			i++;
-// 		}
-// 		tokens = tokens->next;
-// 	}
-// 	return (NULL);
-// }
