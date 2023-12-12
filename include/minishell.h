@@ -201,6 +201,8 @@ char		*find_middle(char *str);
 char		*find_begin(char *str, bool in_heredoc);
 void		multi_free(char *begin, char *mid, char *end, char *temp);
 
+char		*expand_ppid(void);
+
 char		*expand_data(char *str, t_env *env, bool in_heredoc, \
 			t_init *process);
 t_quotes	quote_check(const char *str, size_t start);

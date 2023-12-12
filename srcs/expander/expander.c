@@ -24,6 +24,8 @@ static char	*expanded_part(char *str, t_env *env, t_init *process)
 	i = 0;
 	if (str[0] == '?')
 		return (free(str), ft_itoa(process->errorcode));
+	if (str[0] == '$')
+		return (free(str), expand_ppid());
 	while (env_array[i] != NULL)
 	{
 		len = ft_strlen(str);
