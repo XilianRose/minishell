@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/24 17:44:59 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/12 15:38:22 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ static void	ft_loop(t_list *lst, t_init *process)
 	}
 	rl_clear_history();
 }
-
 
 int32_t	main(int32_t argc, char **argv, char **envp)
 {

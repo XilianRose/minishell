@@ -124,25 +124,6 @@ typedef struct s_token
 	t_token_type	type;
 }	t_token;
 
-// typedef struct s_expand_info
-// {
-// 	int32_t	i;
-// 	int32_t	j;
-// 	int32_t	dquote_i;
-// 	int32_t	quote_i;
-// 	char	*old_data;
-// 	char	*expanded_data;
-// }	t_expand_info; // is this used anywhere?
-
-// typedef struct s_expand_length_info
-// {
-// 	int32_t	i;
-// 	int32_t	length;
-// 	int32_t	dquote_i;
-// 	int32_t	quote_i;
-// 	char	*data;
-// }	t_expand_length_info; // is this used anywhere?
-
 // execution builtins
 bool		ft_echo_builtin(t_init *process, t_cmd *cmd);
 void		ft_cd_builtin(t_init *process, t_cmd *cmd, size_t i);
@@ -180,7 +161,7 @@ void		ft_reset_process(t_list *lst, t_init *process);
 void		ft_execve(t_list *lst, t_init *process);
 bool		ft_executor(t_list *lst, t_init *process);
 
-void		ft_close_fds(t_init *process);
+void		ft_close_pipe_fds(t_init *process);
 bool		ft_check_for_files(t_scmd_list *lst, t_init *process);
 
 bool		ft_heredoc(t_init *process, char *data);
@@ -217,7 +198,6 @@ char		**lexer_split(char const *s);
 // t_list		*quote_begin(t_list *tokens);
 // t_list		*quote_end(t_list *tokens);
 
-
 // parser
 t_list		*parse(t_env *env, t_init *process, const char *user_input);
 t_list		*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
@@ -234,6 +214,7 @@ int64_t		ft_atollong(t_list *lst, t_init *process, const char *str);
 
 void		ft_bubble_sort(char **sortedenv, size_t len);
 
+void		ft_remove_quotes(char *data);
 void		ft_restore_old_fd(t_init *process);
 void		ft_store_old_fd(t_init *process);
 void		ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd);

@@ -6,7 +6,7 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/02 13:32:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/12 15:26:08 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/12/12 15:37:30 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_wait_for_last_child(t_init *process)
 {
-	ft_close_fds(process);
+	ft_close_pipe_fds(process);
 	waitpid(process->ids[process->i - 1], &process->status, 0);
 	if (WIFEXITED(process->status))
 		process->errorcode = WEXITSTATUS(process->status);
@@ -44,7 +44,7 @@ static void	ft_child_process(t_list *lst, t_init *process)
 {
 	if (!process->cmd)
 	{
-		ft_close_fds(process);
+		ft_close_pipe_fds(process);
 		exit(process->errorcode);
 	}
 	if (!process->fdout && ((!process->i && process->nr_of_cmds > 1) || \
@@ -58,7 +58,7 @@ static void	ft_child_process(t_list *lst, t_init *process)
 		if (dup2(process->pipes[process->i - 1][0], STDIN_FILENO) == -1)
 			ft_throw_error(process, errno);
 	}
-	ft_close_fds(process);
+	ft_close_pipe_fds(process);
 	if (process->cmd->builtin == false)
 		ft_execve(lst, process);
 	else
