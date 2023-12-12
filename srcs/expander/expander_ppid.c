@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/12 12:43:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/12 13:37:28 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/12 15:02:32 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*expand_ppid(void)
 	temp = ft_calloc(1, sizeof(char));
 	ppid_str = NULL;
 	proc_fd = open("/proc/self/status", O_RDONLY);
-	if (proc_fd == 2)
+	if (proc_fd < 0)
 		return (ft_free_str_array(NULL, temp), NULL);
 	while (temp != NULL)
 	{
@@ -29,14 +29,14 @@ char	*expand_ppid(void)
 		{
 			ppid_str = ft_strjoin("", temp + 6);
 			if (!ppid_str)
-				return (ft_free_str_array(NULL, temp), NULL);
+				return (close(proc_fd), ft_free_str_array(NULL, temp), NULL);
 			ppid_str[7] = '\0';
-			return (ft_free_str_array(NULL, temp), ppid_str);
+			return (close(proc_fd), ft_free_str_array(NULL, temp), ppid_str);
 		}
 		ft_free_str_array(NULL, temp);
 		temp = get_next_line(proc_fd);
 		if (!temp)
 			return (NULL);
 	}
-	return (ft_free_str_array(NULL, temp), ppid_str);
+	return (close(proc_fd), ft_free_str_array(NULL, temp), ppid_str);
 }

@@ -6,13 +6,37 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/12 15:38:22 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/12/12 15:43:24 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int32_t	g_signal = 0;
+
+static void	welcome(void)
+{
+	char	*temp;
+	int		fd;
+
+	temp = ft_calloc(1, sizeof(char));
+	fd = open("srcs/.welcome.txt", O_RDONLY);
+	if (fd < 0)
+	{
+		ft_free_str_array(NULL, temp);
+		return ;
+	}
+	while (temp != NULL)
+	{
+		ft_printf("%s", temp);
+		ft_free_str_array(NULL, temp);
+		temp = get_next_line(fd);
+	}
+	ft_printf("\n");
+	ft_free_str_array(NULL, temp);
+	close(fd);
+	return ;
+}
 
 static bool	ft_only_spaces_check(char *str)
 {
@@ -91,6 +115,7 @@ int32_t	main(int32_t argc, char **argv, char **envp)
 	if (!ft_copy_env(&process, &env, envp))
 		return (process.errorcode);
 	process.env = &env;
+	welcome();
 	ft_loop(&lst, &process);
 	if (g_signal == SIGINT)
 		process.errorcode = 130;
