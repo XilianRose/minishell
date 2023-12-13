@@ -6,18 +6,20 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/13 16:52:42 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/13 23:04:54 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-e_token_type determine_token_type(token)
+static void	init_token_type(t_token *token)
 {
-	if (!(ft_strchr(new->data, '>')) && !(ft_strchr(new->data, '<')))
-		new->type = CMD_TOKEN;
-	else if (ft_strchr(new->data, '>') || ft_strchr(new->data, '<'))
-		new->type = RDR_TOKEN;
+	if (ft_strchr(token->data, '>') || ft_strchr(token->data, '<'))
+		token->type = RDR_TOKEN;
+	else if (ft_strchr(token->data, '|'))
+		token->type = PIPE_TOKEN;
+	else
+		token->type = CMD_TOKEN;
 }
 
 t_token	*split_rdrtoken(t_token *token, size_t i)
@@ -37,17 +39,11 @@ t_token	*split_rdrtoken(t_token *token, size_t i)
 	new = new_token(new_data);
 	if (!new)
 		return (free(new_data), NULL);
-	//determin token type
-	if (!(ft_strchr(new->data, '>')) && !(ft_strchr(new->data, '<')))
-		new->type = CMD_TOKEN;
-	else if (ft_strchr(new->data, '>') || ft_strchr(new->data, '<'))
-		new->type = RDR_TOKEN;
+	init_token_type(new);
 	token->data = ft_substr(data, 0, i + 1);
 	if (!token->data)
 		return (free(new_data), free(new), NULL);
-	if (!(ft_strchr(token->data, '>')) && !(ft_strchr(token->data, '<')))
-		token->type = CMD_TOKEN;
-	// determin token type
+	init_token_type(token);
 	return (free(data), new);
 }
 
@@ -64,7 +60,10 @@ size_t	is_splitable(t_token *token)
 	{
 		if (((ft_strchr("<", data[i]) != NULL && ft_strchr("<", data[i + 1]) == \
 		NULL) || (ft_strchr("<>", data[i]) == NULL && \
-		ft_strchr("<>", data[i + 1]) != NULL)) && data[i + 1] != '\0')
+		ft_strchr("<>", data[i + 1]) != NULL) || (ft_strchr("|", data[i]) == \
+		NULL && ft_strchr("|", data[i + 1]) != NULL) || \
+		(ft_strchr("|", data[i]) != NULL && ft_strchr("|", data[i + 1]) == \
+		NULL)) && data[i + 1] != '\0')
 			break ;
 		i++;
 	}
