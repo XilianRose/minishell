@@ -194,9 +194,6 @@ t_token		*split_rdrtoken(t_token *token, size_t i);
 size_t		is_splitable(t_token *token);
 t_list		*tokenisation(const char *user_input);
 char		**lexer_split(char const *s);
-// size_t		join_datastr(t_list *tokens, t_list *end);
-// t_list		*quote_begin(t_list *tokens);
-// t_list		*quote_end(t_list *tokens);
 
 // parser
 t_list		*parse(t_env *env, t_init *process, const char *user_input);
@@ -207,6 +204,7 @@ t_list		*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
 size_t		remove_quotes(t_list *tokens);
 size_t		count_cmdtokens(t_list **tokens);
 bool		is_builtin(t_list **tokens);
+char		*new_userinput(char *input, char c);
 char		*complete_input(t_init *process, char *input);
 
 // utilities
