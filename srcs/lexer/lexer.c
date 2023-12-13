@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_new.c                                        :+:    :+:            */
+/*   lexer.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/06 15:08:39 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/08 15:18:01 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/13 16:46:51 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ static void	init_token(t_list *tokens)
 	while (tokens != NULL)
 	{
 		token = tokens->content;
-		if (ft_strncmp(token->data, "|", 2) == 0)
+		if (ft_strchr(token->data, '\"') == NULL && \
+				ft_strchr(token->data, '\'') == NULL && \
+				(ft_strchr(token->data, '|') != NULL))
 			token->type = PIPE_TOKEN;
 		else if (ft_strchr(token->data, '\"') == NULL && \
 				ft_strchr(token->data, '\'') == NULL && \
