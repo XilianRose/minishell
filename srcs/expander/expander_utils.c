@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/08 16:23:16 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/12 13:58:06 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/14 10:14:06 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ char	*find_begin(char *str, bool in_heredoc)
 	size_t	i;
 
 	i = 0;
-
 	while (str[i] != '\0')
 	{
 		if (str[i] == '$' && ft_strchr(" ", str[i + 1]) == NULL)

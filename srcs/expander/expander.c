@@ -99,7 +99,6 @@ static bool	expand_check(char *str, size_t start)
 	bool	res;
 	size_t	i;
 
-
 	res = false;
 	i = start;
 	if (ft_strncmp(str, "~/", 2) == 0 || ft_strncmp(str, "~", 2) == 0)
