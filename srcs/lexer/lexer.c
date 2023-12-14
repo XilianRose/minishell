@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/06 15:08:39 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/14 10:40:59 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/14 15:10:19 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,10 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 		str = (char *)*ui_array;
 		token = new_token(str);
 		if (token == NULL)
-			return (free_tokenlst(tokens), 1);
+			return (1);
 		node = ft_lstnew(token);
 		if (node == NULL)
-			return (free_tokenlst(tokens), 1);
+			return (1);
 		ft_lstadd_back(tokens, node);
 		ui_array++;
 	}
@@ -96,10 +96,14 @@ t_list	*tokenisation(const char *user_input)
 	if (!ui_array)
 		return (NULL);
 	if (make_tlist((const char **) ui_array, &tokens) == 1)
-		return (free(ui_array), NULL);
+	{
+		free(ui_array);
+		free_tokenlst(&tokens, true);
+		return (NULL);
+	}
 	free(ui_array);
 	init_token(tokens);
 	if (split_rdrtokens(tokens, 0) == EXIT_FAILURE)
-		return (free_tokenlst(&tokens), NULL);
+		return (free_tokenlst(&tokens, true), NULL);
 	return (tokens);
 }

@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/12 15:23:28 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/14 15:00:16 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens, t_init *process)
 	if (tokens->next)
 		next_token = tokens->next->content;
 	if (tokens->next == NULL || next_token->type != CMD_TOKEN)
-		return (ft_putendl_fd(str, STDERR_FILENO), free(token->data), NULL);
+		return (ft_putendl_fd(str, STDERR_FILENO), NULL);
 	if (ft_strncmp(token->data, ">>", 3) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_APPEND);
 	else if (ft_strncmp(token->data, "<<", 3) == 0)
@@ -64,9 +64,9 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens, t_init *process)
 	else if (ft_strncmp(token->data, "<", 2) == 0)
 		rdr = ft_allocate_mem_rdr(next_token->data, RDR_INPUT);
 	else
-		return (ft_putendl_fd(str, STDERR_FILENO), free(token->data), NULL);
+		return (ft_putendl_fd(str, STDERR_FILENO), NULL);
 	if (!rdr)
-		return (free(token->data), process->must_exit = true, NULL);
+		return (process->must_exit = true, NULL);
 	return (free(token->data), ft_lstnewscmd(rdr, RDR, process));
 }
 
@@ -143,7 +143,7 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 		remove_quotes(tokens) == EXIT_FAILURE)
 	{
 		process->must_exit = true;
-		return (ft_throw_error(process, ENOMEM), free_tokenlst(&tokens), NULL);
+		return (ft_throw_error(process, ENOMEM), free_tokenlst(&tokens, true), NULL);
 	}
 	cmds = NULL;
 	cmds = make_cmdlist(tokens, &cmds, process);
@@ -151,7 +151,7 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 	{
 		if (process->must_exit == true)
 			ft_throw_error(process, ENOMEM);
-		return (free_tokenlst(&tokens), NULL);
+		return (free_tokenlst(&tokens, true), NULL);
 	}
-	return (free_tokenlst(&tokens), cmds);
+	return (free_tokenlst(&tokens, false), cmds);
 }
