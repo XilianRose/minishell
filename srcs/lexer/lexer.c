@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/06 15:08:39 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/13 22:57:38 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/14 10:40:59 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static size_t	split_rdrtokens(t_list *tokens, size_t i)
 	while (tokens != NULL)
 	{
 		next = tokens->next;
-		if (((t_token *)(tokens->content))->type > RDR_TOKEN)
+		if (((t_token *)(tokens->content))-> type > CMD_TOKEN)
 		{
 			i = is_splitable((t_token *)(tokens->content));
 			if (i < ft_strlen(((t_token *)(tokens->content))->data))
