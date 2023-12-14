@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/11/29 12:57:21 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/14 15:20:19 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,13 @@ bool	is_builtin(t_list **tokens)
 t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
 				t_init *process, size_t count)
 {
+	if (tokens != NULL && ((t_token *)(tokens->content))->type == PIPE_TOKEN)
+	{
+		ft_putendl_fd("BabyBash: syntax error near unexpected token", \
+		STDERR_FILENO);
+		return (NULL);
+	}
+
 	while (tokens != NULL && ((t_token *)(tokens->content))->type != PIPE_TOKEN)
 	{
 		tokens = scmdlist2(tokens, scmds, process, count);
