@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/23 11:31:00 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/13 23:04:54 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/15 18:36:33 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_token	*split_rdrtoken(t_token *token, size_t i)
 	init_token_type(new);
 	token->data = ft_substr(data, 0, i + 1);
 	if (!token->data)
-		return (free(new_data), free(new), NULL);
+		return (free(new_data), free(data), free(new), NULL);
 	init_token_type(token);
 	return (free(data), new);
 }
