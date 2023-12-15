@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/06 15:08:39 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/15 18:23:32 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/15 18:40:58 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static size_t	split_rdrtokens(t_list *tokens, size_t i)
 					return (EXIT_FAILURE);
 				new_node = ft_lstnew(new);
 				if (!new_node)
-					return (free(new), EXIT_FAILURE);
+					return (free(new->data), free(new), EXIT_FAILURE);
 				tokens->next = new_node;
 				new_node->next = next;
 			}
