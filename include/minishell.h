@@ -116,6 +116,7 @@ typedef struct s_init
 	int32_t	oldin;
 	bool	heredoc;
 	bool	must_exit;
+	size_t	arg_count;
 }	t_init;
 
 typedef struct s_token
@@ -197,10 +198,8 @@ char		**lexer_split(char const *s);
 
 // parser
 t_list		*parse(t_env *env, t_init *process, const char *user_input);
-t_list		*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
-			t_init *process, size_t count);
-t_list		*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
-			t_init *process, size_t count);
+t_list		*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_init *process);
+t_list		*scmdlist2(t_list *tokens, t_scmd_list **scmds, t_init *process);
 size_t		remove_quotes(t_list *tokens);
 size_t		count_cmdtokens(t_list **tokens);
 bool		is_builtin(t_list **tokens);

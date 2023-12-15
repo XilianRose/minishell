@@ -6,14 +6,13 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/14 15:00:16 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/15 14:31:45 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_scmd_list	*init_cmdstruct(t_list *tokens, size_t count, \
-					t_init *process, size_t i)
+static t_scmd_list	*init_cmdstruct(t_list *tokens, t_init *process, size_t i)
 {
 	t_token	*token;
 	t_cmd	*cmd;
@@ -21,10 +20,10 @@ static t_scmd_list	*init_cmdstruct(t_list *tokens, size_t count, \
 	bool	builtin;
 
 	builtin = is_builtin(&tokens);
-	data = ft_calloc(count + 1, sizeof(char *));
+	data = ft_calloc(process->arg_count + 1, sizeof(char *));
 	if (!data)
 		return (NULL);
-	while (i < count && tokens != NULL)
+	while (i < process->arg_count && tokens != NULL)
 	{
 		token = tokens->content;
 		if (token->type == CMD_TOKEN)
@@ -70,22 +69,23 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens, t_init *process)
 	return (free(token->data), ft_lstnewscmd(rdr, RDR, process));
 }
 
-t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, \
-				t_init *process, size_t count)
+t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, t_init *process)
 {
 	t_scmd_list	*node;
 
-	if (((t_token *)(tokens->content))->type == CMD_TOKEN && count == 0)
+	if (((t_token *)(tokens->content))->type == CMD_TOKEN \
+		&& process->arg_count == 0)
 	{
-		count = count_cmdtokens(&tokens);
-		node = init_cmdstruct(tokens, count, process, 0);
+		process->arg_count = count_cmdtokens(&tokens);
+		node = init_cmdstruct(tokens, process, 0);
 		if (!node)
 			return (freescmdlst(scmds), process->must_exit = true, NULL);
 		scmdlst_add_back(scmds, node);
 		while (tokens && ((t_token *)(tokens->content))->type == CMD_TOKEN)
 			tokens = tokens->next;
 	}
-	else if (((t_token *)(tokens->content))->type == CMD_TOKEN && count > 0)
+	else if (((t_token *)(tokens->content))->type == CMD_TOKEN \
+		&& process->arg_count > 0)
 		tokens = tokens->next;
 	else if (((t_token *)(tokens->content))->type == RDR_TOKEN)
 	{
@@ -107,7 +107,7 @@ static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_init *process)
 	scmds = NULL;
 	while (tokens)
 	{
-		tokens = make_scmdlist(tokens, &scmds, process, 0);
+		tokens = make_scmdlist(tokens, &scmds, process);
 		if (process->must_exit == true)
 			return (ft_freelst(*cmds), NULL);
 		if (!scmds)
@@ -132,7 +132,6 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 	t_list	*tokens;
 	t_list	*cmds;
 
-	tokens = NULL;
 	tokens = tokenisation(user_input);
 	if (!tokens)
 	{
@@ -143,7 +142,8 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 		remove_quotes(tokens) == EXIT_FAILURE)
 	{
 		process->must_exit = true;
-		return (ft_throw_error(process, ENOMEM), free_tokenlst(&tokens, true), NULL);
+		return (ft_throw_error(process, ENOMEM), free_tokenlst(&tokens, true), \
+			NULL);
 	}
 	cmds = NULL;
 	cmds = make_cmdlist(tokens, &cmds, process);

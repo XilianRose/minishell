@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/15 13:46:04 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/15 14:42:28 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ static void	ft_loop(t_list *lst, t_init *process)
 	str = NULL;
 	while (1)
 	{
+		process->arg_count = 0;
 		if (!ft_setup_interactive(process))
 			break ;
 		readline_return = read_from_line(&str);
