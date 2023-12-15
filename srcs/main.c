@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/04/11 17:02:44 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/12 15:43:24 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/12/15 13:46:04 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static void	welcome(void)
 	int		fd;
 
 	temp = ft_calloc(1, sizeof(char));
+	if (!temp)
+		return ;
 	fd = open("srcs/.welcome.txt", O_RDONLY);
 	if (fd < 0)
 	{
