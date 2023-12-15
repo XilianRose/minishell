@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/06 15:08:39 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/15 17:51:19 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/15 18:23:32 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 			return (1);
 		node = ft_lstnew(token);
 		if (node == NULL)
-			return (1);
+			return (free(token), 1);
 		ft_lstadd_back(tokens, node);
 		ui_array++;
 	}
