@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/15 14:24:19 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/15 17:00:52 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,14 @@ size_t	count_cmdtokens(t_list **tokens)
 	count = 0;
 	while (token->type != PIPE_TOKEN && current != NULL)
 	{
-		token = current->content;
 		if (token->type == CMD_TOKEN)
 			count++;
 		else if (token->type == RDR_TOKEN)
 			current = current->next;
 		if (current != NULL)
 			current = current->next;
+		if (current != NULL)
+			token = current->content;
 	}
 	return (count);
 }
@@ -109,6 +110,7 @@ bool	is_builtin(t_list **tokens)
 
 t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_init *process)
 {
+	process->arg_count = 0;
 	if (tokens != NULL && ((t_token *)(tokens->content))->type == PIPE_TOKEN)
 	{
 		ft_putendl_fd("BabyBash: syntax error near unexpected token", \
@@ -119,7 +121,7 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_init *process)
 	while (tokens != NULL && ((t_token *)(tokens->content))->type != PIPE_TOKEN)
 	{
 		tokens = scmdlist2(tokens, scmds, process);
-		if (!tokens)
+		if (!tokens && process->must_exit == true)
 			return (NULL);
 	}
 	return (tokens);
