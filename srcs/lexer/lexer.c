@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/12/06 15:08:39 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/14 15:10:19 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/15 17:51:19 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ t_list	*tokenisation(const char *user_input)
 		return (NULL);
 	if (make_tlist((const char **) ui_array, &tokens) == 1)
 	{
-		free(ui_array);
+		ft_free_str_array(ui_array, NULL);
 		free_tokenlst(&tokens, true);
 		return (NULL);
 	}
