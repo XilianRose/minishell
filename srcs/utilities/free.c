@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/18 12:29:24 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/18 15:58:58 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,31 @@ void	ft_free_str_array(char **arr, char *str)
 	}
 }
 
-void	ft_free_structs(t_scmd_list *temp)
+static void	ft_free_structs(t_scmd_list **smcd_list)
 {
+	t_rdr		*rdr;
+	t_cmd		*cmd;
+	t_scmd_list	*temp;
+
+	temp = *smcd_list;
 	if (temp->type == RDR)
-		free_rdrstruct(temp->data);
+	{
+		rdr = temp->data;
+		if (rdr->data)
+		{
+			free(rdr->data);
+			rdr->data = NULL;
+		}
+		free(rdr);
+		rdr = NULL;
+	}
 	else if (temp->type == CMD)
-		free_cmdstruct(temp->data);
+	{
+		cmd = temp->data;
+		ft_free_str_array(cmd->arg, cmd->path);
+		free(cmd);
+		cmd = NULL;
+	}
 }
 
 void	freescmdlst(t_scmd_list **lst)
@@ -52,7 +71,7 @@ void	freescmdlst(t_scmd_list **lst)
 	while (temp)
 	{
 		next = temp->next;
-		ft_free_structs(temp);
+		ft_free_structs(&temp);
 		free(temp);
 		temp = next;
 	}
@@ -92,7 +111,7 @@ void	free_tokenlst(t_list **tokens, bool	free_data)
 		token = temp->content;
 		if (token)
 		{
-			if (token->type == PIPE_TOKEN && token->data)
+			if (token->type != CMD_TOKEN && token->data)
 				free(token->data);
 			else if (free_data == true && token->data)
 				free(token->data);

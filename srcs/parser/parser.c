@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/18 12:30:59 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/18 15:58:07 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static t_scmd_list	*init_rdrstruct(t_list *tokens, t_init *process)
 		return (ft_putendl_fd(str, STDERR_FILENO), NULL);
 	if (!rdr)
 		return (process->must_exit = true, NULL);
-	return (free(token->data), ft_lstnewscmd(rdr, RDR, process));
+	return (ft_lstnewscmd(rdr, RDR, process));
 }
 
 t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, t_init *process)
@@ -79,7 +79,7 @@ t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, t_init *process)
 		process->arg_count = count_cmdtokens(&tokens);
 		node = init_cmdstruct(tokens, process, 0);
 		if (!node)
-			return (freescmdlst(scmds), process->must_exit = true, NULL);
+			return (freescmdlst_nodata(scmds), process->must_exit = true, NULL);
 		scmdlst_add_back(scmds, node);
 		while (tokens && ((t_token *)(tokens->content))->type == CMD_TOKEN)
 			tokens = tokens->next;
@@ -91,7 +91,7 @@ t_list	*scmdlist2(t_list *tokens, t_scmd_list **scmds, t_init *process)
 	{
 		node = init_rdrstruct(tokens, process);
 		if (!node)
-			return (freescmdlst(scmds), process->must_exit = true, NULL);
+			return (freescmdlst_nodata(scmds), NULL);
 		tokens = tokens->next->next;
 		scmdlst_add_back(scmds, node);
 	}
@@ -109,16 +109,16 @@ static t_list	*make_cmdlist(t_list *tokens, t_list **cmds, t_init *process)
 	{
 		tokens = make_scmdlist(tokens, &scmds, process);
 		if (process->must_exit == true)
-			return (ft_freelst(*cmds), NULL);
+			return (freelst_nodata(*cmds), NULL);
 		if (!scmds)
 		{
 			process->errorcode = 2;
-			return (ft_freelst(*cmds), NULL);
+			return (freelst_nodata(*cmds), NULL);
 		}
 		node = ft_lstnew(scmds);
-		scmds = NULL;
 		if (!node)
-			return (process->must_exit = true, ft_freelst(*cmds), NULL);
+			return (process->must_exit = true, freelst_nodata(*cmds), NULL);
+		scmds = NULL;
 		ft_lstadd_back(cmds, node);
 		if (tokens == NULL)
 			return (*cmds);
@@ -151,7 +151,7 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 	{
 		if (process->must_exit == true)
 			ft_throw_error(process, ENOMEM);
-		return (free_tokenlst(&tokens, false), NULL);
+		return (free_tokenlst(&tokens, true), NULL);
 	}
 	return (free_tokenlst(&tokens, false), cmds);
 }
