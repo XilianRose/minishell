@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/04 14:11:39 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/14 11:07:21 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/18 12:29:24 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,12 @@ void	ft_free_str_array(char **arr, char *str)
 	}
 }
 
-static void	ft_free_structs(t_scmd_list *temp)
+void	ft_free_structs(t_scmd_list *temp)
 {
-	t_rdr	*rdr;
-	t_cmd	*cmd;
-
 	if (temp->type == RDR)
-	{
-		rdr = temp->data;
-		if (rdr->data)
-		{
-			free(rdr->data);
-			rdr->data = NULL;
-		}
-		free(rdr);
-	}
+		free_rdrstruct(temp->data);
 	else if (temp->type == CMD)
-	{
-		cmd = temp->data;
-		ft_free_str_array(cmd->arg, cmd->path);
-		free(cmd);
-	}
+		free_cmdstruct(temp->data);
 }
 
 void	freescmdlst(t_scmd_list **lst)

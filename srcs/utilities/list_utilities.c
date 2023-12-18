@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:25:13 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/11/09 15:09:01 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/18 12:31:59 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type, t_init *process)
 	if (!newnode)
 	{
 		process->must_exit = true;
+		if (type == RDR)
+			free_rdrstruct(data);
+		else if (type == CMD)
+			free_cmdstruct(data);
 		return (NULL);
 	}
 	newnode->data = data;

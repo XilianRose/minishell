@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/01 14:24:50 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/12/18 12:10:24 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/18 12:30:59 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ t_list	*parse(t_env *env, t_init *process, const char *user_input)
 	{
 		if (process->must_exit == true)
 			ft_throw_error(process, ENOMEM);
-		return (free_tokenlst(&tokens, true), NULL);
+		return (free_tokenlst(&tokens, false), NULL);
 	}
 	return (free_tokenlst(&tokens, false), cmds);
 }

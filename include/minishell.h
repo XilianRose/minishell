@@ -217,7 +217,11 @@ void		ft_store_old_fd(t_init *process);
 void		ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd);
 bool		ft_prep(t_list *lst, t_init *process);
 
+void		free_rdrstruct(t_rdr	*rdr);
+void		free_cmdstruct(t_cmd *cmd);
+
 void		ft_free_str_array(char **arr, char *str);
+void		ft_free_structs(t_scmd_list *temp);
 void		freescmdlst(t_scmd_list **lst);
 void		ft_freelst(t_list *lst);
 void		free_tokenlst(t_list **tokens, bool free_data);
