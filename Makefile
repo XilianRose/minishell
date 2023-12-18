@@ -6,7 +6,7 @@
 #    By: mstegema <mstegema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/08/01 18:15:02 by cschabra      #+#    #+#                  #
-#    Updated: 2023/12/18 18:50:53 by cschabra      ########   odam.nl          #
+#    Updated: 2023/12/18 18:56:19 by cschabra      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,9 +62,6 @@ srcs/main.c
 
 OBJS	= ${SRCS:.c=.o}
 
-TEST_SRCS = ${shell find tests -iname "*.c"}
-TEST_OBJS	= ${TEST_SRCS:.c=.o}
-
 all: ${NAME}
 
 ${NAME}: ${OBJS}
@@ -73,12 +70,10 @@ ${NAME}: ${OBJS}
 
 clean:
 	@rm -f ${OBJS}
-	@rm -f ${TEST_OBJS}
 	@${MAKE} -C ${LIBFT} clean
 
 fclean: clean
 	@rm -f ${NAME}
-	@rm -f ${TEST_NAME}
 	@${MAKE} -C ${LIBFT} fclean
 
 re: fclean all
