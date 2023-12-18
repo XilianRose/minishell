@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/08/24 17:15:46 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/15 17:00:52 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/18 16:15:44 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ t_list	*make_scmdlist(t_list *tokens, t_scmd_list **scmds, t_init *process)
 		STDERR_FILENO);
 		return (NULL);
 	}
-
 	while (tokens != NULL && ((t_token *)(tokens->content))->type != PIPE_TOKEN)
 	{
 		tokens = scmdlist2(tokens, scmds, process);
