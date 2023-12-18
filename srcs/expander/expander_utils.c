@@ -1,91 +1,128 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        ::::::::            */
-// /*   expander_utils.c                                   :+:    :+:            */
-// /*                                                     +:+                    */
-// /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
-// /*                                                   +#+                      */
-// /*   Created: 2023/08/01 14:23:55 by cschabra      #+#    #+#                 */
-// /*   Updated: 2023/08/24 15:21:58 by mstegema      ########   odam.nl         */
-// /*                                                                            */
-// /* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   expander_utils.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/09/08 16:23:16 by mstegema      #+#    #+#                 */
+/*   Updated: 2023/12/18 18:31:02 by cschabra      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
-// #include "minishell.h"
+#include "minishell.h"
 
-// //# define ENV_VAR_DELIMITERS "\0 \t\n\r\f\v\""
+t_quotes	quote_check(const char *str, size_t start)
+{
+	bool	in_single;
+	bool	in_double;
+	size_t	i;
 
-// int	resolve_quote_index_at_data_index(int data_index, int quote_index)
-// {
-// 	if (quote_index == -1)
-// 		return (data_index);
-// 	return (-1);
-// }
+	in_single = false;
+	in_double = false;
+	i = 0;
+	while (str[i] != '\0' && i < start)
+	{
+		if (str[i] == '\'' && in_double == false)
+			in_single = !in_single;
+		if (str[i] == '\"' && in_single == false)
+			in_double = !in_double;
+		i++;
+	}
+	if (in_double == true)
+		return (IN_DOUBLE);
+	else if (in_single == true)
+		return (IN_SINGLE);
+	else
+		return (NOT_QUOTED);
+}
 
-// // geeft de index terug waarop de environment variabele eindigt.
-// int	resolve_environment_variable_length(char *data, int *length)
-// {
-// 	const char	*delimiters = ENV_VAR_DELIMITERS;
-// 	char		*variable_name;
-// 	char		*variable_value;
+char	*find_end(char *str, char *beginning)
+{
+	char	*end;
+	size_t	i;
+	size_t	len;
 
-// 	variable_name = str_head(data, delimiters, sizeof(ENV_VAR_DELIMITERS) - 1);
-// 	if (variable_name == NULL)
-// 		return (-1);
-// 	variable_value = getenv(variable_name);
-// 	if (variable_value == NULL)
-// 		return (free(variable_name), -1);
-// 	*length = ft_strlen(variable_value);
-// 	free(variable_name);
-// 	return (str_length_until(data, delimiters, sizeof(ENV_VAR_DELIMITERS) - 1));
-// }
+	i = 0;
+	while (str[i] == beginning[i])
+		i++;
+	if (str[i] == '$')
+		i++;
+	while (str[i] != '\0')
+	{
+		if (ft_isalnum(str[i]) == 0 && str[i] != '_' && str[i] != '?')
+			break ;
+		i++;
+	}
+	len = ft_strlen(&str[i]);
+	if (i > 0 && str[i] == '$' && str[i - 1] == '$')
+		end = ft_substr(str, i + 1, len);
+	else
+		end = ft_substr(str, i, len);
+	return (end);
+}
 
-// static char	*get_env_variable_value(char *env_variable_name)
-// {
-// 	char	*variable_value;
+char	*find_middle(char *str, size_t i, size_t len)
+{
+	char	*middle;
 
-// 	variable_value = getenv(env_variable_name);
-// 	if (variable_value == NULL)
-// 		variable_value = str_empty();
-// 	else
-// 		variable_value = ft_strdup(variable_value);
-// 	return (variable_value);
-// }
+	while (str[i] != '\0')
+	{
+		if (str[i] == '$' && ft_strchr(" ", str[i + 1]) == NULL)
+		{
+			if (str[i + 1] == '$')
+			{
+				len++;
+				break ;
+			}
+			while (str[i + len] != '\0')
+			{
+				if (ft_isalnum(str[i + len]) == 0 && \
+					ft_strchr("_?", str[i + len]) == NULL)
+					break ;
+				len++;
+			}
+			if (ft_isalnum(str[i + len]) == 0 && str[i + len] != '_')
+				break ;
+		}
+		i++;
+	}
+	middle = ft_substr(str, i + 1, len - 1);
+	return (middle);
+}
 
-// // geeft de index terug waarop de environment variabele eindigt.
-// bool	do_env_variable_assignment(char *old_data, \
-// char *expanded_data, int *old_data_i, int *expanded_data_i)
-// {
-// 	const char	*delimiters = ENV_VAR_DELIMITERS;
-// 	char		*variable_name;
-// 	char		*variable_value;
-// 	int			i;
+char	*find_begin(char *str, bool in_heredoc)
+{
+	char	*beginning;
+	size_t	i;
 
-// 	variable_name = str_head(old_data, delimiters, \
-// 	sizeof(ENV_VAR_DELIMITERS) - 1);
-// 	if (variable_name == NULL)
-// 		return (false);
-// 	variable_value = get_env_variable_value(variable_name);
-// 	i = 0;
-// 	while (variable_value[i] != '\0')
-// 	{
-// 		expanded_data[i] = variable_value[i];
-// 		i++;
-// 	}
-// 	*old_data_i = *old_data_i + str_length_until(old_data, delimiters, \
-// 	sizeof(ENV_VAR_DELIMITERS) - 1);
-// 	*expanded_data_i = *expanded_data_i + i;
-// 	free(variable_name);
-// 	free(variable_value);
-// 	return (true);
-// }
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '$' && ft_strchr(" ", str[i + 1]) == NULL)
+		{
+			if (in_heredoc == false)
+			{
+				if (quote_check(str, i) != IN_SINGLE)
+					break ;
+			}
+			else
+				break ;
+		}
+		i++;
+	}
+	beginning = ft_substr(str, 0, i);
+	return (beginning);
+}
 
-// bool	is_here_doc_argument(t_token *token, t_token *previous_token)
-// {
-// 	if (previous_token == NULL)
-// 		return (false);
-// 	if (token->type != CMD_OR_FILE_TOKEN)
-// 		return (false);
-// 	if (previous_token->type != REDIRECTION_TOKEN)
-// 		return (false);
-// 	return (str_equals(previous_token->data, "<<"));
-// }
+void	multi_free(char *begin, char *mid, char *end, char *temp)
+{
+	if (begin)
+		free(begin);
+	if (mid)
+		free(mid);
+	if (end)
+		free(end);
+	if (temp)
+		free(temp);
+}

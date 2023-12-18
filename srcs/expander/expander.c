@@ -1,140 +1,146 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        ::::::::            */
-// /*   expander.c                                         :+:    :+:            */
-// /*                                                     +:+                    */
-// /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
-// /*                                                   +#+                      */
-// /*   Created: 2023/08/01 14:24:07 by cschabra      #+#    #+#                 */
-// /*   Updated: 2023/08/24 15:24:13 by mstegema      ########   odam.nl         */
-// /*                                                                            */
-// /* ************************************************************************** */
+/* ************************************************************************** */
+/*							                                                  */
+/*                                                        ::::::::            */
+/*   expander.c                                         :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/08/30 12:08:20 by mstegema      #+#    #+#                 */
+/*   Updated: 2023/09/06 15:39:23 by mstegema      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
-// #include "minishell.h"
+#include "minishell.h"
 
-// static bool	check_environment_variable_length(t_expand_length_info *info)
-// {
-// 	if ((info->dquote_i == -1 && info->quote_i == -1) \
-// 	|| info->dquote_i < info->quote_i)
-// 	{
-// 		info->i = resolve_environment_variable_length(\
-// 		&(info->data[info->i + 1]), &info->length);
-// 		if (info->i == -1)
-// 			return (false);
-// 	}
-// 	else
-// 	{
-// 		info->length++;
-// 	}
-// 	return (true);
-// }
+static char	*expanded_part(char *str, t_env *env, t_init *process)
+{
+	char	**env_array;
+	char	*res;
+	size_t	i;
+	size_t	len;
 
-// static int	determine_expand_data_length(char *data)
-// {
-// 	t_expand_length_info	info;
+	env_array = env->new_env;
+	res = NULL;
+	i = 0;
+	if (str[0] == '?')
+		return (free(str), ft_itoa(process->errorcode));
+	if (str[0] == '$')
+		return (free(str), expand_ppid());
+	while (env_array[i] != NULL)
+	{
+		len = ft_strlen(str);
+		if (ft_strncmp(env_array[i], str, len) == 0 && env_array[i][len] == '=')
+		{
+			len = len + 1;
+			res = ft_substr(env_array[i], len, ft_strlen(env_array[i]) - len);
+			return (free(str), res);
+		}
+		i++;
+	}
+	return (free(str), ft_strjoin("", ""));
+}
 
-// 	init_expand_length_info(&info, data);
-// 	while (!expand_length_data_at(info, '\0'))
-// 	{
-// 		if (expand_length_data_at(info, '$'))
-// 		{
-// 			if (!check_environment_variable_length(&info))
-// 				return (-1);
-// 		}
-// 		else if (expand_length_data_at(info, '\''))
-// 		{
-// 			update_quote(&info);
-// 		}
-// 		else if (expand_length_data_at(info, '\"'))
-// 		{
-// 			update_dquote(&info);
-// 		}
-// 		else
-// 		{
-// 			info.length++;
-// 		}
-// 		info.i++;
-// 	}
-// 	return (info.length);
-// }
+char	*expand_data(char *str, t_env *env, bool in_heredoc, t_init *process)
+{
+	char	*new_data;
+	char	*temp;
+	char	*beginning;
+	char	*middle;
+	char	*end;
 
-// static char	*create_expanded_data(char *old_data, int length)
-// {
-// 	t_expand_info	info;
+	beginning = find_begin(str, in_heredoc);
+	if (!beginning)
+		return (NULL);
+	end = find_end(str, beginning);
+	if (!end)
+		return (free(beginning), NULL);
+	middle = find_middle(str, 0, 1);
+	if (!middle)
+		return (free(beginning), free(end), NULL);
+	middle = expanded_part(middle, env, process);
+	if (!middle)
+		return (free(beginning), free(end), NULL);
+	temp = ft_strjoin(beginning, middle);
+	if (!temp)
+		return (multi_free(beginning, middle, end, NULL), NULL);
+	new_data = ft_strjoin(temp, end);
+	if (!new_data)
+		return (multi_free(beginning, middle, end, temp), NULL);
+	return (multi_free(beginning, middle, end, temp), new_data);
+}
 
-// 	if (!init_expand_info(&info, old_data, length))
-// 		return (NULL);
-// 	while (!expand_data_at(info, '\0'))
-// 	{
-// 		if (expand_data_at(info, '$'))
-// 		{
-// 			if (!check_env_variable_assignment(&info))
-// 				return (free(info.expanded_data), NULL);
-// 		}
-// 		else if (expand_data_at(info, '\''))
-// 			check_quote_index_at_data_index(&info);
-// 		else if (expand_data_at(info, '\"'))
-// 			check_dquote_index_at_data_index(&info);
-// 		else
-// 		{
-// 			info.expanded_data[info.j] = info.old_data[info.i];
-// 			info.j++;
-// 		}
-// 		info.i++;
-// 	}
-// 	info.expanded_data[info.j] = '\0';
-// 	return (info.expanded_data);
-// }
+static size_t	replace_token(t_token *token, t_env *env, t_init *process)
+{
+	char	*new_data;
+	char	*temp;
 
-// bool	expand_data(t_token *token, t_token *previous_token)
-// {
-// 	int		expand_data_length;
-// 	bool	expandable;
-// 	char	*old_data;
+	if (ft_strncmp(token->data, "~", 2) == 0)
+		new_data = expand_data("$HOME", env, false, process);
+	else if (ft_strncmp(token->data, "~/", 2) == 0)
+	{
+		temp = expand_data("$HOME", env, false, process);
+		if (!temp)
+			return (EXIT_FAILURE);
+		new_data = ft_strjoin(temp, token->data + 1);
+		free(temp);
+	}
+	else
+		new_data = expand_data(token->data, env, false, process);
+	if (!new_data)
+		return (EXIT_FAILURE);
+	temp = token->data;
+	token->data = new_data;
+	free(temp);
+	return (EXIT_SUCCESS);
+}
 
-// 	if (token->type == REDIRECTION_TOKEN || token->type == PIPE_TOKEN
-// 		|| is_here_doc_argument(token, previous_token))
-// 		return (true);
-// 	expand_data_length = determine_expand_data_length(token->data);
-// 	expandable = str_contains_any(token->data, "$\"\'");
-// 	if (expandable)
-// 	{
-// 		old_data = token->data;
-// 		token->data = create_expanded_data(old_data, expand_data_length);
-// 		if (token->data == NULL)
-// 			return (free(old_data), false);
-// 		free(old_data);
-// 	}
-// 	return (true);
-// }
+static bool	expand_check(char *str, size_t start)
+{
+	bool	res;
+	size_t	i;
 
-// bool	expand_tokens(t_list *tokens)
-// {
-// 	t_list	*current;
-// 	t_token	*current_token;
-// 	t_token	*previous_token;
+	res = false;
+	i = start;
+	if (ft_strncmp(str, "~/", 2) == 0 || ft_strncmp(str, "~", 2) == 0)
+		return (true);
+	else if (str[i] == '$' && (str[i + 1] == ' ' || str[i + 1] == '\0'))
+		return (false);
+	else if (quote_check(str, start) == IN_SINGLE)
+		return (false);
+	else if (str[i] == '$' && (str[i + 1] == '\'' || str[i + 1] == '\"'))
+	{
+		if (quote_check(str, start) == NOT_QUOTED)
+			return (true);
+		else
+			return (false);
+	}
+	return (true);
+}
 
-// 	previous_token = NULL;
-// 	current = tokens;
-// 	while (current != NULL)
-// 	{
-// 		current_token = (t_token *)current->content;
-// 		if (!expand_data(current_token, previous_token))
-// 			return (false);
-// 		previous_token = current_token;
-// 		current = current->next;
-// 	}
-// 	return (true);
-// }
+size_t	expand(t_list *tokens, t_env *env, t_init *process)
+{
+	t_token	*token;
+	size_t	i;
 
-// // 1. ook $? afhandelen
-// // (nadat de implementatie hiervoor is gemaakt bij de executor)
-// // int	main(void)
-// // {
-// // 	t_list	*tokens;
-
-// // 	tokens = read_tokens_from_command_line("echo \"hallo $onzin\"");
-// // 	expand_tokens(tokens);
-// // 	ft_lstclear(&tokens, &token_free);
-// // 	system("leaks -q minishell");
-// // }
+	while (tokens != NULL)
+	{
+		i = 0;
+		token = tokens->content;
+		while (token->data != NULL && token->data[i] != '\0')
+		{
+			if (ft_strncmp(token->data, "~/", 2) == 0 || \
+			ft_strncmp(token->data, "~", 2) == 0 || token->data[i] == '$' )
+			{
+				if (expand_check(token->data, i) == true)
+				{
+					if (replace_token(token, env, process) == EXIT_FAILURE)
+						return (EXIT_FAILURE);
+					i = -1;
+				}
+			}
+			i++;
+		}
+		tokens = tokens->next;
+	}
+	return (EXIT_SUCCESS);
+}

@@ -5,50 +5,64 @@
 /*                                                     +:+                    */
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/08/15 14:10:44 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/08/24 16:23:50 by mstegema      ########   odam.nl         */
+/*   Created: 2023/12/06 15:08:39 by mstegema      #+#    #+#                 */
+/*   Updated: 2023/12/15 18:40:58 by mstegema      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	merge_tokens(t_list *tokens)
+static size_t	split_rdrtokens(t_list *tokens, size_t i)
 {
-	t_list	*begin;
-	t_list	*end;
-	t_token	*token;
-	t_token	*next_token;
+	t_list	*next;
+	t_token	*new;
+	t_list	*new_node;
 
 	while (tokens != NULL)
 	{
-		begin = quote_begin(tokens);
-		end = quote_end(begin);
-		if (begin == NULL || end == NULL)
-			return (1); //no quotes || no ending quotes
-		token = begin->content;
-		tokens = begin;
-		while (tokens != end)
+		next = tokens->next;
+		if (((t_token *)(tokens->content))-> type > CMD_TOKEN)
 		{
-			next_token = tokens->next->content;
-			token->data = ft_strjoin(token->data, " ");
-			token->data = ft_strjoin(token->data, next_token->data);
-			tokens = tokens->next;
+			i = is_splitable((t_token *)(tokens->content));
+			if (i < ft_strlen(((t_token *)(tokens->content))->data))
+			{
+				new = split_rdrtoken((t_token *)(tokens->content), i);
+				if (!new)
+					return (EXIT_FAILURE);
+				new_node = ft_lstnew(new);
+				if (!new_node)
+					return (free(new->data), free(new), EXIT_FAILURE);
+				tokens->next = new_node;
+				new_node->next = next;
+			}
 		}
-		begin->next = end->next;
 		tokens = tokens->next;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
-static t_token	*init_token(const char *str)
+static void	init_token(t_list *tokens)
 {
-	if (ft_strncmp(str, "|", 2) == 0)
-		return (new_token(str, PIPE_TOKEN));
-	else if ((ft_strncmp(str, ">", 2) == 0) || (ft_strncmp(str, "<", 2) == 0)
-		|| (ft_strncmp(str, ">>", 3) == 0) || (ft_strncmp(str, "<<", 3) == 0))
-		return (new_token(str, REDIRECTION_TOKEN));
-	else
-		return (new_token(str, CMD_OR_FILE_TOKEN));
+	t_token	*token;
+
+	token = NULL;
+	while (tokens != NULL)
+	{
+		token = tokens->content;
+		if (ft_strchr(token->data, '\"') == NULL && \
+				ft_strchr(token->data, '\'') == NULL && \
+				(ft_strchr(token->data, '|') != NULL))
+			token->type = PIPE_TOKEN;
+		else if (ft_strchr(token->data, '\"') == NULL && \
+				ft_strchr(token->data, '\'') == NULL && \
+				((ft_strchr(token->data, '>') != NULL) || \
+				(ft_strchr(token->data, '<') != NULL)) && \
+				(ft_strncmp(token->data, "\\<", 3) != 0))
+			token->type = RDR_TOKEN;
+		else
+			token->type = CMD_TOKEN;
+		tokens = tokens->next;
+	}
 }
 
 static size_t	make_tlist(const char **ui_array, t_list **tokens)
@@ -57,34 +71,19 @@ static size_t	make_tlist(const char **ui_array, t_list **tokens)
 	t_token	*token;
 	char	*str;
 
-	while (ui_array[0] != '\0')
+	while (ui_array[0] != NULL)
 	{
 		str = (char *)*ui_array;
-		token = init_token(str);
+		token = new_token(str);
 		if (token == NULL)
-			return (ft_lstclear(tokens, &free), 1);
+			return (1);
 		node = ft_lstnew(token);
 		if (node == NULL)
-			return (ft_lstclear(tokens, &free), 1);
+			return (free(token), 1);
 		ft_lstadd_back(tokens, node);
 		ui_array++;
 	}
 	return (0);
-}
-
-static void	print_tlist(t_list *list)
-{
-	t_token	*current;
-
-	current = list->content;
-	while (list != NULL && list->next != NULL)
-	{
-		printf("data: [%s]	type: [%d]\n", current->data, current->type);
-		list = list->next;
-		current = list->content;
-	}
-	if (list != NULL)
-		printf("data: [%s]	type: [%d]\n", current->data, current->type);
 }
 
 t_list	*tokenisation(const char *user_input)
@@ -93,11 +92,18 @@ t_list	*tokenisation(const char *user_input)
 	char	**ui_array;
 
 	tokens = NULL;
-	ui_array = ft_split(user_input, ' ');
+	ui_array = lexer_split(user_input);
 	if (!ui_array)
-		exit(1); //exit "failed to parse"?
-	make_tlist((const char **) ui_array, &tokens);
-	merge_tokens(tokens);
-	print_tlist(tokens);
+		return (NULL);
+	if (make_tlist((const char **) ui_array, &tokens) == 1)
+	{
+		ft_free_str_array(ui_array, NULL);
+		free_tokenlst(&tokens, true);
+		return (NULL);
+	}
+	free(ui_array);
+	init_token(tokens);
+	if (split_rdrtokens(tokens, 0) == EXIT_FAILURE)
+		return (free_tokenlst(&tokens, true), NULL);
 	return (tokens);
 }

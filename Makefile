@@ -6,24 +6,60 @@
 #    By: mstegema <mstegema@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/08/01 18:15:02 by cschabra      #+#    #+#                  #
-#    Updated: 2023/08/24 16:25:27 by mstegema      ########   odam.nl          #
+#    Updated: 2023/12/18 18:50:53 by cschabra      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
-TEST_NAME = minishell_test
 
-CFLAGS = -Wall -Werror -Wextra ${HEADERS} #-fsanitize=address #-Wunreachable-code -Ofast
+NAME = minishell
+
+CFLAGS = -Wall -Werror -Wextra ${HEADERS} #-Wunreachable-code -Ofast
 
 LIBFT = 42lib
 
-READLINE_DIR = $(shell brew --prefix readline)
-READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
+# READLINE_DIR = $(shell brew --prefix readline)
+# READLINE_LIB = -lreadline -lhistory -L $(READLINE_DIR)/lib
+READLINE_LIB = -lreadline -lhistory
 
 HEADERS	= -I include -I ${LIBFT}/include -I $(READLINE_DIR)/include
 LIBS	= ${LIBFT}/libft.a
 
-SRCS	= ${shell find srcs -iname "*.c"}
+SRCS	= srcs/execution/builtins/builtin.c \
+srcs/execution/builtins/cd.c \
+srcs/execution/builtins/env.c \
+srcs/execution/builtins/export_append.c \
+srcs/execution/builtins/export_builtin.c \
+srcs/execution/builtins/export_utils.c \
+srcs/execution/builtins/pwd_utils.c \
+srcs/execution/builtins/unset.c \
+srcs/execution/childprocess.c \
+srcs/execution/errors.c \
+srcs/execution/executor.c \
+srcs/execution/fds.c \
+srcs/execution/heredoc.c \
+srcs/execution/pathfinder.c \
+srcs/execution/pipes.c \
+srcs/execution/signals.c \
+srcs/expander/expander_ppid.c \
+srcs/expander/expander_utils.c \
+srcs/expander/expander.c \
+srcs/lexer/lexer_split.c \
+srcs/lexer/lexer_utils.c \
+srcs/lexer/lexer.c \
+srcs/parser/parser_utils.c \
+srcs/parser/parser.c \
+srcs/parser/prelim_parser_utils.c \
+srcs/parser/prelim_parser.c \
+srcs/utilities/atollong.c \
+srcs/utilities/bubblesort.c \
+srcs/utilities/exec_utils.c \
+srcs/utilities/free.c \
+srcs/utilities/free2.c \
+srcs/utilities/list_utilities.c \
+srcs/utilities/node_mem_alloc.c \
+srcs/utilities/string_utilities.c \
+srcs/main.c
+
 OBJS	= ${SRCS:.c=.o}
 
 TEST_SRCS = ${shell find tests -iname "*.c"}
@@ -31,15 +67,9 @@ TEST_OBJS	= ${TEST_SRCS:.c=.o}
 
 all: ${NAME}
 
-tests: ${TEST_NAME}
-
 ${NAME}: ${OBJS}
 	@${MAKE} -C ${LIBFT}
 	@${CC} -o ${NAME} ${CFLAGS} ${SRCS} ${LIBS} ${READLINE_LIB}
-
-${TEST_NAME}: ${OBJS} ${TEST_OBJS}
-	@${MAKE} -C ${LIBFT}
-	@${CC} -o ${TEST_NAME} ${CFLAGS} ${SRCS} ${TEST_SRCS} ${LIBS} ${READLINE_LIB}
 
 clean:
 	@rm -f ${OBJS}
@@ -51,9 +81,9 @@ fclean: clean
 	@rm -f ${TEST_NAME}
 	@${MAKE} -C ${LIBFT} fclean
 
-re: fclean
+re: fclean all
 
-debug: CFLAGS += -g
-debug: re tests
+debug: CFLAGS += -g #-fsanitize=address
+debug: re
 
-.PHONY: all, tests, clean, fclean, re, debug
+.PHONY: all, clean, fclean, re, debug

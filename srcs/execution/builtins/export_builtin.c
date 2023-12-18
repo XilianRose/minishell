@@ -6,55 +6,65 @@
 /*   By: cschabra <cschabra@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/05/19 12:55:14 by cschabra      #+#    #+#                 */
-/*   Updated: 2023/08/10 16:43:33 by cschabra      ########   odam.nl         */
+/*   Updated: 2023/11/24 15:45:12 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_add_new_var(t_cmd *info, t_env *env, char *arg)
+void	ft_add_new_var(t_init *process, t_cmd *cmd, t_env *env, char *arg)
 {
 	t_export	exp;
-	int			i;
+	int32_t		i;
 
 	i = 0;
 	ft_check_for_plus(arg);
 	exp.arg_len = ft_strlen(arg);
 	exp.new_env = malloc((env->env_len + 2) * sizeof(char *));
 	if (!exp.new_env)
-		ft_throw_error(errno, "add new env malloc failed");
+	{
+		ft_throw_error(process, errno);
+		process->must_exit = true;
+		return ;
+	}
 	exp.arg_copy = malloc((exp.arg_len + 1) * sizeof(char));
 	if (!exp.arg_copy)
 	{
-		i = errno;
+		ft_throw_error(process, errno);
 		free(exp.new_env);
 		exp.new_env = NULL;
-		ft_throw_error(i, "arg copy malloc failed");
+		process->must_exit = true;
+		return ;
 	}
 	ft_memcpy(exp.arg_copy, arg, (exp.arg_len + 1));
-	ft_fill_env(info, env, &exp, i);
+	ft_fill_env(process, cmd, &exp, i);
 }
 
-static void	ft_overwrite_var(t_cmd *info, char *arg, int c)
+void	ft_overwrite_var(t_init *process, t_cmd *cmd, char *arg, size_t c)
 {
-	int	len;
+	size_t	len;
 
 	if (!ft_strchr(arg, '='))
 		return ;
 	len = ft_strlen(arg);
-	free(info->env->new_env[c]);
-	info->env->new_env[c] = NULL;
-	info->env->new_env[c] = malloc((len + 1) * sizeof(char));
-	if (!info->env->new_env[c])
-		ft_throw_error(1, "overwrite var malloc failed");
-	ft_memcpy(info->env->new_env[c], arg, (len + 1));
+	free(cmd->env->new_env[c]);
+	cmd->env->new_env[c] = NULL;
+	cmd->env->new_env[c] = malloc((len + 1) * sizeof(char));
+	if (!cmd->env->new_env[c])
+	{
+		ft_throw_error(process, errno);
+		process->must_exit = true;
+		return ;
+	}
+	ft_memcpy(cmd->env->new_env[c], arg, (len + 1));
 }
 
-static bool	ft_check_export_input(t_cmd *info, t_env *env, char *arg, \
-	int j)
+static bool	ft_check_export_input(t_init *process, char *arg, size_t j)
 {
-	int	c;
+	t_cmd	*cmd;
+	size_t	c;
 
+	cmd = process->cmd;
 	c = 0;
 	if (arg[j] == '_' && (arg[j + 1] == '=' || arg[j + 1] == '+'))
 		return (false);
@@ -62,57 +72,69 @@ static bool	ft_check_export_input(t_cmd *info, t_env *env, char *arg, \
 	{
 		while (ft_isalpha(arg[j]) || ft_isdigit(arg[j]) || arg[j] == '_')
 			j++;
-		while (env->new_env[c])
+		while (cmd->env->new_env[c])
 		{
-			if (!ft_cmpname(arg, env->new_env[c], j) && arg[j] != '+')
-				return (ft_overwrite_var(info, arg, c), true);
+			if (!ft_cmpname(arg, cmd->env->new_env[c], j) && arg[j] != '+')
+				return (ft_overwrite_var(process, cmd, arg, c), true);
 			c++;
 		}
 		if (arg[j] == '+' && (arg[j + 1] == '='))
-			return (ft_export_append(info, env, arg, j), true);
+			return (ft_export_append(process, cmd, arg, j), true);
 		else if (arg[j] == '=' || !arg[j])
-			return (ft_add_new_var(info, env, arg), true);
+			return (ft_add_new_var(process, cmd, cmd->env, arg), true);
 	}
 	return (false);
 }
 
-static void	ft_export_no_args(t_cmd *info)
+static bool	ft_export_no_args(t_cmd *cmd)
 {
 	char	**sortedenv;
-	int		len;
+	size_t	len;
 
 	len = 0;
-	while (info->env->new_env[len])
+	while (cmd->env->new_env[len])
 		len++;
 	sortedenv = malloc((len + 1) * sizeof(char *));
 	if (!sortedenv)
-		ft_throw_error(errno, "export malloc failed");
-	ft_memcpy(sortedenv, info->env->new_env, (len + 1) * sizeof(char *));
+		return (perror("BabyBash"), false);
+	ft_memcpy(sortedenv, cmd->env->new_env, (len + 1) * sizeof(char *));
 	ft_bubble_sort(sortedenv, len);
-	ft_write_export(sortedenv);
+	if (!ft_write_export(sortedenv))
+	{
+		free(sortedenv);
+		sortedenv = NULL;
+		return (false);
+	}
 	free(sortedenv);
 	sortedenv = NULL;
+	return (true);
 }
 
-void	ft_export_builtin(t_cmd *info, t_env *env)
+void	ft_export_builtin(t_init *process, t_cmd *cmd)
 {
-	char	**arg;
-	int		i;
-	int		j;
+	size_t	i;
 
 	i = 1;
-	j = 0;
-	arg = info->arg;
-	if (!arg[i])
+	process->errorcode = 0;
+	if (!cmd->arg[i])
 	{
-		ft_export_no_args(info);
-		return ;
+		if (!ft_export_no_args(cmd))
+		{
+			process->errorcode = 1;
+			process->must_exit = true;
+		}
 	}
-	while (arg[i])
+	while (process->must_exit == false && cmd->arg[i])
 	{
-		if (!ft_check_export_input(info, env, arg[i], j))
-			printf("minishell: export: %c%s\': not a valid identifier\n", \
-				'`', arg[i]);
+		if (!ft_check_export_input(process, cmd->arg[i], 0))
+		{
+			ft_error_export_unset("export", cmd->arg[i]);
+			process->errorcode = 1;
+		}
+		else if (process->must_exit == true)
+			process->errorcode = 1;
+		else
+			process->errorcode = 0;
 		i++;
 	}
 }

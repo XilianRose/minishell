@@ -13,12 +13,32 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define _GNU_SOURCE
+
 # include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/errno.h>
 # include <sys/param.h>
 # include <signal.h>
+# include <sys/wait.h>
+# include <termios.h>
+
+extern int32_t	g_signal;
+
+typedef enum e_quotes
+{
+	NOT_QUOTED = 0,
+	IN_SINGLE = 1,
+	IN_DOUBLE = 2
+}	t_quotes;
+
+typedef enum e_string_status
+{
+	NO_STRING = 0,
+	EMPTY_STRING = 1,
+	VALID_STRING = 2
+}	t_string_status;
 
 typedef enum e_struct_type
 {
@@ -26,31 +46,32 @@ typedef enum e_struct_type
 	RDR = 1
 }	t_struct_type;
 
-typedef enum e_redirect_type
+typedef enum e_rdr_type
 {
 	RDR_INPUT,
 	RDR_OUTPUT,
 	HERE_DOC,
 	RDR_APPEND
-}	t_redirect_type;
+}	t_rdr_type;
 
 typedef enum e_token_type
 {
-	CMD_OR_FILE_TOKEN	= 1,
-	REDIRECTION_TOKEN	= 2,
+	CMD_TOKEN			= 1,
+	RDR_TOKEN			= 2,
 	PIPE_TOKEN			= 3
 }	t_token_type;
 
 typedef struct s_rdr
 {
-	char			*data;
-	t_redirect_type	type;
+	char		*data;
+	t_rdr_type	type;
+	bool		expand;
 }	t_rdr;
 
 typedef struct s_env
 {
 	char	**new_env;
-	int		env_len;
+	size_t	env_len;
 }	t_env;
 
 typedef struct s_cmd
@@ -58,6 +79,7 @@ typedef struct s_cmd
 	char	*path;
 	char	**arg;
 	t_env	*env;
+	bool	builtin;
 }	t_cmd;
 
 typedef struct s_scmd_list
@@ -71,27 +93,31 @@ typedef struct s_export
 {
 	char	**new_env;
 	char	*arg_copy;
-	int		arg_len;
-	int		var_len;
-	int		name_len;
+	size_t	arg_len;
+	size_t	var_len;
+	size_t	name_len;
 	char	*new_var;
 }	t_export;
 
-typedef struct s_childproc
+typedef struct s_init
 {
-	pid_t		*ids;
-	t_cmd		*cmd;
-	int			status;
-	int			errorcode;
-	int			i;
-	int			nr_of_cmds;
-	int			pipe_count;
-	int			**pipes;
-	int			fdin;
-	int			fdout;
-	int			oldout;
-	t_scmd_list	*temp;
-}	t_childproc;
+	t_env	*env;
+	pid_t	*ids;
+	t_cmd	*cmd;
+	int32_t	status;
+	int32_t	errorcode;
+	size_t	i;
+	size_t	nr_of_cmds;
+	size_t	pipe_count;
+	int32_t	**pipes;
+	int32_t	fdin;
+	int32_t	fdout;
+	int32_t	oldout;
+	int32_t	oldin;
+	bool	heredoc;
+	bool	must_exit;
+	size_t	arg_count;
+}	t_init;
 
 typedef struct s_token
 {
@@ -99,101 +125,116 @@ typedef struct s_token
 	t_token_type	type;
 }	t_token;
 
-typedef struct s_expand_info
-{
-	int		i;
-	int		j;
-	int		dquote_i;
-	int		quote_i;
-	char	*old_data;
-	char	*expanded_data;
-}	t_expand_info;
+// execution builtins
+bool		ft_echo_builtin(t_init *process, t_cmd *cmd);
+void		ft_cd_builtin(t_init *process, t_cmd *cmd, size_t i);
+void		ft_pwd_builtin(t_init *process);
+void		ft_exit_builtin(t_list *lst, t_init *process, t_cmd *cmd);
 
-typedef struct s_expand_length_info
-{
-	int		i;
-	int		length;
-	int		dquote_i;
-	int		quote_i;
-	char	*data;
-}	t_expand_length_info;
+void		ft_env_builtin(t_init *process, t_cmd *cmd);
+bool		ft_set_oldpwd(t_init *process, t_env *env, char *str, size_t i);
+bool		ft_set_pwd(t_init *process, t_env *env, char *buffer, size_t i);
+bool		ft_copy_env(t_init *process, t_env *env, char **old_env);
 
-void			ft_test_child(t_env *env, char **argv); // tester, remove at end
-// builtins
-void			ft_echo_builtin(t_cmd *info);
-void			ft_cd_builtin(t_cmd *info);
-void			ft_pwd_builtin(void);
-void			ft_exit_builtin(t_cmd *info);
+void		ft_export_append(t_init *process, t_cmd *cmd, char *arg, size_t j);
 
-void			ft_free_env(char **new_env, char *arg_copy);
-void			ft_env_builtin(t_cmd *info);
-void			ft_copy_env(t_env *env, char **old_env);
+void		ft_add_new_var(t_init *process, t_cmd *cmd, t_env *env, char *arg);
+void		ft_overwrite_var(t_init *process, t_cmd *cmd, char *arg, size_t c);
+void		ft_export_builtin(t_init *process, t_cmd *cmd);
 
-void			ft_export_append(t_cmd *info, t_env *env, char *arg, \
-	int j);
+void		ft_fill_env(t_init *process, t_cmd *cmd, t_export *exp, size_t i);
+void		ft_check_for_plus(char *arg);
+int32_t		ft_find_value(char *var);
+bool		ft_write_export(char **sortedenv);
 
-void			ft_add_new_var(t_cmd *info, t_env *env, char *arg);
-void			ft_export_builtin(t_cmd *info, t_env *env);
+void		ft_unset_builtin(t_init *process, t_cmd *cmd);
 
-void			ft_fill_env(t_cmd *info, t_env *env, t_export *exp, \
-	int i);
-void			ft_check_for_plus(char *arg);
-int				ft_find_value(char *var);
-void			ft_write_export(char **sortedenv);
+// execution general
+void		ft_wait_for_last_child(t_init *process);
+void		ft_create_child(t_list *lst, t_init *process);
 
-void			ft_unset_builtin(t_cmd *info);
+void		ft_error_export_unset(char *name, char *option);
+void		ft_error_exit(t_list *lst, t_init *process, char *str);
+void		ft_error_env(int32_t errnr, t_cmd *cmd);
+void		ft_throw_error(t_init *process, int32_t errnr);
 
-// execution
-void			ft_create_child(t_list *lst);
+void		ft_reset_process(t_list *lst, t_init *process);
+void		ft_execve(t_list *lst, t_init *process);
+bool		ft_executor(t_list *lst, t_init *process);
 
-bool			ft_prep(t_childproc *child, t_list *lst);
+void		ft_close_pipe_fds(t_init *process);
+bool		ft_check_for_files(t_scmd_list *lst, t_init *process);
 
-void			ft_free_all(void);
-void			ft_throw_error(int errornr, char *errormessage);
+bool		ft_heredoc(t_init *process, char *data);
 
-void			ft_execute(t_cmd *info);
+bool		ft_find_path(t_list *lst, t_init *process);
 
-void			ft_restore_output(t_childproc *child);
-void			ft_close_fds(t_childproc *child);
-bool			ft_infile(t_childproc *child, t_rdr *which);
-bool			ft_outfile(t_childproc *child, t_rdr *which);
-void			ft_check_for_files(t_childproc *child, t_scmd_list *lst);
+void		ft_free_pipes(t_init *process, size_t pipe_count);
+size_t		ft_count_pipes(t_list *arglst);
+bool		ft_create_pipes(t_init *process, size_t pipe_count);
 
-void			ft_heredoc(char *data);
+// execution signals
+bool		ft_setup_interactive(t_init *process);
+bool		ft_setup_noninteractive(t_init *process);
 
-void			ft_free_pipes(int **pipes, int pipe_count);
-int				ft_count_pipes(t_list *arglst);
-int				**ft_create_pipes(int **pipes, int pipe_count);
+// expander
+char		*find_end(char *str, char *beginning);
+char		*find_middle(char *str, size_t i, size_t len);
+char		*find_begin(char *str, bool in_heredoc);
+void		multi_free(char *begin, char *mid, char *end, char *temp);
 
-// expander here
-// -----------------------------------------------------------------------------
+char		*expand_ppid(void);
+
+char		*expand_data(char *str, t_env *env, bool in_heredoc, \
+			t_init *process);
+t_quotes	quote_check(const char *str, size_t start);
+size_t		expand(t_list *tokens, t_env *env, t_init *process);
 
 // lexer
-t_list			*quote_begin(t_list *tokens);
-t_list			*quote_end(t_list *tokens);
-t_token			*new_token(const char *data, t_token_type type);
-t_list			*tokenisation(const char *user_input);
+t_token		*split_rdrtoken(t_token *token, size_t i);
+size_t		is_splitable(t_token *token);
+t_list		*tokenisation(const char *user_input);
+char		**lexer_split(char const *s);
 
-// parser here
-// -----------------------------------------------------------------------------
+// parser
+t_list		*parse(t_env *env, t_init *process, const char *user_input);
+t_list		*make_scmdlist(t_list *tokens, t_scmd_list **scmds, \
+			t_init *process);
+t_list		*scmdlist2(t_list *tokens, t_scmd_list **scmds, t_init *process);
+size_t		remove_quotes(t_list *tokens);
+size_t		count_cmdtokens(t_list **tokens);
+bool		is_builtin(t_list **tokens);
+char		*new_userinput(char *input, char c);
+char		*complete_input(t_init *process, char *input);
 
 // utilities
-long long int	ft_atollong(const char *str);
+int64_t		ft_atollong(t_list *lst, t_init *process, const char *str);
 
-void			ft_bubble_sort(char **sortedenv, int len);
+void		ft_bubble_sort(char **sortedenv, size_t len);
 
-t_scmd_list		*ft_lstnewscmd(void *data, t_struct_type type);
-void			ft_freelst(t_list *lst);
-void			ft_freescmdlst(t_scmd_list *lst);
+void		ft_remove_quotes(char *data);
+void		ft_restore_old_fd(t_init *process);
+void		ft_store_old_fd(t_init *process);
+void		ft_run_builtin(t_list *lst, t_init *process, t_cmd *cmd);
+bool		ft_prep(t_list *lst, t_init *process);
 
-t_rdr			*allocate_mem_redirect(t_rdr *redirect, char *data, \
-	t_redirect_type type);
-t_cmd			*allocate_mem_cmd_info(t_cmd *cmd, char *path, \
-	char **arg, t_env *env);
+void		freestructs_nodata(t_scmd_list *temp);
+void		freescmdlst_nodata(t_scmd_list **lst);
+void		freelst_nodata(t_list *lst);
 
-bool			str_contains_any(const char *str, const char *chars);
-bool			str_equals(char *lhs, char *rhs);
-bool			ft_cmpname(const char *s1, const char *s2, int n);
-void			free_array(char **array);
+void		ft_free_str_array(char **arr, char *str);
+void		freescmdlst(t_scmd_list **lst);
+void		ft_freelst(t_list *lst);
+void		free_tokenlst(t_list **tokens, bool free_data);
+
+t_scmd_list	*ft_lstnewscmd(void *data, t_struct_type type, t_init *process);
+void		scmdlst_add_back(t_scmd_list **scmds, t_scmd_list *new);
+
+t_rdr		*ft_allocate_mem_rdr(char *data, t_rdr_type type);
+t_cmd		*ft_allocate_mem_cmd(char **arg, t_env *env, bool builtin);
+t_token		*new_token(const char *data);
+
+bool		str_equals(char *lhs, char *rhs);
+bool		ft_cmpname(const char *s1, const char *s2, size_t n);
 
 #endif
