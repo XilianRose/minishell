@@ -6,7 +6,7 @@
 /*   By: mstegema <mstegema@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/09/08 16:23:16 by mstegema      #+#    #+#                 */
-/*   Updated: 2023/12/14 10:14:06 by mstegema      ########   odam.nl         */
+/*   Updated: 2023/12/18 18:31:02 by cschabra      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,29 +55,30 @@ char	*find_end(char *str, char *beginning)
 		i++;
 	}
 	len = ft_strlen(&str[i]);
-	if (str[i] == '$')
+	if (i > 0 && str[i] == '$' && str[i - 1] == '$')
 		end = ft_substr(str, i + 1, len);
 	else
 		end = ft_substr(str, i, len);
 	return (end);
 }
 
-char	*find_middle(char *str)
+char	*find_middle(char *str, size_t i, size_t len)
 {
 	char	*middle;
-	size_t	i;
-	size_t	len;
 
-	i = 0;
-	len = 1;
 	while (str[i] != '\0')
 	{
 		if (str[i] == '$' && ft_strchr(" ", str[i + 1]) == NULL)
 		{
+			if (str[i + 1] == '$')
+			{
+				len++;
+				break ;
+			}
 			while (str[i + len] != '\0')
 			{
 				if (ft_isalnum(str[i + len]) == 0 && \
-					ft_strchr("_?$", str[i + len]) == NULL)
+					ft_strchr("_?", str[i + len]) == NULL)
 					break ;
 				len++;
 			}

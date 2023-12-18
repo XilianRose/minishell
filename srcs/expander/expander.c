@@ -54,7 +54,7 @@ char	*expand_data(char *str, t_env *env, bool in_heredoc, t_init *process)
 	end = find_end(str, beginning);
 	if (!end)
 		return (free(beginning), NULL);
-	middle = find_middle(str);
+	middle = find_middle(str, 0, 1);
 	if (!middle)
 		return (free(beginning), free(end), NULL);
 	middle = expanded_part(middle, env, process);
